@@ -3,30 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shoppaza | Global Mega Online Shopping Mall</title>
-  <meta name="description" content="Shoppaza - Premier global e-commerce marketplace by SAJID SERVICES LTD (SC874640). Explore 800+ authentic fashion, jewelry, wigs, and lifestyle items. Multi-currency checkout in GBP, USD, USDT, and PKR.">
+  <title>Online Shopping in UK & Worldwide: Fashion, Wigs, Jewelry & Electronics - Shoppaza.com</title>
+  <meta name="description" content="Shop 800+ authentic dresses, wigs, fine jewelry, handbags, and lifestyle products on Shoppaza. Operated by SAJID SERVICES LTD (SC874640). Multi-currency checkout in GBP, USD, USDT, and PKR.">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+          fontFamily: { sans: ['"Roboto"', 'sans-serif'] },
           colors: {
             daraz: {
               orange: '#F85606',
-              orangeHover: '#d94700',
-              lightOrange: '#fff4ed',
-              dark: '#0f172a',
-              cardBg: '#ffffff',
-              border: '#e2e8f0',
-              price: '#F85606',
-              discount: '#ffefe8',
-              accent: '#6366F1'
+              orangeDark: '#D94700',
+              bg: '#F5F5F5',
+              card: '#FFFFFF',
+              textDark: '#212121',
+              textMuted: '#757575',
+              border: '#E2E8F0',
+              flashBg: '#FFF4EE',
+              footerBg: '#2E2E2E'
             }
           }
         }
@@ -34,7 +34,7 @@
     }
   </script>
   <style>
-    body { background-color: #f5f5f5; color: #1e293b; }
+    body { background-color: #F5F5F5; color: #212121; font-family: 'Roboto', sans-serif; }
     .line-clamp-2 {
       display: -webkit-box;
       -webkit-line-clamp: 2;
@@ -45,141 +45,111 @@
     .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="font-sans antialiased selection:bg-daraz-orange selection:text-white">
+<body class="antialiased selection:bg-daraz-orange selection:text-white">
 
-  <!-- ================= TOP NOTICE & UTILITY BAR ================= -->
-  <div class="bg-slate-900 text-slate-300 text-xs py-2 px-4 border-b border-slate-800">
-    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-      <div class="flex items-center gap-4 text-[11px]">
-        <span class="flex items-center gap-1.5 text-amber-400 font-semibold">
-          <i class="fa-solid fa-bolt"></i> Mega Flash Deals Live!
-        </span>
-        <span class="hidden md:inline text-slate-500">|</span>
-        <span class="hidden md:inline">
-          Operated by <strong>SAJID SERVICES LTD</strong> (UK Registered SC874640)
-        </span>
+  <!-- ================= 1. DARAZ TOP UTILITY BAR ================= -->
+  <div class="bg-[#F5F5F5] border-b border-slate-200 text-xs py-1.5 px-4 text-slate-600">
+    <div class="max-w-[1240px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div class="flex items-center gap-5 text-[11px] font-normal">
+        <a href="#productsCatalog" class="hover:text-daraz-orange transition flex items-center gap-1 font-medium text-daraz-orange">
+          <i class="fa-solid fa-mobile-screen-button"></i> SAVE MORE ON APP
+        </a>
+        <span class="text-slate-300">|</span>
+        <span class="hidden sm:inline">Official Corporate Entity: <strong>SAJID SERVICES LTD</strong> (UK Registered SC874640)</span>
       </div>
 
       <div class="flex items-center gap-5 text-[11px]">
         <!-- Multi-Currency Selector -->
-        <div class="flex items-center gap-1.5 bg-slate-800/80 px-2.5 py-1 rounded-md border border-slate-700">
-          <span class="text-slate-400">Currency:</span>
-          <select id="currencySelector" onchange="changeCurrency(this.value)" class="bg-transparent text-white font-bold focus:outline-none cursor-pointer">
-            <option value="GBP" class="bg-slate-900 text-white">GBP (£) - Stripe UK</option>
-            <option value="USD" class="bg-slate-900 text-white">USD ($) - Global</option>
-            <option value="USDT" class="bg-slate-900 text-white">USDT (₮) - Crypto</option>
-            <option value="PKR" class="bg-slate-900 text-white">PKR (₨) - Pakistan</option>
+        <div class="flex items-center gap-1.5 bg-white px-2.5 py-0.5 rounded border border-slate-300">
+          <span class="text-slate-400">CURRENCY:</span>
+          <select id="currencySelector" onchange="changeCurrency(this.value)" class="bg-transparent text-daraz-orange font-bold focus:outline-none cursor-pointer">
+            <option value="GBP">GBP (£) - Stripe UK</option>
+            <option value="USD">USD ($) - Global</option>
+            <option value="USDT">USDT (₮) - Crypto</option>
+            <option value="PKR">PKR (₨) - Pakistan</option>
           </select>
         </div>
 
-        <a href="contact.html" class="hover:text-white transition">Help & Support</a>
-        <a href="about.html" class="hover:text-white transition">About Us</a>
-        <a href="admin.html" class="text-orange-400 hover:text-orange-300 font-bold transition flex items-center gap-1">
+        <a href="contact.html" class="hover:text-daraz-orange transition uppercase">Help & Support</a>
+        <a href="about.html" class="hover:text-daraz-orange transition uppercase">About Us</a>
+        <a href="logos-preview.html" class="hover:text-daraz-orange transition uppercase text-indigo-600 font-bold">Logo Concepts</a>
+        <a href="admin.html" class="text-daraz-orange hover:text-daraz-orangeDark font-bold transition flex items-center gap-1 uppercase">
           <i class="fa-solid fa-lock text-[10px]"></i> Merchant Login
         </a>
       </div>
     </div>
   </div>
 
-  <!-- ================= MAIN DARAZ-STYLE HEADER ================= -->
+  <!-- ================= 2. DARAZ MAIN HEADER (WHITE & ORANGE SIGNATURE) ================= -->
   <header class="bg-white sticky top-0 z-50 shadow-sm border-b border-slate-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4 sm:gap-8">
+    <div class="max-w-[1240px] mx-auto px-4 py-3 flex items-center justify-between gap-6">
       
       <!-- Brand Logo -->
       <a href="index.html" class="flex-shrink-0 flex items-center">
-        <img src="logo.svg" alt="Shoppaza Global Store" class="h-10 sm:h-12 w-auto object-contain">
+        <img src="logo.svg" alt="Shoppaza Mall" class="h-10 sm:h-12 w-auto object-contain">
       </a>
 
-      <!-- Daraz-style Big Search Bar with Categories -->
-      <div class="flex-1 max-w-2xl relative hidden sm:block">
-        <form onsubmit="handleSearch(event)" class="flex items-center bg-slate-100 rounded-xl overflow-hidden border-2 border-daraz-orange focus-within:ring-2 focus-within:ring-daraz-orange/30 transition">
-          <!-- Category dropdown inside search -->
-          <select id="searchCategorySelect" class="bg-slate-200/80 text-xs text-slate-700 font-semibold px-3 py-3 border-r border-slate-300 focus:outline-none cursor-pointer">
-            <option value="all">All Categories</option>
-          </select>
-          <input type="text" id="searchInput" placeholder="Search across 800+ authentic fashion, jewelry, wigs & luxury items..." class="w-full bg-transparent px-4 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none">
-          <button type="submit" class="bg-daraz-orange hover:bg-daraz-orangeHover text-white px-6 py-3 text-sm font-bold transition flex items-center gap-1.5 flex-shrink-0">
+      <!-- Daraz Signature Big Search Box with Orange Button -->
+      <div class="flex-1 max-w-2xl relative">
+        <form onsubmit="handleSearch(event)" class="flex items-center bg-[#F5F5F5] rounded-lg overflow-hidden border border-slate-200 focus-within:border-daraz-orange focus-within:bg-white transition">
+          <input type="text" id="searchInput" placeholder="Search in Shoppaza (800+ authentic fashion, wigs, jewelry)..." class="w-full bg-transparent px-4 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none">
+          <button type="submit" class="bg-daraz-orange hover:bg-daraz-orangeDark text-white px-6 py-2.5 text-sm font-bold transition flex items-center justify-center flex-shrink-0">
             <i class="fa-solid fa-magnifying-glass"></i>
-            <span class="hidden md:inline">Search</span>
           </button>
         </form>
       </div>
 
-      <!-- Header Actions: Wishlist & Cart Drawer Trigger -->
-      <div class="flex items-center gap-4 sm:gap-6 flex-shrink-0">
-        
-        <!-- Wishlist -->
-        <button onclick="alert('Wishlist feature saved to your browser session!')" class="text-slate-600 hover:text-daraz-orange transition relative p-1.5" title="Wishlist">
-          <i class="fa-regular fa-heart text-2xl"></i>
-          <span class="absolute -top-1 -right-1 bg-slate-800 text-white font-bold text-[10px] w-4 h-4 rounded-full flex items-center justify-center">0</span>
-        </button>
-
-        <!-- Cart Button (Triggers Drawer) -->
-        <button onclick="toggleCartDrawer()" class="flex items-center gap-2.5 bg-daraz-lightOrange border border-daraz-orange/30 px-3.5 py-2 rounded-xl text-daraz-orange hover:bg-daraz-orange hover:text-white transition shadow-sm group">
+      <!-- Daraz Cart Action -->
+      <div class="flex items-center gap-4 flex-shrink-0">
+        <button onclick="toggleCartDrawer()" class="flex items-center gap-2 p-2 hover:bg-slate-50 rounded-lg transition relative text-slate-700 hover:text-daraz-orange">
           <div class="relative">
-            <i class="fa-solid fa-cart-shopping text-xl"></i>
-            <span id="cartCountBadge" class="absolute -top-2.5 -right-2.5 bg-daraz-orange group-hover:bg-slate-900 text-white font-extrabold text-[10px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow">0</span>
+            <i class="fa-solid fa-cart-shopping text-2xl"></i>
+            <span id="cartCountBadge" class="absolute -top-2 -right-2 bg-daraz-orange text-white font-black text-[10px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow">0</span>
           </div>
-          <div class="hidden sm:block text-left leading-tight">
-            <div class="text-[10px] uppercase font-bold text-slate-500 group-hover:text-white">My Cart</div>
-            <div class="text-xs font-black" id="cartTotalHeader">£0.00</div>
-          </div>
+          <span class="hidden md:inline font-bold text-xs uppercase tracking-wider">Cart</span>
         </button>
-
       </div>
-    </div>
 
-    <!-- Mobile Search Bar -->
-    <div class="sm:hidden px-4 pb-3">
-      <form onsubmit="handleSearch(event)" class="flex items-center bg-slate-100 rounded-xl overflow-hidden border border-daraz-orange">
-        <input type="text" id="mobileSearchInput" placeholder="Search 800+ products..." class="w-full bg-transparent px-3 py-2 text-xs text-slate-800 focus:outline-none">
-        <button type="submit" class="bg-daraz-orange text-white px-4 py-2 text-xs font-bold">
-          <i class="fa-solid fa-magnifying-glass"></i>
-        </button>
-      </form>
     </div>
   </header>
 
-  <!-- ================= MEGA HERO & CATEGORIES SECTION (DARAZ SIGNATURE) ================= -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-6">
-    <div class="grid lg:grid-cols-12 gap-4 items-stretch">
+  <!-- ================= 3. HERO SECTION (DARAZ VERTICAL MENU + BANNER) ================= -->
+  <section class="max-w-[1240px] mx-auto px-4 pt-3 pb-6">
+    <div class="grid grid-cols-12 gap-3 items-stretch">
       
-      <!-- Left Category Tree (Desktop) -->
-      <aside class="hidden lg:block lg:col-span-3 bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
-        <div class="flex items-center gap-2 pb-3 mb-2 border-b border-slate-100 font-bold text-xs uppercase tracking-wider text-slate-700">
-          <i class="fa-solid fa-bars text-daraz-orange"></i> Categories Catalog
+      <!-- Left Category Sidebar (Daraz Standard) -->
+      <aside class="hidden lg:block lg:col-span-3 bg-white rounded-lg p-2.5 shadow-sm border border-slate-200 text-xs">
+        <div class="font-bold text-slate-700 px-3 py-2 text-[11px] uppercase tracking-wider border-b border-slate-100 flex items-center gap-2">
+          <i class="fa-solid fa-bars text-daraz-orange"></i> All Categories
         </div>
-        <ul class="space-y-1 text-xs font-medium text-slate-600" id="heroCategoryMenu">
+        <ul class="py-1 space-y-0.5 text-slate-600 font-normal" id="heroCategoryMenu">
           <!-- Dynamically populated categories -->
         </ul>
       </aside>
 
-      <!-- Center Hero Carousel / Banner -->
-      <div class="lg:col-span-9 rounded-2xl overflow-hidden relative shadow-sm min-h-[300px] sm:min-h-[380px] bg-slate-900 flex items-center">
-        <!-- Slide Background & Content -->
+      <!-- Right Main Promotional Slider Banner -->
+      <div class="col-span-12 lg:col-span-9 bg-slate-900 rounded-lg overflow-hidden relative shadow-sm min-h-[340px] sm:min-h-[380px] flex items-center">
         <div class="absolute inset-0 z-0">
-          <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1600&auto=format&fit=crop&q=80" alt="Shoppaza Fashion Mega Sale" class="w-full h-full object-cover opacity-40">
+          <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1600&auto=format&fit=crop&q=80" alt="Daraz Mega Fest" class="w-full h-full object-cover opacity-50">
           <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/70 to-transparent"></div>
         </div>
 
-        <div class="relative z-10 p-6 sm:p-12 max-w-xl text-white">
-          <div class="inline-flex items-center gap-2 bg-daraz-orange px-3 py-1 rounded-full text-white font-extrabold text-[11px] uppercase tracking-wider mb-4 shadow">
-            <i class="fa-solid fa-fire"></i> Daraz Mega Shopping Fest 2026
+        <div class="relative z-10 p-6 sm:p-10 max-w-lg text-white space-y-3">
+          <div class="inline-block bg-daraz-orange px-2.5 py-0.5 rounded text-[11px] font-black uppercase tracking-wider">
+            Mega Shopping Fest 2026
           </div>
-          <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
-            Huge Discounts Up To <span class="text-amber-400">60% OFF</span>
+          <h1 class="text-3xl sm:text-5xl font-black leading-tight tracking-tight">
+            Up to <span class="text-amber-400">60% OFF</span> Storewide
           </h1>
-          <p class="mt-3 text-xs sm:text-sm text-slate-300 leading-relaxed">
-            Over 800+ designer dresses, authentic human hair wigs, fine jewelry, luxury sunglasses & bags. Worldwide express air shipping!
+          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-light">
+            800+ authentic human hair wigs, luxury party dresses, fine necklaces & designer bags. Worldwide express delivery!
           </p>
-
-          <div class="mt-6 flex flex-wrap items-center gap-3">
-            <a href="#productsCatalog" class="bg-daraz-orange hover:bg-daraz-orangeHover text-white px-6 py-3 rounded-xl font-bold text-xs transition shadow-lg shadow-daraz-orange/30 flex items-center gap-2">
-              <span>Shop All Products</span>
-              <i class="fa-solid fa-arrow-right text-xs"></i>
+          <div class="pt-3 flex gap-3">
+            <a href="#productsCatalog" class="bg-daraz-orange hover:bg-daraz-orangeDark text-white px-6 py-2.5 rounded font-bold text-xs uppercase tracking-wider transition shadow-md">
+              Shop Now
             </a>
-            <button onclick="filterCategory('Wigs & Hair')" class="bg-white/10 hover:bg-white/20 backdrop-blur text-white px-5 py-3 rounded-xl font-semibold text-xs border border-white/20 transition">
-              Trending Wigs & Hair
+            <button onclick="filterCategory('Wigs & Hair')" class="bg-white/10 hover:bg-white/20 text-white px-5 py-2.5 rounded font-semibold text-xs border border-white/20 transition">
+              Trending Wigs
             </button>
           </div>
         </div>
@@ -188,229 +158,209 @@
     </div>
   </section>
 
-  <!-- ================= DARAZ TRUST BADGES ================= -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6">
-    <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-200 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+  <!-- ================= 4. DARAZ 4 PILLARS / BRAND PROMISES ================= -->
+  <section class="max-w-[1240px] mx-auto px-4 pb-6">
+    <div class="bg-white rounded-lg p-4 shadow-sm border border-slate-200 grid grid-cols-2 md:grid-cols-4 gap-4">
       
       <div class="flex items-center gap-3">
-        <div class="w-11 h-11 rounded-xl bg-orange-50 text-daraz-orange flex items-center justify-center text-xl flex-shrink-0">
+        <div class="w-10 h-10 rounded-full bg-orange-50 text-daraz-orange flex items-center justify-center text-lg flex-shrink-0">
           <i class="fa-solid fa-shield-halved"></i>
         </div>
         <div>
-          <div class="font-bold text-slate-800 text-xs sm:text-sm">100% Authentic</div>
-          <div class="text-[11px] text-slate-500">Verified UK Quality</div>
+          <div class="font-bold text-xs text-slate-800">100% Authentic Products</div>
+          <div class="text-[10px] text-slate-400">Direct from Verified Vendors</div>
         </div>
       </div>
 
       <div class="flex items-center gap-3">
-        <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl flex-shrink-0">
+        <div class="w-10 h-10 rounded-full bg-orange-50 text-daraz-orange flex items-center justify-center text-lg flex-shrink-0">
           <i class="fa-solid fa-rotate-left"></i>
         </div>
         <div>
-          <div class="font-bold text-slate-800 text-xs sm:text-sm">14-Day Free Returns</div>
-          <div class="text-[11px] text-slate-500">UK Law Guarantee</div>
+          <div class="font-bold text-xs text-slate-800">14-Day Free Returns</div>
+          <div class="text-[10px] text-slate-400">UK Consumer Rights Compliant</div>
         </div>
       </div>
 
       <div class="flex items-center gap-3">
-        <div class="w-11 h-11 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl flex-shrink-0">
-          <i class="fa-solid fa-lock"></i>
+        <div class="w-10 h-10 rounded-full bg-orange-50 text-daraz-orange flex items-center justify-center text-lg flex-shrink-0">
+          <i class="fa-solid fa-credit-card"></i>
         </div>
         <div>
-          <div class="font-bold text-slate-800 text-xs sm:text-sm">Stripe & Crypto</div>
-          <div class="text-[11px] text-slate-500">Cards, Apple Pay & USDT</div>
+          <div class="font-bold text-xs text-slate-800">Stripe & Crypto Safe</div>
+          <div class="text-[10px] text-slate-400">Cards, Apple Pay & USDT</div>
         </div>
       </div>
 
       <div class="flex items-center gap-3">
-        <div class="w-11 h-11 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl flex-shrink-0">
+        <div class="w-10 h-10 rounded-full bg-orange-50 text-daraz-orange flex items-center justify-center text-lg flex-shrink-0">
           <i class="fa-solid fa-truck-fast"></i>
         </div>
         <div>
-          <div class="font-bold text-slate-800 text-xs sm:text-sm">Express Delivery</div>
-          <div class="text-[11px] text-slate-500">Tracked global freight</div>
+          <div class="font-bold text-xs text-slate-800">Global Air Shipping</div>
+          <div class="text-[10px] text-slate-400">Tracked Express Delivery</div>
         </div>
       </div>
 
     </div>
   </section>
 
-  <!-- ================= FLASH SALE SECTION (DARAZ SIGNATURE) ================= -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
-    <div class="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200">
+  <!-- ================= 5. FLASH SALE (DARAZ SIGNATURE - EXACT 6 PRODUCTS ROW) ================= -->
+  <section class="max-w-[1240px] mx-auto px-4 pb-6">
+    <div class="bg-white rounded-lg p-4 sm:p-5 shadow-sm border border-slate-200">
       
       <!-- Flash Sale Header with Live Timer -->
-      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-5 border-b border-slate-100">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
         <div class="flex items-center gap-4">
-          <span class="text-xl sm:text-2xl font-black text-daraz-orange tracking-tight flex items-center gap-2">
+          <span class="text-lg sm:text-xl font-bold text-daraz-orange tracking-tight uppercase flex items-center gap-1.5">
             <i class="fa-solid fa-bolt"></i> Flash Sale
           </span>
-          <div class="flex items-center gap-1.5 text-xs font-bold text-slate-600">
-            <span class="text-slate-400 font-normal">Ending in:</span>
-            <span class="bg-slate-900 text-white px-2 py-1 rounded" id="timerHours">08</span> :
-            <span class="bg-slate-900 text-white px-2 py-1 rounded" id="timerMins">45</span> :
-            <span class="bg-slate-900 text-white px-2 py-1 rounded" id="timerSecs">19</span>
+          <div class="flex items-center gap-1 text-xs font-bold text-slate-700">
+            <span class="text-slate-400 text-[11px] font-normal mr-1">On Sale Now:</span>
+            <span class="bg-slate-900 text-white px-2 py-0.5 rounded font-mono" id="timerHours">08</span> :
+            <span class="bg-slate-900 text-white px-2 py-0.5 rounded font-mono" id="timerMins">45</span> :
+            <span class="bg-slate-900 text-white px-2 py-0.5 rounded font-mono" id="timerSecs">19</span>
           </div>
         </div>
 
-        <a href="#productsCatalog" class="text-xs font-bold text-daraz-orange hover:underline uppercase tracking-wider flex items-center gap-1">
-          Shop More <i class="fa-solid fa-chevron-right text-[10px]"></i>
+        <a href="#productsCatalog" class="text-xs font-bold text-daraz-orange hover:bg-orange-50 px-3 py-1 rounded border border-daraz-orange uppercase transition">
+          SHOP MORE
         </a>
       </div>
 
-      <!-- Flash Sale Cards Row (Scrollable or Grid) -->
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3.5 pt-5" id="flashSaleProductsRow">
-        <!-- Dynamically loaded flash sale cards -->
+      <!-- EXACT 6 PRODUCTS PER ROW (Daraz Desktop Standard) -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 pt-4" id="flashSaleProductsRow">
+        <!-- Injected via JS -->
       </div>
 
     </div>
   </section>
 
-  <!-- ================= CATEGORIES CIRCULAR QUICK SELECTOR ================= -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
-    <div class="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200">
-      <h2 class="font-extrabold text-slate-800 text-sm sm:text-base uppercase tracking-wider mb-4">Explore Top Collections</h2>
-      <div class="grid grid-cols-4 sm:grid-cols-7 gap-4 text-center" id="categoryCirclesGrid">
+  <!-- ================= 6. CATEGORIES SECTION (DARAZ CIRCLES) ================= -->
+  <section class="max-w-[1240px] mx-auto px-4 pb-6">
+    <div class="bg-white rounded-lg p-4 sm:p-5 shadow-sm border border-slate-200">
+      <h2 class="font-bold text-slate-800 text-base mb-4">Categories</h2>
+      <div class="grid grid-cols-4 sm:grid-cols-7 gap-3 text-center" id="categoryCirclesGrid">
         <!-- Populated via JS -->
       </div>
     </div>
   </section>
 
-  <!-- ================= MAIN PRODUCTS EXPLORATION GRID ("JUST FOR YOU") ================= -->
-  <section id="productsCatalog" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+  <!-- ================= 7. JUST FOR YOU (DARAZ CORE - EXACT 6 PRODUCTS PER ROW) ================= -->
+  <section id="productsCatalog" class="max-w-[1240px] mx-auto px-4 pb-16">
     
-    <!-- Filter bar & Status -->
-    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-      <div>
-        <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
-          <span>Just For You</span>
-          <span class="text-xs font-semibold bg-slate-200 text-slate-700 px-2.5 py-0.5 rounded-full" id="activeFilterBadge">All Products (805)</span>
-        </h2>
-        <p class="text-xs text-slate-500 mt-1">Authentic luxury apparel, hair accessories & jewelry guaranteed by SAJID SERVICES LTD.</p>
-      </div>
+    <div class="flex items-center justify-between pb-4">
+      <h2 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
+        <span>Just For You</span>
+        <span class="text-xs font-medium text-slate-400" id="activeFilterBadge">(805 Products Available)</span>
+      </h2>
 
-      <!-- Category Filter Pills (Mobile friendly) -->
-      <div class="flex items-center gap-2 overflow-x-auto max-w-full pb-2 scrollbar-hide" id="categoryFilterPills">
+      <!-- Category Filter Pills -->
+      <div class="hidden sm:flex items-center gap-1.5 overflow-x-auto max-w-xl pb-1 scrollbar-hide" id="categoryFilterPills">
         <!-- Pills injected by JS -->
       </div>
     </div>
 
-    <!-- Products Responsive Grid -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4" id="mainProductsGrid">
+    <!-- EXACT 6 COLUMNS GRID (Daraz Standard) -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3" id="mainProductsGrid">
       <!-- 805 Products Injected dynamically -->
     </div>
 
-    <!-- Load More Button -->
-    <div class="mt-10 text-center">
-      <button id="loadMoreBtn" onclick="loadMoreProducts()" class="bg-white hover:bg-slate-50 text-slate-800 font-bold text-xs sm:text-sm px-8 py-3.5 rounded-xl border border-slate-300 shadow-sm transition hover:border-daraz-orange inline-flex items-center gap-2">
-        <span>Load More Products</span>
-        <i class="fa-solid fa-spinner animate-spin hidden" id="loadSpinner"></i>
+    <!-- Centered LOAD MORE Button (Daraz Style) -->
+    <div class="mt-8 text-center">
+      <button id="loadMoreBtn" onclick="loadMoreProducts()" class="bg-white hover:bg-slate-50 text-daraz-orange font-bold text-xs uppercase tracking-wider px-12 py-3 rounded border border-daraz-orange shadow-sm transition hover:shadow-md inline-flex items-center gap-2">
+        <span>LOAD MORE</span>
       </button>
     </div>
 
   </section>
 
-  <!-- ================= SLIDE-OUT CART DRAWER ================= -->
+  <!-- ================= 8. SLIDE-OUT CART DRAWER ================= -->
   <div id="cartDrawer" class="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm hidden transition-opacity">
     <div class="fixed inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl flex flex-col justify-between z-10">
       
-      <!-- Drawer Header -->
-      <div class="p-5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+      <div class="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
         <div class="flex items-center gap-2">
-          <i class="fa-solid fa-cart-shopping text-daraz-orange text-lg"></i>
-          <h3 class="font-bold text-slate-900 text-base">Shopping Cart</h3>
-          <span class="bg-daraz-orange text-white text-[11px] font-bold px-2 py-0.5 rounded-full" id="drawerCartCount">0</span>
+          <i class="fa-solid fa-cart-shopping text-daraz-orange"></i>
+          <h3 class="font-bold text-slate-900 text-sm uppercase">My Cart</h3>
+          <span class="bg-daraz-orange text-white text-[10px] font-bold px-2 py-0.5 rounded-full" id="drawerCartCount">0</span>
         </div>
-        <button onclick="toggleCartDrawer()" class="text-slate-400 hover:text-slate-700 p-2 text-lg">
-          <i class="fa-solid fa-xmark"></i>
+        <button onclick="toggleCartDrawer()" class="text-slate-400 hover:text-slate-700 p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
         </button>
       </div>
 
-      <!-- Drawer Items Container -->
-      <div class="p-5 overflow-y-auto flex-1 space-y-4 divide-y divide-slate-100" id="cartDrawerItems">
-        <!-- Injected via JS -->
+      <div class="p-4 overflow-y-auto flex-1 space-y-3 divide-y divide-slate-100 text-xs" id="cartDrawerItems">
+        <!-- Items Injected via JS -->
       </div>
 
-      <!-- Drawer Footer & Checkout Action -->
-      <div class="p-5 border-t border-slate-200 bg-slate-50 space-y-3">
+      <div class="p-4 border-t border-slate-200 bg-slate-50 space-y-3">
         <div class="flex justify-between text-xs text-slate-600">
-          <span>Standard Tracked Shipping</span>
+          <span>Tracked Shipping:</span>
           <span class="text-emerald-600 font-bold">FREE</span>
         </div>
         <div class="flex justify-between text-sm font-bold text-slate-900">
-          <span>Subtotal (<span id="cartDrawerCurrency">GBP</span>)</span>
-          <span class="text-lg text-daraz-orange font-black" id="cartDrawerSubtotal">£0.00</span>
+          <span>Total (<span id="cartDrawerCurrency">GBP</span>):</span>
+          <span class="text-base text-daraz-orange font-black" id="cartDrawerSubtotal">£0.00</span>
         </div>
 
-        <button onclick="openCheckoutModal()" class="w-full py-3.5 bg-daraz-orange hover:bg-daraz-orangeHover text-white rounded-xl font-bold text-sm transition shadow-lg shadow-daraz-orange/20 flex items-center justify-center gap-2">
-          <i class="fa-solid fa-lock"></i> Proceed to Checkout
+        <button onclick="openCheckoutModal()" class="w-full py-3 bg-daraz-orange hover:bg-daraz-orangeDark text-white rounded font-bold text-xs uppercase tracking-wider transition shadow">
+          PROCEED TO CHECKOUT
         </button>
-
-        <div class="text-[11px] text-center text-slate-500 flex items-center justify-center gap-3">
-          <span><i class="fa-solid fa-shield-check text-emerald-500"></i> Stripe Verified</span>
-          <span>•</span>
-          <span>14-Day Money Back</span>
-        </div>
       </div>
 
     </div>
   </div>
 
-  <!-- ================= PRODUCT DETAIL QUICK VIEW MODAL ================= -->
+  <!-- ================= 9. QUICK VIEW PRODUCT MODAL ================= -->
   <div id="quickViewModal" class="fixed inset-0 z-[70] bg-black/75 hidden backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-3xl w-full p-6 sm:p-8 relative shadow-2xl overflow-y-auto max-h-[90vh]">
-      <button onclick="closeQuickViewModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-800 text-xl">
+    <div class="bg-white rounded-xl max-w-3xl w-full p-6 relative shadow-2xl overflow-y-auto max-h-[90vh]">
+      <button onclick="closeQuickViewModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-800 text-xl">
         <i class="fa-solid fa-xmark"></i>
       </button>
 
-      <div class="grid sm:grid-cols-2 gap-6 sm:gap-8 items-start">
-        <!-- Image & Gallery -->
+      <div class="grid sm:grid-cols-2 gap-6 items-start">
         <div>
-          <div class="aspect-square rounded-2xl overflow-hidden bg-slate-100 border border-slate-200">
+          <div class="aspect-square rounded-lg overflow-hidden bg-slate-100 border border-slate-200">
             <img id="qvMainImage" src="" alt="Product" class="w-full h-full object-cover">
           </div>
-          <div class="flex gap-2 mt-3 overflow-x-auto pb-1" id="qvThumbnails">
-            <!-- Thumbs injected via JS -->
-          </div>
+          <div class="flex gap-2 mt-2 overflow-x-auto pb-1" id="qvThumbnails"></div>
         </div>
 
-        <!-- Details -->
-        <div class="space-y-4">
-          <span class="px-2.5 py-1 rounded-md bg-daraz-lightOrange text-daraz-orange text-[11px] font-bold" id="qvCategory">Category</span>
-          <h3 class="text-lg sm:text-xl font-bold text-slate-900 leading-snug" id="qvTitle">Product Title</h3>
+        <div class="space-y-3 text-xs">
+          <span class="px-2 py-0.5 rounded bg-orange-50 text-daraz-orange text-[10px] font-bold" id="qvCategory">Category</span>
+          <h3 class="text-base font-bold text-slate-900 leading-snug" id="qvTitle">Product Title</h3>
           
-          <div class="flex items-center gap-2 text-xs text-amber-500 font-bold">
+          <div class="flex items-center gap-2 text-amber-500 font-bold">
             <span id="qvRating">★ 4.9</span>
-            <span class="text-slate-400 font-normal">(<span id="qvReviews">140</span> ratings • <span id="qvSold">850</span> sold)</span>
+            <span class="text-slate-400 font-normal">(<span id="qvReviews">140</span> Ratings • <span id="qvSold">850</span> Sold)</span>
           </div>
 
-          <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+          <div class="p-3 bg-slate-50 rounded border border-slate-200">
             <div class="flex items-baseline gap-3">
-              <span class="text-2xl sm:text-3xl font-black text-daraz-orange" id="qvPrice">£0.00</span>
+              <span class="text-2xl font-black text-daraz-orange" id="qvPrice">£0.00</span>
               <span class="text-xs text-slate-400 line-through" id="qvComparePrice">£0.00</span>
-              <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded" id="qvDiscount">-35%</span>
+              <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded" id="qvDiscount">-35%</span>
             </div>
-            <div class="text-[11px] text-slate-500 mt-1">Multi-currency payment supported: GBP, USD, USDT & PKR</div>
           </div>
 
-          <p class="text-xs text-slate-600 leading-relaxed" id="qvDescription">Description</p>
+          <p class="text-slate-600 leading-relaxed text-[11px]" id="qvDescription">Description</p>
 
-          <!-- Quantity Stepper -->
           <div class="flex items-center gap-3 pt-2">
-            <span class="text-xs font-semibold text-slate-700">Quantity:</span>
-            <div class="flex items-center border border-slate-300 rounded-lg overflow-hidden">
-              <button onclick="adjustQvQty(-1)" class="px-3 py-1 bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold">-</button>
-              <span id="qvQtyDisplay" class="px-4 py-1 text-xs font-bold text-slate-800">1</span>
-              <button onclick="adjustQvQty(1)" class="px-3 py-1 bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold">+</button>
+            <span class="font-semibold text-slate-700">Quantity:</span>
+            <div class="flex items-center border border-slate-300 rounded overflow-hidden">
+              <button onclick="adjustQvQty(-1)" class="px-2.5 py-0.5 bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold">-</button>
+              <span id="qvQtyDisplay" class="px-3 py-0.5 text-xs font-bold text-slate-800">1</span>
+              <button onclick="adjustQvQty(1)" class="px-2.5 py-0.5 bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold">+</button>
             </div>
           </div>
 
-          <div class="grid grid-cols-2 gap-3 pt-4">
-            <button onclick="addQvToCart()" class="py-3 rounded-xl bg-daraz-lightOrange text-daraz-orange border border-daraz-orange/40 font-bold text-xs hover:bg-daraz-orange hover:text-white transition">
-              <i class="fa-solid fa-cart-plus mr-1"></i> Add to Cart
+          <div class="grid grid-cols-2 gap-3 pt-3">
+            <button onclick="addQvToCart()" class="py-2.5 rounded bg-orange-50 text-daraz-orange border border-daraz-orange font-bold text-xs uppercase hover:bg-daraz-orange hover:text-white transition">
+              Add to Cart
             </button>
-            <button onclick="instantBuyFromQv()" class="py-3 rounded-xl bg-daraz-orange hover:bg-daraz-orangeHover text-white font-bold text-xs transition shadow-lg shadow-daraz-orange/20">
-              <i class="fa-solid fa-bolt mr-1"></i> Buy Now
+            <button onclick="instantBuyFromQv()" class="py-2.5 rounded bg-daraz-orange hover:bg-daraz-orangeDark text-white font-bold text-xs uppercase transition shadow">
+              Buy Now
             </button>
           </div>
         </div>
@@ -418,170 +368,153 @@
     </div>
   </div>
 
-  <!-- ================= SECURE CHECKOUT MODAL (STRIPE & USDT) ================= -->
+  <!-- ================= 10. CHECKOUT MODAL ================= -->
   <div id="checkoutModal" class="fixed inset-0 z-[80] bg-black/80 hidden backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 relative shadow-2xl max-h-[92vh] overflow-y-auto">
-      <button onclick="closeCheckoutModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-800 text-xl">
+    <div class="bg-white rounded-xl max-w-lg w-full p-6 relative shadow-2xl max-h-[92vh] overflow-y-auto">
+      <button onclick="closeCheckoutModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-800 text-lg">
         <i class="fa-solid fa-xmark"></i>
       </button>
 
-      <div class="flex items-center gap-3 mb-5">
-        <div class="w-10 h-10 rounded-xl bg-daraz-orange text-white flex items-center justify-center font-bold">
-          <i class="fa-solid fa-lock"></i>
-        </div>
-        <div>
-          <h3 class="font-bold text-slate-900 text-lg">Secure Multi-Tender Checkout</h3>
-          <p class="text-xs text-slate-500">Processed under 256-Bit SSL Encryption • SAJID SERVICES LTD</p>
-        </div>
+      <div class="flex items-center gap-2 mb-4">
+        <i class="fa-solid fa-lock text-daraz-orange text-lg"></i>
+        <h3 class="font-bold text-slate-900 text-base">Secure Gateway Checkout</h3>
       </div>
 
-      <!-- Order Summary Card -->
-      <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 mb-5 flex justify-between items-center">
+      <div class="p-3 bg-slate-50 rounded border border-slate-200 mb-4 flex justify-between items-center text-xs">
         <div>
-          <span class="text-xs text-slate-500">Total Payable Amount</span>
-          <div class="text-2xl font-black text-slate-900" id="checkoutPayableAmount">£0.00</div>
+          <span class="text-slate-500">Total Payable</span>
+          <div class="text-xl font-black text-daraz-orange" id="checkoutPayableAmount">£0.00</div>
         </div>
-        <div class="text-right">
-          <span class="text-xs text-emerald-600 font-bold flex items-center gap-1"><i class="fa-solid fa-shield-check"></i> Buyer Protected</span>
-          <span class="text-[11px] text-slate-500" id="checkoutItemsCount">0 Items</span>
-        </div>
+        <span class="text-emerald-600 font-bold flex items-center gap-1"><i class="fa-solid fa-shield-halved"></i> 256-Bit SSL</span>
       </div>
 
-      <form id="checkoutForm" onsubmit="handleFinalCheckout(event)" class="space-y-4 text-xs">
-        <!-- Customer Details -->
+      <form id="checkoutForm" onsubmit="handleFinalCheckout(event)" class="space-y-3 text-xs">
         <div>
           <label class="block font-bold text-slate-700 uppercase mb-1">Full Name</label>
-          <input type="text" required placeholder="John Doe" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:border-daraz-orange">
+          <input type="text" required placeholder="John Doe" class="w-full border border-slate-300 rounded p-2 text-slate-900 focus:outline-none focus:border-daraz-orange">
         </div>
-
         <div>
           <label class="block font-bold text-slate-700 uppercase mb-1">Email Address</label>
-          <input type="email" required placeholder="buyer@example.com" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:border-daraz-orange">
-          <p class="text-[10px] text-slate-500 mt-1">Official VAT invoice and shipment tracking will be sent here.</p>
+          <input type="email" required placeholder="buyer@example.com" class="w-full border border-slate-300 rounded p-2 text-slate-900 focus:outline-none focus:border-daraz-orange">
         </div>
-
         <div>
           <label class="block font-bold text-slate-700 uppercase mb-1">Delivery Address</label>
-          <input type="text" required placeholder="Street address, City, Country, Postal Code" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:border-daraz-orange">
+          <input type="text" required placeholder="Address, City, Country" class="w-full border border-slate-300 rounded p-2 text-slate-900 focus:outline-none focus:border-daraz-orange">
         </div>
 
-        <!-- Payment Method Selection -->
         <div>
-          <label class="block font-bold text-slate-700 uppercase mb-2">Select Payment Method</label>
-          <div class="grid grid-cols-2 gap-3">
-            <label class="p-3 rounded-xl border-2 border-daraz-orange bg-daraz-lightOrange cursor-pointer flex items-center gap-2">
+          <label class="block font-bold text-slate-700 uppercase mb-1">Payment Method</label>
+          <div class="grid grid-cols-2 gap-2">
+            <label class="p-2.5 rounded border border-daraz-orange bg-orange-50 cursor-pointer flex items-center gap-2">
               <input type="radio" name="paymentMethod" value="card" checked class="text-daraz-orange">
               <div>
                 <div class="font-bold text-slate-900">Card / Stripe</div>
                 <div class="text-[10px] text-slate-500">Visa, Mastercard, Apple Pay</div>
               </div>
             </label>
-
-            <label class="p-3 rounded-xl border border-slate-200 hover:border-slate-300 cursor-pointer flex items-center gap-2">
+            <label class="p-2.5 rounded border border-slate-200 cursor-pointer flex items-center gap-2">
               <input type="radio" name="paymentMethod" value="crypto" class="text-daraz-orange">
               <div>
-                <div class="font-bold text-slate-900">USDT / Crypto</div>
-                <div class="text-[10px] text-slate-500">Tether TRC20 / ERC20</div>
+                <div class="font-bold text-slate-900">USDT (TRC20)</div>
+                <div class="text-[10px] text-slate-500">Tether Crypto</div>
               </div>
             </label>
           </div>
         </div>
 
-        <button type="submit" class="w-full py-3.5 bg-daraz-orange hover:bg-daraz-orangeHover text-white font-bold text-sm rounded-xl shadow-lg shadow-daraz-orange/30 transition">
+        <button type="submit" class="w-full py-3 bg-daraz-orange hover:bg-daraz-orangeDark text-white font-bold text-xs uppercase tracking-wider rounded transition shadow mt-2">
           Confirm Order & Complete Payment
         </button>
       </form>
     </div>
   </div>
 
-  <!-- ================= COMPREHENSIVE LEGAL & CORPORATE FOOTER ================= -->
-  <footer class="bg-slate-900 text-slate-400 text-xs pt-16 pb-12 border-t border-slate-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <!-- ================= 11. WORLD-CLASS DARAZ MEGA CORPORATE FOOTER ================= -->
+  <footer class="bg-white border-t border-slate-300 pt-12 pb-8 text-xs text-slate-600">
+    <div class="max-w-[1240px] mx-auto px-4">
       
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-slate-800">
+      <!-- 4 Columns Footer -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pb-10 border-b border-slate-200">
         
-        <!-- Company & Logo -->
-        <div class="md:col-span-2 space-y-4">
-          <img src="logo-white.svg" alt="Shoppaza by SAJID SERVICES LTD" class="h-10 w-auto object-contain">
-          <p class="text-xs text-slate-400 leading-relaxed max-w-md">
-            Shoppaza is the premier global e-commerce marketplace offering authentic fashion apparel, wigs, fine jewelry, and lifestyle products with worldwide express fulfillment.
-          </p>
-          
-          <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-300 space-y-1.5 max-w-lg">
-            <div class="font-bold text-white flex items-center gap-2">
-              <i class="fa-solid fa-landmark text-amber-400"></i> Corporate Entity Disclosure (UK):
-            </div>
-            <div>Shoppaza is a trading name wholly owned and operated by <strong>SAJID SERVICES LTD</strong>.</div>
-            <div>Registered in Scotland, United Kingdom • Company Registration No: <strong>SC874640</strong>.</div>
-            <div>Registered Office: <strong>Office 146 18 Young St, Unit Lge, Edinburgh, Scotland, United Kingdom, EH2 4JB</strong>.</div>
-            <div>Nature of Business (SIC): <strong>58290 - Other software publishing & digital commerce</strong>.</div>
+        <!-- Column 1: Customer Care -->
+        <div>
+          <h4 class="font-bold text-slate-800 text-sm mb-3 uppercase tracking-wide">Customer Care</h4>
+          <ul class="space-y-2 text-slate-500">
+            <li><a href="contact.html" class="hover:text-daraz-orange transition">Help Center & FAQ</a></li>
+            <li><a href="contact.html" class="hover:text-daraz-orange transition">How to Buy</a></li>
+            <li><a href="refund-policy.html" class="hover:text-daraz-orange transition">Returns & Refunds Policy</a></li>
+            <li><a href="contact.html" class="hover:text-daraz-orange transition">Contact Support Team</a></li>
+            <li><a href="terms.html" class="hover:text-daraz-orange transition">Purchase Protection Guarantee</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 2: Shoppaza -->
+        <div>
+          <h4 class="font-bold text-slate-800 text-sm mb-3 uppercase tracking-wide">Shoppaza</h4>
+          <ul class="space-y-2 text-slate-500">
+            <li><a href="about.html" class="hover:text-daraz-orange transition">About SAJID SERVICES LTD</a></li>
+            <li><a href="terms.html" class="hover:text-daraz-orange transition">Terms & Conditions</a></li>
+            <li><a href="privacy.html" class="hover:text-daraz-orange transition">Privacy Policy (UK GDPR)</a></li>
+            <li><a href="admin.html" class="hover:text-daraz-orange transition text-daraz-orange font-bold">Merchant Portal Login</a></li>
+            <li><a href="logos-preview.html" class="hover:text-daraz-orange transition">Brand Logo Concepts</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 3: Payment Methods -->
+        <div>
+          <h4 class="font-bold text-slate-800 text-sm mb-3 uppercase tracking-wide">Payment Gateways</h4>
+          <p class="text-[11px] text-slate-500 mb-3">All payments are tokenized and protected under PCI-DSS Level 1 security.</p>
+          <div class="flex flex-wrap gap-2 text-xl text-slate-500 mb-4">
+            <span class="px-2 py-1 bg-slate-100 rounded border border-slate-200 flex items-center text-xs font-bold text-indigo-600"><i class="fa-brands fa-stripe text-lg mr-1"></i> Stripe</span>
+            <span class="px-2 py-1 bg-slate-100 rounded border border-slate-200 flex items-center text-xs font-bold text-blue-600"><i class="fa-brands fa-cc-visa text-base mr-1"></i> Visa</span>
+            <span class="px-2 py-1 bg-slate-100 rounded border border-slate-200 flex items-center text-xs font-bold text-rose-600"><i class="fa-brands fa-cc-mastercard text-base mr-1"></i> Mastercard</span>
+            <span class="px-2 py-1 bg-slate-100 rounded border border-slate-200 flex items-center text-xs font-bold text-slate-800"><i class="fa-brands fa-apple-pay text-lg mr-1"></i> Apple Pay</span>
+            <span class="px-2 py-1 bg-slate-100 rounded border border-slate-200 flex items-center text-xs font-bold text-emerald-600">USDT TRC20</span>
           </div>
         </div>
 
-        <!-- Quick Links -->
+        <!-- Column 4: Verified Corporate Entity (UK Registration) -->
         <div>
-          <h4 class="text-xs uppercase font-bold text-white tracking-wider mb-4">Customer Care</h4>
-          <ul class="space-y-2.5">
-            <li><a href="contact.html" class="hover:text-white transition">Help Center & Support</a></li>
-            <li><a href="about.html" class="hover:text-white transition">About SAJID SERVICES LTD</a></li>
-            <li><a href="#productsCatalog" class="hover:text-white transition">Browse All 800+ Products</a></li>
-            <li><a href="admin.html" class="hover:text-white text-orange-400 font-bold transition">Merchant Portal</a></li>
-          </ul>
-        </div>
-
-        <!-- Compliance & Gateways -->
-        <div>
-          <h4 class="text-xs uppercase font-bold text-white tracking-wider mb-4">Legal & Consumer Rights</h4>
-          <ul class="space-y-2.5">
-            <li><a href="terms.html" class="hover:text-white transition">Terms & Conditions</a></li>
-            <li><a href="privacy.html" class="hover:text-white transition">Privacy Policy (UK GDPR)</a></li>
-            <li><a href="refund-policy.html" class="hover:text-white transition">14-Day Refund & Returns Policy</a></li>
-            <li><a href="contact.html" class="hover:text-white transition">Contact Legal Team</a></li>
-          </ul>
-          <div class="mt-4 pt-3 border-t border-slate-800 text-[11px]">
-            <span class="text-slate-500">Official Support Email:</span><br>
-            <a href="mailto:support@shoppaza.com" class="text-amber-400 hover:underline font-semibold">support@shoppaza.com</a>
+          <h4 class="font-bold text-slate-800 text-sm mb-3 uppercase tracking-wide">Corporate Entity</h4>
+          <div class="p-3 bg-slate-50 rounded border border-slate-200 space-y-1 text-[11px] text-slate-600">
+            <div class="font-bold text-slate-900">SAJID SERVICES LTD</div>
+            <div>Company Number: <strong>SC874640</strong> (Scotland, UK)</div>
+            <div>Registered Office: <strong>Office 146 18 Young St, Unit Lge, Edinburgh, Scotland, United Kingdom, EH2 4JB</strong></div>
+            <div>SIC: <strong>58290 - Other software publishing</strong></div>
+            <div class="pt-1">Support: <a href="mailto:support@shoppaza.com" class="text-daraz-orange font-bold">support@shoppaza.com</a></div>
           </div>
         </div>
 
       </div>
 
-      <!-- Payment Badges & Copyright -->
-      <div class="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-        <div>
-          © 2026 SAJID SERVICES LTD (Company No. SC874640). All rights reserved.
+      <!-- Bottom Bar -->
+      <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500">
+        <div class="flex items-center gap-3">
+          <img src="logo.svg" alt="Shoppaza" class="h-6 w-auto">
+          <span>© 2026 SAJID SERVICES LTD (Company No. SC874640). All Rights Reserved.</span>
         </div>
-
-        <div class="flex items-center gap-3 text-lg text-slate-400">
-          <span class="text-xs uppercase font-bold text-slate-500 mr-1">Secured By:</span>
-          <i class="fa-brands fa-stripe text-2xl text-indigo-400" title="Stripe Secured"></i>
-          <i class="fa-brands fa-cc-visa text-xl" title="Visa"></i>
-          <i class="fa-brands fa-cc-mastercard text-xl" title="Mastercard"></i>
-          <i class="fa-brands fa-cc-amex text-xl" title="American Express"></i>
-          <i class="fa-brands fa-apple-pay text-2xl" title="Apple Pay"></i>
-          <i class="fa-brands fa-google-pay text-2xl" title="Google Pay"></i>
-          <span class="text-xs font-bold text-emerald-400 px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20">USDT (TRC20)</span>
+        <div class="flex items-center gap-4">
+          <span class="font-semibold text-slate-700">Available In:</span>
+          <span>United Kingdom</span> • <span>United States</span> • <span>Pakistan</span> • <span>Global</span>
         </div>
       </div>
 
     </div>
   </footer>
 
-  <!-- ================= COMPLETE MULTI-CURRENCY & CATALOG SCRIPT ================= -->
+  <!-- ================= 12. COMPLETE JAVASCRIPT ENGINE (6 COLUMNS, MULTI-CURRENCY) ================= -->
   <script>
-    // State
     let products = [];
     let displayedProducts = [];
     let currentCurrency = 'GBP';
     let currentCategory = 'all';
     let searchQuery = '';
     let page = 1;
-    const PAGE_SIZE = 25;
+    const PAGE_SIZE = 24; // Multiples of 6 for clean rows!
     let cart = [];
     let currentQvProduct = null;
     let currentQvQty = 1;
 
-    // Currency Formatting Config
     const currencyConfig = {
       GBP: { symbol: '£', rateKey: 'price_gbp', compareKey: 'compare_gbp', decimals: 2 },
       USD: { symbol: '$', rateKey: 'price_usd', compareKey: 'compare_usd', decimals: 2 },
@@ -589,9 +522,7 @@
       PKR: { symbol: '₨ ', rateKey: 'price_pkr', compareKey: 'compare_pkr', decimals: 0 }
     };
 
-    // Initialize
     window.addEventListener('DOMContentLoaded', async () => {
-      // Check saved currency & cart
       const savedCurr = localStorage.getItem('shoppaza_currency');
       if (savedCurr && currencyConfig[savedCurr]) {
         currentCurrency = savedCurr;
@@ -603,11 +534,7 @@
         try { cart = JSON.parse(savedCart); } catch(e) {}
       }
       updateCartUI();
-
-      // Start countdown clock
       startFlashCountdown();
-
-      // Fetch products.json
       await loadProducts();
     });
 
@@ -616,7 +543,6 @@
         const res = await fetch('products.json');
         products = await res.json();
         
-        // Check local custom products added from Admin
         const localProds = JSON.parse(localStorage.getItem('shoppaza_custom_products') || '[]');
         if (localProds.length > 0) {
           products = [...localProds, ...products];
@@ -646,7 +572,6 @@
       localStorage.setItem('shoppaza_currency', currentCurrency);
       document.getElementById('cartDrawerCurrency').innerText = currentCurrency;
 
-      // Re-render UI
       renderFlashSale();
       renderProductsGrid();
       updateCartUI();
@@ -656,43 +581,34 @@
     function buildCategoriesList() {
       const cats = Array.from(new Set(products.map(p => p.category))).filter(Boolean).sort();
       
-      // 1. Search dropdown
-      const searchCat = document.getElementById('searchCategorySelect');
-      cats.forEach(c => {
-        const opt = document.createElement('option');
-        opt.value = c;
-        opt.innerText = c;
-        searchCat.appendChild(opt);
-      });
-
-      // 2. Hero category menu
+      // Hero menu (Left Sidebar)
       const heroMenu = document.getElementById('heroCategoryMenu');
       heroMenu.innerHTML = '';
-      cats.slice(0, 10).forEach(c => {
+      cats.slice(0, 11).forEach(c => {
         const li = document.createElement('li');
         li.innerHTML = `
-          <button onclick="filterCategory('${c}')" class="w-full text-left py-1.5 px-2.5 rounded-lg hover:bg-slate-100 hover:text-daraz-orange transition flex items-center justify-between group">
+          <button onclick="filterCategory('${c}')" class="w-full text-left py-1.5 px-2.5 rounded hover:bg-[#F5F5F5] hover:text-daraz-orange transition flex items-center justify-between group">
             <span class="truncate">${c}</span>
-            <i class="fa-solid fa-chevron-right text-[9px] text-slate-300 group-hover:text-daraz-orange"></i>
+            <i class="fa-solid fa-chevron-right text-[8px] text-slate-300 group-hover:text-daraz-orange"></i>
           </button>
         `;
         heroMenu.appendChild(li);
       });
 
-      // 3. Category Filter Pills
+      // Filter Pills
       const pillsContainer = document.getElementById('categoryFilterPills');
       pillsContainer.innerHTML = `
-        <button onclick="filterCategory('all')" class="category-pill px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition bg-daraz-orange text-white">All</button>
+        <button onclick="filterCategory('all')" class="category-pill px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap transition bg-daraz-orange text-white">All</button>
       `;
       cats.forEach(c => {
         const btn = document.createElement('button');
         btn.onclick = () => filterCategory(c);
-        btn.className = 'category-pill px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition bg-white text-slate-700 hover:bg-slate-100 border border-slate-200';
+        btn.className = 'category-pill px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition bg-white text-slate-700 hover:bg-slate-100 border border-slate-200';
         btn.innerText = c;
         pillsContainer.appendChild(btn);
       });
 
-      // 4. Circular Quick Selector
+      // Circles
       const circlesContainer = document.getElementById('categoryCirclesGrid');
       const icons = [
         { cat: 'Wigs & Hair', icon: 'fa-scissors', bg: 'bg-rose-50 text-rose-600' },
@@ -706,32 +622,33 @@
 
       circlesContainer.innerHTML = icons.map(i => `
         <button onclick="filterCategory('${i.cat}')" class="flex flex-col items-center group">
-          <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl ${i.bg} flex items-center justify-center text-xl sm:text-2xl group-hover:scale-110 transition shadow-sm border border-slate-100">
+          <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-full ${i.bg} flex items-center justify-center text-xl sm:text-2xl group-hover:scale-105 transition shadow-sm border border-slate-100">
             <i class="fa-solid ${i.icon}"></i>
           </div>
-          <span class="text-[11px] font-bold text-slate-700 mt-2 group-hover:text-daraz-orange transition truncate max-w-full">${i.cat.split(' ')[0]}</span>
+          <span class="text-[11px] font-medium text-slate-700 mt-2 group-hover:text-daraz-orange transition truncate max-w-full">${i.cat.split(' ')[0]}</span>
         </button>
       `).join('');
     }
 
+    // FLASH SALE (STRICT 6 ITEMS)
     function renderFlashSale() {
       const container = document.getElementById('flashSaleProductsRow');
       if (!container || products.length === 0) return;
       
       const flashItems = products.slice(0, 6);
       container.innerHTML = flashItems.map(p => `
-        <div onclick="openQuickView(${p.id})" class="bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-md transition cursor-pointer group flex flex-col justify-between">
+        <div onclick="openQuickView(${p.id})" class="bg-white rounded border border-slate-200 overflow-hidden hover:shadow-md transition cursor-pointer group flex flex-col justify-between">
           <div class="aspect-square relative overflow-hidden bg-slate-50">
             <img src="${p.image}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.src='favicon.svg'">
-            <span class="absolute top-2 left-2 bg-daraz-orange text-white text-[10px] font-black px-1.5 py-0.5 rounded shadow">-${p.discount || 35}%</span>
+            <span class="absolute top-1.5 left-1.5 bg-daraz-orange text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow">-${p.discount || 35}%</span>
           </div>
-          <div class="p-2.5 space-y-1">
-            <div class="font-extrabold text-daraz-orange text-sm">${formatPrice(p)}</div>
+          <div class="p-2 space-y-1">
+            <div class="font-bold text-daraz-orange text-sm">${formatPrice(p)}</div>
             <div class="text-[10px] text-slate-400 line-through">${formatPrice(p, true)}</div>
             <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mt-1">
               <div class="bg-daraz-orange h-full w-[70%]"></div>
             </div>
-            <div class="text-[9px] text-slate-500 font-semibold mt-0.5">${p.sold_count || 45} Sold</div>
+            <div class="text-[9px] text-slate-500 font-medium">${p.sold_count || 45} Sold</div>
           </div>
         </div>
       `).join('');
@@ -740,34 +657,24 @@
     function filterCategory(cat) {
       currentCategory = cat;
       page = 1;
-      
-      // Update badge
-      document.getElementById('activeFilterBadge').innerText = (cat === 'all' ? 'All Products (805)' : cat);
+      document.getElementById('activeFilterBadge').innerText = (cat === 'all' ? '(805 Products Available)' : `(${cat})`);
 
-      // Update pills styles
       document.querySelectorAll('.category-pill').forEach(btn => {
         if (btn.innerText === cat || (cat === 'all' && btn.innerText === 'All')) {
-          btn.className = 'category-pill px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition bg-daraz-orange text-white';
+          btn.className = 'category-pill px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap transition bg-daraz-orange text-white';
         } else {
-          btn.className = 'category-pill px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition bg-white text-slate-700 hover:bg-slate-100 border border-slate-200';
+          btn.className = 'category-pill px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition bg-white text-slate-700 hover:bg-slate-100 border border-slate-200';
         }
       });
 
       filterAndRenderProducts();
-      
-      // Smooth scroll to catalog
       document.getElementById('productsCatalog').scrollIntoView({ behavior: 'smooth' });
     }
 
     function handleSearch(e) {
       e.preventDefault();
-      const input = document.getElementById('searchInput') || document.getElementById('mobileSearchInput');
-      const catSelect = document.getElementById('searchCategorySelect');
-      
+      const input = document.getElementById('searchInput');
       searchQuery = (input ? input.value : '').toLowerCase().trim();
-      if (catSelect && catSelect.value !== 'all') {
-        currentCategory = catSelect.value;
-      }
       page = 1;
       filterAndRenderProducts();
       document.getElementById('productsCatalog').scrollIntoView({ behavior: 'smooth' });
@@ -783,54 +690,45 @@
       renderProductsGrid();
     }
 
+    // MAIN GRID (EXACT 6 COLUMNS ON DESKTOP)
     function renderProductsGrid() {
       const grid = document.getElementById('mainProductsGrid');
       const count = page * PAGE_SIZE;
       const visible = displayedProducts.slice(0, count);
 
       grid.innerHTML = visible.map(p => `
-        <div class="bg-white rounded-2xl border border-slate-200 hover:border-daraz-orange overflow-hidden hover:shadow-lg transition duration-200 flex flex-col justify-between group">
-          <!-- Image -->
-          <div onclick="openQuickView(${p.id})" class="aspect-square relative overflow-hidden bg-slate-50 cursor-pointer">
-            <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.src='favicon.svg'">
-            <span class="absolute top-2 left-2 bg-daraz-orange text-white text-[10px] font-black px-1.5 py-0.5 rounded shadow">-${p.discount || 30}%</span>
-            <span class="absolute bottom-2 left-2 bg-emerald-600/90 text-white text-[9px] font-bold px-1.5 py-0.5 rounded backdrop-blur">Free Shipping</span>
+        <div onclick="openQuickView(${p.id})" class="bg-white rounded border border-slate-200 hover:border-daraz-orange hover:shadow-md transition duration-150 flex flex-col justify-between cursor-pointer group">
+          <!-- 1:1 Image -->
+          <div class="aspect-square relative overflow-hidden bg-slate-50">
+            <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-200" onerror="this.src='favicon.svg'">
+            <span class="absolute top-1.5 left-1.5 bg-daraz-orange text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow">-${p.discount || 30}%</span>
           </div>
 
-          <!-- Body -->
-          <div class="p-3 flex-1 flex flex-col justify-between space-y-2">
+          <!-- Product Details -->
+          <div class="p-2.5 flex-1 flex flex-col justify-between space-y-2">
             <div>
-              <div class="text-[10px] font-bold text-slate-400 uppercase">${p.category}</div>
-              <h4 onclick="openQuickView(${p.id})" class="text-xs font-semibold text-slate-800 line-clamp-2 hover:text-daraz-orange transition cursor-pointer mt-0.5" title="${p.title}">
+              <h4 class="text-xs font-normal text-slate-800 line-clamp-2 leading-snug group-hover:text-daraz-orange transition" title="${p.title}">
                 ${p.title}
               </h4>
             </div>
 
-            <!-- Price & Rating -->
+            <!-- Price & Stars -->
             <div>
-              <div class="flex items-baseline gap-2">
-                <span class="text-sm sm:text-base font-black text-daraz-orange">${formatPrice(p)}</span>
-                <span class="text-[10px] text-slate-400 line-through">${formatPrice(p, true)}</span>
-              </div>
-
+              <div class="text-sm font-bold text-daraz-orange">${formatPrice(p)}</div>
+              <div class="text-[10px] text-slate-400 line-through">${formatPrice(p, true)}</div>
+              
               <div class="flex items-center justify-between text-[10px] text-slate-500 pt-1">
                 <span class="text-amber-500 font-bold">★ ${p.rating || 4.8}</span>
-                <span>${p.sold_count || 120}+ sold</span>
+                <span>(${p.reviews_count || 50})</span>
               </div>
-
-              <!-- Quick Add to Cart button -->
-              <button onclick="addToCartDirect(${p.id}, event)" class="w-full mt-2 py-2 rounded-xl bg-daraz-lightOrange text-daraz-orange hover:bg-daraz-orange hover:text-white border border-daraz-orange/30 font-bold text-xs transition flex items-center justify-center gap-1.5 shadow-sm">
-                <i class="fa-solid fa-cart-shopping"></i> Add to Cart
-              </button>
             </div>
           </div>
         </div>
       `).join('');
 
-      // Toggle Load More button
       const loadBtn = document.getElementById('loadMoreBtn');
       if (loadBtn) {
-        loadBtn.style.display = (visible.length >= displayedProducts.length) ? 'none' : 'inline-flex';
+        loadBtn.style.display = (visible.length >= displayedProducts.length) ? 'none' : 'inline-block';
       }
     }
 
@@ -857,10 +755,9 @@
 
       renderQuickViewPrice();
 
-      // Thumbnails
       const thumbContainer = document.getElementById('qvThumbnails');
       thumbContainer.innerHTML = (prod.images || [prod.image]).map(img => `
-        <img src="${img}" onclick="document.getElementById('qvMainImage').src='${img}'" class="w-12 h-12 object-cover rounded-lg border border-slate-200 cursor-pointer hover:border-daraz-orange">
+        <img src="${img}" onclick="document.getElementById('qvMainImage').src='${img}'" class="w-12 h-12 object-cover rounded border border-slate-200 cursor-pointer hover:border-daraz-orange">
       `).join('');
 
       document.getElementById('quickViewModal').classList.remove('hidden');
@@ -896,16 +793,7 @@
       openCheckoutModal();
     }
 
-    // Cart Management
-    function addToCartDirect(id, event) {
-      if (event) event.stopPropagation();
-      const prod = products.find(p => p.id === id);
-      if (prod) {
-        addToCart(prod, 1);
-        toggleCartDrawer(true);
-      }
-    }
-
+    // Cart
     function addToCart(prod, qty = 1) {
       const existing = cart.find(i => i.id === prod.id);
       if (existing) {
@@ -926,7 +814,6 @@
       document.getElementById('cartCountBadge').innerText = totalCount;
       document.getElementById('drawerCartCount').innerText = totalCount;
 
-      // Subtotal calculation in active currency
       const cfg = currencyConfig[currentCurrency];
       const subtotal = cart.reduce((sum, item) => {
         const p = item[cfg.rateKey] || item.price_usd;
@@ -938,37 +825,32 @@
         maximumFractionDigits: cfg.decimals
       });
 
-      document.getElementById('cartTotalHeader').innerText = formattedSubtotal;
       document.getElementById('cartDrawerSubtotal').innerText = formattedSubtotal;
       document.getElementById('checkoutPayableAmount').innerText = formattedSubtotal;
-      document.getElementById('checkoutItemsCount').innerText = `${totalCount} Items`;
 
-      // Drawer Items HTML
       const itemsContainer = document.getElementById('cartDrawerItems');
       if (cart.length === 0) {
         itemsContainer.innerHTML = `
-          <div class="text-center py-16 text-slate-400">
-            <i class="fa-solid fa-bag-shopping text-4xl mb-3 text-slate-300"></i>
-            <p class="text-xs">Your shopping cart is empty.</p>
-            <a href="#productsCatalog" onclick="toggleCartDrawer(false)" class="inline-block mt-3 px-4 py-2 bg-daraz-orange text-white font-bold text-xs rounded-xl">Start Shopping</a>
+          <div class="text-center py-12 text-slate-400">
+            <i class="fa-solid fa-cart-shopping text-3xl mb-2 text-slate-300"></i>
+            <p>Your cart is empty.</p>
           </div>
         `;
       } else {
         itemsContainer.innerHTML = cart.map(item => `
-          <div class="flex items-center gap-3 pt-3">
-            <img src="${item.image}" class="w-14 h-14 object-cover rounded-xl border border-slate-200 flex-shrink-0" onerror="this.src='favicon.svg'">
+          <div class="flex items-center gap-3 pt-2">
+            <img src="${item.image}" class="w-12 h-12 object-cover rounded border border-slate-200 flex-shrink-0" onerror="this.src='favicon.svg'">
             <div class="flex-1 overflow-hidden">
               <h5 class="font-bold text-slate-800 text-xs truncate">${item.title}</h5>
-              <div class="text-xs text-daraz-orange font-extrabold mt-0.5">${formatPrice(item)}</div>
-              
-              <div class="flex items-center gap-2 mt-2">
-                <button onclick="changeCartQty(${item.id}, -1)" class="w-5 h-5 bg-slate-200 text-slate-700 rounded flex items-center justify-center font-bold text-xs">-</button>
-                <span class="text-xs font-bold text-slate-800">${item.qty}</span>
-                <button onclick="changeCartQty(${item.id}, 1)" class="w-5 h-5 bg-slate-200 text-slate-700 rounded flex items-center justify-center font-bold text-xs">+</button>
+              <div class="text-xs text-daraz-orange font-bold">${formatPrice(item)}</div>
+              <div class="flex items-center gap-2 mt-1">
+                <button onclick="changeCartQty(${item.id}, -1)" class="w-4 h-4 bg-slate-200 text-slate-700 rounded flex items-center justify-center font-bold text-xs">-</button>
+                <span class="font-bold">${item.qty}</span>
+                <button onclick="changeCartQty(${item.id}, 1)" class="w-4 h-4 bg-slate-200 text-slate-700 rounded flex items-center justify-center font-bold text-xs">+</button>
               </div>
             </div>
-            <button onclick="removeFromCart(${item.id})" class="text-slate-400 hover:text-red-500 p-2">
-              <i class="fa-solid fa-trash-can text-sm"></i>
+            <button onclick="removeFromCart(${item.id})" class="text-slate-400 hover:text-red-500 p-1">
+              <i class="fa-solid fa-trash-can"></i>
             </button>
           </div>
         `).join('');
@@ -1007,7 +889,7 @@
     // Checkout
     function openCheckoutModal() {
       if (cart.length === 0) {
-        alert('Your cart is empty! Please add products before checking out.');
+        alert('Your cart is empty! Please add products.');
         return;
       }
       toggleCartDrawer(false);
@@ -1024,9 +906,9 @@
       const payable = document.getElementById('checkoutPayableAmount').innerText;
 
       if (method === 'crypto') {
-        alert(`Order Received! For USDT Payment: Please transfer ${payable} (TRC20) to company wallet: TShpza874640EdinUK99x2. Your order will be dispatched once confirmed on blockchain.`);
+        alert(`Order Placed! Please transfer ${payable} (USDT TRC20) to company wallet: TShpza874640EdinUK99x2. Official receipt will be sent from SAJID SERVICES LTD.`);
       } else {
-        alert(`Order Received! Redirecting to Stripe 256-Bit SSL payment session for ${payable}. An official VAT invoice from SAJID SERVICES LTD will be delivered to your email.`);
+        alert(`Order Placed! Connecting to Stripe 256-Bit SSL payment session for ${payable}. VAT receipt delivered via SAJID SERVICES LTD.`);
       }
 
       cart = [];
@@ -1035,7 +917,6 @@
       closeCheckoutModal();
     }
 
-    // Flash sale countdown timer
     function startFlashCountdown() {
       let seconds = 31519;
       setInterval(() => {

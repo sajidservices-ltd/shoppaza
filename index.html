@@ -77,16 +77,19 @@
             <option value="GBP" class="bg-slate-900 text-white">GBP (£) - Stripe UK</option>
             <option value="USD" class="bg-slate-900 text-white">USD ($) - Global</option>
             <option value="USDT" class="bg-slate-900 text-white">USDT (₮) - Crypto</option>
-            <option value="PKR" class="bg-slate-900 text-white">PKR (₨) - Pakistan</option>
+            <option value="PKR" class="bg-slate-900 text-white">PKR (₨)</option>
           </select>
         </div>
 
         <a href="contact.html" class="hover:text-amber-400 transition uppercase">Help & Support</a>
         <a href="about.html" class="hover:text-amber-400 transition uppercase">About Us</a>
-        <a href="logos-preview.html" class="hover:text-amber-400 text-amber-300 font-bold transition uppercase">Logo Concepts</a>
-        <a href="admin.html" class="text-amber-400 hover:text-white font-bold transition flex items-center gap-1 uppercase">
-          <i class="fa-solid fa-lock text-[10px]"></i> Merchant Login
-        </a>
+        
+        <!-- Customer Sign In / Sign Up -->
+        <div class="flex items-center gap-2 text-slate-300 font-bold">
+          <button onclick="openAuthModal('signin')" class="hover:text-amber-400 uppercase transition">Sign In</button>
+          <span class="text-slate-600">/</span>
+          <button onclick="openAuthModal('signup')" class="text-amber-400 hover:text-white uppercase transition">Sign Up</button>
+        </div>
       </div>
     </div>
   </div>
@@ -110,8 +113,18 @@
         </form>
       </div>
 
-      <!-- Daraz Header Actions: Wishlist & Cart -->
+      <!-- Daraz Header Actions: Account & Cart -->
       <div class="flex items-center gap-4 sm:gap-6 flex-shrink-0 text-white">
+        <!-- Customer Account / Sign In -->
+        <button onclick="openAuthModal('signin')" class="flex items-center gap-2 p-1.5 hover:bg-white/10 rounded-lg transition text-white" title="Customer Account">
+          <i class="fa-regular fa-circle-user text-2xl text-white"></i>
+          <div class="text-left hidden md:block">
+            <div class="text-[10px] text-amber-200 leading-none">Hello, Sign In</div>
+            <div class="text-xs font-bold leading-tight" id="headerCustomerName">My Account</div>
+          </div>
+        </button>
+
+        <!-- Cart -->
         <button onclick="toggleCartDrawer()" class="flex items-center gap-2 p-1.5 hover:bg-white/10 rounded-lg transition relative text-white">
           <div class="relative">
             <i class="fa-solid fa-cart-shopping text-2xl text-white"></i>
@@ -1148,6 +1161,77 @@
     </div>
   </div>
 
+  <!-- ================= 10B. CUSTOMER AUTH MODAL (SIGN IN / SIGN UP) ================= -->
+  <div id="authModal" class="fixed inset-0 z-[85] bg-black/80 hidden backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 sm:p-8 relative shadow-2xl">
+      <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-800 text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <!-- Auth Tabs -->
+      <div class="flex border-b border-slate-200 mb-6">
+        <button id="authTabSignIn" onclick="switchAuthTab('signin')" class="w-1/2 pb-3 font-bold text-sm text-daraz-orange border-b-2 border-daraz-orange transition">
+          Sign In
+        </button>
+        <button id="authTabSignUp" onclick="switchAuthTab('signup')" class="w-1/2 pb-3 font-semibold text-sm text-slate-400 border-b-2 border-transparent hover:text-slate-700 transition">
+          Create Account
+        </button>
+      </div>
+
+      <!-- Sign In Form -->
+      <form id="signInForm" onsubmit="handleCustomerSignIn(event)" class="space-y-4 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 uppercase mb-1">Email or Username</label>
+          <input type="text" id="signInEmail" required placeholder="name@example.com" class="w-full border border-slate-300 rounded-lg p-3 text-slate-900 focus:outline-none focus:border-daraz-orange">
+        </div>
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <label class="font-bold text-slate-700 uppercase">Password</label>
+            <a href="contact.html" class="text-daraz-orange hover:underline text-[11px]">Forgot?</a>
+          </div>
+          <input type="password" id="signInPass" required placeholder="••••••••" class="w-full border border-slate-300 rounded-lg p-3 text-slate-900 focus:outline-none focus:border-daraz-orange">
+        </div>
+        <button type="submit" class="w-full py-3 bg-daraz-orange hover:bg-orange-600 text-white font-bold text-xs uppercase tracking-wider rounded-lg transition shadow">
+          Sign In
+        </button>
+      </form>
+
+      <!-- Sign Up Form -->
+      <form id="signUpForm" onsubmit="handleCustomerSignUp(event)" class="space-y-4 text-xs hidden">
+        <div>
+          <label class="block font-bold text-slate-700 uppercase mb-1">Full Name</label>
+          <input type="text" id="signUpName" required placeholder="Your Full Name" class="w-full border border-slate-300 rounded-lg p-3 text-slate-900 focus:outline-none focus:border-daraz-orange">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 uppercase mb-1">Email Address</label>
+          <input type="email" id="signUpEmail" required placeholder="buyer@example.com" class="w-full border border-slate-300 rounded-lg p-3 text-slate-900 focus:outline-none focus:border-daraz-orange">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 uppercase mb-1">Create Password</label>
+          <input type="password" id="signUpPass" required minlength="6" placeholder="At least 6 characters" class="w-full border border-slate-300 rounded-lg p-3 text-slate-900 focus:outline-none focus:border-daraz-orange">
+        </div>
+        <button type="submit" class="w-full py-3 bg-daraz-orange hover:bg-orange-600 text-white font-bold text-xs uppercase tracking-wider rounded-lg transition shadow">
+          Create Shoppaza Account
+        </button>
+      </form>
+
+      <!-- Social / 1-Click Divider -->
+      <div class="my-5 flex items-center justify-between gap-3 text-slate-400 text-xs">
+        <div class="h-px bg-slate-200 flex-1"></div>
+        <span>or continue with</span>
+        <div class="h-px bg-slate-200 flex-1"></div>
+      </div>
+
+      <button type="button" onclick="socialMockLogin('Google')" class="w-full py-2.5 border border-slate-300 rounded-lg font-bold text-xs text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-2 transition">
+        <i class="fa-brands fa-google text-red-500"></i> Continue with Google
+      </button>
+
+      <p class="text-[10px] text-slate-400 text-center mt-4">
+        Protected by SAJID SERVICES LTD (SC874640) • UK GDPR Compliant
+      </p>
+    </div>
+  </div>
+
   <!-- ================= 11. WORLD-CLASS DARAZ MEGA CORPORATE FOOTER ================= -->
   <footer class="bg-white border-t border-slate-300 pt-12 pb-8 text-xs text-slate-600">
     <div class="max-w-[1240px] mx-auto px-4">
@@ -1174,8 +1258,8 @@
             <li><a href="about.html" class="hover:text-daraz-orange transition">About SAJID SERVICES LTD</a></li>
             <li><a href="terms.html" class="hover:text-daraz-orange transition">Terms & Conditions</a></li>
             <li><a href="privacy.html" class="hover:text-daraz-orange transition">Privacy Policy (UK GDPR)</a></li>
-            <li><a href="admin.html" class="hover:text-daraz-orange transition text-daraz-orange font-bold">Merchant Portal Login</a></li>
-            <li><a href="logos-preview.html" class="hover:text-daraz-orange transition">Brand Logo Concepts</a></li>
+            <li><a href="contact.html" class="hover:text-daraz-orange transition">Customer Help & FAQs</a></li>
+            <li><a href="refund-policy.html" class="hover:text-daraz-orange transition">14-Day UK Refund Policy</a></li>
           </ul>
         </div>
 
@@ -1214,7 +1298,7 @@
         </div>
         <div class="flex items-center gap-4">
           <span class="font-semibold text-slate-700">Available In:</span>
-          <span>United Kingdom</span> • <span>United States</span> • <span>Pakistan</span> • <span>Global</span>
+          <span>United Kingdom</span> • <span>United States</span> • <span>Europe</span> • <span>Worldwide</span>
         </div>
       </div>
 
@@ -1255,6 +1339,7 @@
         try { cart = JSON.parse(savedCart); } catch(e) {}
       }
       updateCartUI();
+      updateCustomerHeader();
       startFlashCountdown();
       startCarouselAutoRotate();
       await loadCategoriesData();
@@ -1849,6 +1934,22 @@
       const method = document.querySelector('input[name="paymentMethod"]:checked').value;
       const payable = document.getElementById('checkoutPayableAmount').innerText;
 
+      // Save order to live database for Admin Panel
+      const existingOrders = JSON.parse(localStorage.getItem('shoppaza_live_orders') || '[]');
+      const custData = JSON.parse(localStorage.getItem('shoppaza_customer') || '{}');
+      const newOrder = {
+        id: '#SPZ-' + Math.floor(100000 + Math.random() * 900000),
+        date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+        customer: custData.name || 'Shoppaza Customer',
+        items: cart.length,
+        total: payable,
+        channel: 'Online Store',
+        payment: method === 'crypto' ? 'USDT (Paid)' : 'Stripe (Paid)',
+        fulfillment: 'Unfulfilled'
+      };
+      existingOrders.unshift(newOrder);
+      localStorage.setItem('shoppaza_live_orders', JSON.stringify(existingOrders));
+
       if (method === 'crypto') {
         alert(`Order Placed! Please transfer ${payable} (USDT TRC20) to company wallet: TShpza874640EdinUK99x2. Official receipt will be sent from SAJID SERVICES LTD.`);
       } else {
@@ -1859,6 +1960,76 @@
       saveCart();
       updateCartUI();
       closeCheckoutModal();
+    }
+
+    // Customer Auth Functions
+    function openAuthModal(tab = 'signin') {
+      switchAuthTab(tab);
+      document.getElementById('authModal').classList.remove('hidden');
+    }
+
+    function closeAuthModal() {
+      document.getElementById('authModal').classList.add('hidden');
+    }
+
+    function switchAuthTab(tab) {
+      const signInForm = document.getElementById('signInForm');
+      const signUpForm = document.getElementById('signUpForm');
+      const tabSignIn = document.getElementById('authTabSignIn');
+      const tabSignUp = document.getElementById('authTabSignUp');
+
+      if (tab === 'signin') {
+        signInForm.classList.remove('hidden');
+        signUpForm.classList.add('hidden');
+        tabSignIn.className = 'w-1/2 pb-3 font-bold text-sm text-daraz-orange border-b-2 border-daraz-orange transition';
+        tabSignUp.className = 'w-1/2 pb-3 font-semibold text-sm text-slate-400 border-b-2 border-transparent hover:text-slate-700 transition';
+      } else {
+        signInForm.classList.add('hidden');
+        signUpForm.classList.remove('hidden');
+        tabSignUp.className = 'w-1/2 pb-3 font-bold text-sm text-daraz-orange border-b-2 border-daraz-orange transition';
+        tabSignIn.className = 'w-1/2 pb-3 font-semibold text-sm text-slate-400 border-b-2 border-transparent hover:text-slate-700 transition';
+      }
+    }
+
+    function handleCustomerSignIn(e) {
+      e.preventDefault();
+      const email = document.getElementById('signInEmail').value.trim();
+      const name = email.split('@')[0];
+      const customer = { name: name.charAt(0).toUpperCase() + name.slice(1), email };
+      localStorage.setItem('shoppaza_customer', JSON.stringify(customer));
+      updateCustomerHeader();
+      closeAuthModal();
+      alert(`Welcome back, ${customer.name}! You are now signed in.`);
+    }
+
+    function handleCustomerSignUp(e) {
+      e.preventDefault();
+      const name = document.getElementById('signUpName').value.trim();
+      const email = document.getElementById('signUpEmail').value.trim();
+      const customer = { name, email };
+      localStorage.setItem('shoppaza_customer', JSON.stringify(customer));
+      updateCustomerHeader();
+      closeAuthModal();
+      alert(`Account created successfully! Welcome to Shoppaza, ${name}.`);
+    }
+
+    function socialMockLogin(provider) {
+      const customer = { name: 'Verified Customer', email: 'customer@gmail.com' };
+      localStorage.setItem('shoppaza_customer', JSON.stringify(customer));
+      updateCustomerHeader();
+      closeAuthModal();
+      alert(`Signed in with ${provider}! Welcome to Shoppaza.`);
+    }
+
+    function updateCustomerHeader() {
+      const saved = localStorage.getItem('shoppaza_customer');
+      const greetingEl = document.getElementById('headerCustomerName');
+      if (saved && greetingEl) {
+        try {
+          const cust = JSON.parse(saved);
+          greetingEl.innerText = cust.name;
+        } catch(e) {}
+      }
     }
 
     function startFlashCountdown() {

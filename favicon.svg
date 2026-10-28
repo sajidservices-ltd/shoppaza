@@ -1,12 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
-  <defs>
-    <linearGradient id="favGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#F85606" />
-      <stop offset="100%" stop-color="#EA580C" />
-    </linearGradient>
-  </defs>
-  <rect width="64" height="64" rx="16" fill="url(#favGrad)"/>
-  <path d="M26 26C26 22 28.5 18 32 18C35.5 18 38 22 38 26" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
-  <path d="M19 27H45L43 49C43 51 41.5 52.5 39.5 52.5H24.5C22.5 52.5 21 51 21 49L19 27Z" fill="#FFFFFF" fill-opacity="0.25" stroke="#FFFFFF" stroke-width="3" stroke-linejoin="round"/>
-  <path d="M33 30L27 38H33L31 46L39 36H32.5L34.5 30H33Z" fill="#FFFFFF"/>
+  <!-- Rounded Squircle Base (Deep Obsidian) -->
+  <rect width="64" height="64" rx="16" fill="#0F172A"/>
+  <rect x="0.5" y="0.5" width="63" height="63" rx="15.5" stroke="#FFFFFF" stroke-opacity="0.1"/>
+
+  <!-- 3D Isometric Parcel Cube -->
+  <g transform="translate(6, 6)">
+    <!-- Top Face (Snow White) -->
+    <polygon points="26,6 48,18 26,30 4,18" fill="#FFFFFF"/>
+    <!-- Left Face (Electric Sunset Orange) -->
+    <polygon points="4,18 26,30 26,52 4,40" fill="#F85606"/>
+    <!-- Right Face (Luminous Amber Gold) -->
+    <polygon points="26,30 48,18 48,40 26,52" fill="#FFB800"/>
+    
+    <!-- Central Seams -->
+    <line x1="26" y1="30" x2="26" y2="52" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="4" y1="18" x2="26" y2="30" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="48" y1="18" x2="26" y2="30" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+    
+    <!-- Center Node -->
+    <circle cx="26" cy="30" r="3" fill="#FFFFFF"/>
+    <circle cx="26" cy="30" r="1.5" fill="#0F172A"/>
+  </g>
 </svg>

@@ -140,74 +140,443 @@
       <!-- Right Interactive Multi-Product Banner Carousel -->
       <div class="col-span-12 lg:col-span-9 bg-slate-900 rounded-lg overflow-hidden relative shadow-sm min-h-[350px] sm:min-h-[400px] flex items-center group">
         
-        <!-- Slide 1: Jewelry & Fine Accessories -->
-        <div class="carousel-slide absolute inset-0 transition-opacity duration-700 opacity-100 flex items-center" id="slide-0">
+        <!-- Slide 1: Necklaces & Pendants -->
+        <div class="carousel-slide absolute inset-0 transition-opacity duration-700 ease-in-out opacity-100 z-10 flex items-center overflow-hidden" id="slide-0">
+          <!-- Full Background Image of Product 1 -->
           <div class="absolute inset-0 z-0">
-            <img src="https://cdn.shopify.com/s/files/1/1107/7573/0514/files/944203732049_f6e1f021-d10a-4299-8d76-e6c1e3092b78.jpg?v=1792323862" alt="Fine Jewelry" class="w-full h-full object-cover opacity-45">
-            <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent"></div>
+            <img src="https://cdn.shopify.com/s/files/1/1107/7573/0514/files/8d4af980-1734-45c0-b668-203bd561dd0f.jpg?v=1790418994" alt="Fine Necklaces & Crystal Pendants" class="w-full h-full object-cover" onerror="this.src='favicon.svg'">
+            <!-- Smooth Gradient Overlay for Contrast & Text Readability -->
+            <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-slate-950/20"></div>
           </div>
-          <div class="relative z-10 p-6 sm:p-12 max-w-lg text-white space-y-3">
-            <span class="inline-block bg-daraz-orange text-white px-2.5 py-0.5 rounded text-[11px] font-black uppercase tracking-wider">
-              Mega Jewelry Gala
-            </span>
-            <h1 class="text-3xl sm:text-5xl font-black leading-tight tracking-tight">
-              Fine Necklaces & <span class="text-amber-400">Crystal Rings</span>
-            </h1>
-            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-light">
-              Over 180+ natural stone pendants, zircon rings, and bridal jewelry sets with express insured delivery.
-            </p>
-            <div class="pt-2 flex gap-3">
-              <button onclick="filterCategory('Necklaces & Pendants')" class="bg-daraz-orange hover:bg-daraz-orangeDark text-white px-6 py-2.5 rounded font-bold text-xs uppercase tracking-wider transition shadow-md">
-                Explore Jewelry
-              </button>
+
+          <!-- Slide Content: Left Text Info + Right Real Product Card -->
+          <div class="relative z-10 w-full h-full px-6 sm:px-10 py-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <!-- Left Info -->
+            <div class="max-w-md text-white space-y-3">
+              <div class="inline-flex items-center gap-2 bg-daraz-orange text-white px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider shadow">
+                <i class="fa-solid fa-fire text-amber-300"></i> JEWELRY GALA
+              </div>
+              <h1 class="text-2xl sm:text-4xl lg:text-5xl font-black leading-tight tracking-tight text-white drop-shadow">
+                Fine Necklaces  <span style="color: #F59E0B">&  Crystal Pendants</span>
+              </h1>
+              <p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-light drop-shadow max-w-sm">
+                Over 85+ natural stone tree-of-life pendants & gemstone necklaces.
+              </p>
+              <div class="pt-2 flex items-center gap-3">
+                <button onclick="filterCategory('Necklaces & Pendants')" class="bg-daraz-orange hover:bg-daraz-orangeDark text-white px-6 py-2.5 rounded-lg font-bold text-xs uppercase tracking-wider transition shadow-lg flex items-center gap-2">
+                  <span>Explore Necklaces</span>
+                  <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </button>
+                <span class="px-2.5 py-1 rounded-md bg-white/20 backdrop-blur text-white text-[10px] font-bold tracking-wide border border-white/20">FLAT 50% OFF</span>
+              </div>
+            </div>
+
+            <!-- Right Featured Product Showcase Card -->
+            <div class="hidden sm:flex items-center gap-3 flex-shrink-0">
+              <div onclick="filterCategory('Necklaces & Pendants')" class="bg-white/95 backdrop-blur rounded-2xl p-3 shadow-2xl border-2 border-white/80 max-w-[210px] cursor-pointer hover:scale-105 transition duration-300 group/card">
+                <div class="aspect-square w-40 h-40 rounded-xl overflow-hidden bg-slate-50 mb-2.5 relative">
+                  <img src="https://cdn.shopify.com/s/files/1/1107/7573/0514/files/66809ba7-0332-4d91-8f8b-b2fcb55260e4.jpg?v=1790418992" alt="Glowing Stone Healing Necklace" class="w-full h-full object-cover group-hover/card:scale-110 transition duration-300" onerror="this.src='favicon.svg'">
+                  <span class="absolute top-2 left-2 bg-daraz-orange text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow">HOT DEAL</span>
+                </div>
+                <div class="text-[11px] font-bold text-slate-900 line-clamp-1 leading-snug">Glowing Stone Healing Necklace</div>
+                <div class="text-xs font-black text-daraz-orange mt-1">Featured in Necklaces</div>
+              </div>
             </div>
           </div>
         </div>
-
-        <!-- Slide 2: Designer Bags & Luxury Watches -->
-        <div class="carousel-slide absolute inset-0 transition-opacity duration-700 opacity-0 flex items-center" id="slide-1">
+        <!-- Slide 2: Bags & Handbags -->
+        <div class="carousel-slide absolute inset-0 transition-opacity duration-700 ease-in-out opacity-0 z-0 flex items-center overflow-hidden" id="slide-1">
+          <!-- Full Background Image of Product 1 -->
           <div class="absolute inset-0 z-0">
-            <img src="https://cdn.shopify.com/s/files/1/1107/7573/0514/files/24976775618400.jpg?v=1792322301" alt="Designer Bags" class="w-full h-full object-cover opacity-45">
-            <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent"></div>
+            <img src="https://cdn.shopify.com/s/files/1/1107/7573/0514/files/9d528ddc-0030-4485-bfcb-eda31c27be80.jpg?v=1790418957" alt="Luxury Boston Handbags & Totes" class="w-full h-full object-cover" onerror="this.src='favicon.svg'">
+            <!-- Smooth Gradient Overlay for Contrast & Text Readability -->
+            <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-slate-950/20"></div>
           </div>
-          <div class="relative z-10 p-6 sm:p-12 max-w-lg text-white space-y-3">
-            <span class="inline-block bg-indigo-600 text-white px-2.5 py-0.5 rounded text-[11px] font-black uppercase tracking-wider">
-              Designer Leather & Timepieces
-            </span>
-            <h1 class="text-3xl sm:text-5xl font-black leading-tight tracking-tight">
-              Luxury Handbags & <span class="text-amber-400">Chronograph Watches</span>
-            </h1>
-            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-light">
-              Premium Boston bags, shoulder totes, and precision watches crafted for modern lifestyle.
-            </p>
-            <div class="pt-2 flex gap-3">
-              <button onclick="filterCategory('Bags & Handbags')" class="bg-daraz-orange hover:bg-daraz-orangeDark text-white px-6 py-2.5 rounded font-bold text-xs uppercase tracking-wider transition shadow-md">
-                View Handbags
-              </button>
+
+          <!-- Slide Content: Left Text Info + Right Real Product Card -->
+          <div class="relative z-10 w-full h-full px-6 sm:px-10 py-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <!-- Left Info -->
+            <div class="max-w-md text-white space-y-3">
+              <div class="inline-flex items-center gap-2 bg-daraz-orange text-white px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider shadow">
+                <i class="fa-solid fa-fire text-amber-300"></i> DESIGNER LEATHER
+              </div>
+              <h1 class="text-2xl sm:text-4xl lg:text-5xl font-black leading-tight tracking-tight text-white drop-shadow">
+                Luxury Boston Handbags  <span style="color: #38BDF8">&  Totes</span>
+              </h1>
+              <p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-light drop-shadow max-w-sm">
+                Handcrafted premium leather bags engineered for work, travel & style.
+              </p>
+              <div class="pt-2 flex items-center gap-3">
+                <button onclick="filterCategory('Bags & Handbags')" class="bg-daraz-orange hover:bg-daraz-orangeDark text-white px-6 py-2.5 rounded-lg font-bold text-xs uppercase tracking-wider transition shadow-lg flex items-center gap-2">
+                  <span>Explore Bags</span>
+                  <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </button>
+                <span class="px-2.5 py-1 rounded-md bg-white/20 backdrop-blur text-white text-[10px] font-bold tracking-wide border border-white/20">NEW ARRIVALS 2026</span>
+              </div>
+            </div>
+
+            <!-- Right Featured Product Showcase Card -->
+            <div class="hidden sm:flex items-center gap-3 flex-shrink-0">
+              <div onclick="filterCategory('Bags & Handbags')" class="bg-white/95 backdrop-blur rounded-2xl p-3 shadow-2xl border-2 border-white/80 max-w-[210px] cursor-pointer hover:scale-105 transition duration-300 group/card">
+                <div class="aspect-square w-40 h-40 rounded-xl overflow-hidden bg-slate-50 mb-2.5 relative">
+                  <img src="https://cdn.shopify.com/s/files/1/1107/7573/0514/files/d10bdf1b-b73d-4ad1-83d0-96fd7162e645.jpg?v=1790418955" alt="Small Square Bag" class="w-full h-full object-cover group-hover/card:scale-110 transition duration-300" onerror="this.src='favicon.svg'">
+                  <span class="absolute top-2 left-2 bg-daraz-orange text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow">HOT DEAL</span>
+                </div>
+                <div class="text-[11px] font-bold text-slate-900 line-clamp-1 leading-snug">Small Square Bag</div>
+                <div class="text-xs font-black text-daraz-orange mt-1">Featured in Bags</div>
+              </div>
             </div>
           </div>
         </div>
-
-        <!-- Slide 3: Dresses & Fashion Apparel -->
-        <div class="carousel-slide absolute inset-0 transition-opacity duration-700 opacity-0 flex items-center" id="slide-2">
+        <!-- Slide 3: Dresses & Gowns -->
+        <div class="carousel-slide absolute inset-0 transition-opacity duration-700 ease-in-out opacity-0 z-0 flex items-center overflow-hidden" id="slide-2">
+          <!-- Full Background Image of Product 1 -->
           <div class="absolute inset-0 z-0">
-            <img src="https://cdn.shopify.com/s/files/1/1107/7573/0514/files/1110091494943_d81643c1-65b1-4609-b6b8-a68132cb0dbd.jpg?v=1792325357" alt="Dresses & Gowns" class="w-full h-full object-cover opacity-45">
-            <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent"></div>
+            <img src="https://cdn.shopify.com/s/files/1/1107/7573/0514/files/8f747e2b-a5d6-482a-a5ab-74431d2cb3e3.jpg?v=1790419112" alt="Evening Gowns & Party Wear" class="w-full h-full object-cover" onerror="this.src='favicon.svg'">
+            <!-- Smooth Gradient Overlay for Contrast & Text Readability -->
+            <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-slate-950/20"></div>
           </div>
-          <div class="relative z-10 p-6 sm:p-12 max-w-lg text-white space-y-3">
-            <span class="inline-block bg-rose-600 text-white px-2.5 py-0.5 rounded text-[11px] font-black uppercase tracking-wider">
-              Runway Collections
-            </span>
-            <h1 class="text-3xl sm:text-5xl font-black leading-tight tracking-tight">
-              Party Dresses & <span class="text-amber-400">Casual Shirts</span>
-            </h1>
-            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-light">
-              Elevate your wardrobe with evening gowns, lace work shirts, and chic jackets up to 60% off.
-            </p>
-            <div class="pt-2 flex gap-3">
-              <button onclick="filterCategory('Dresses & Gowns')" class="bg-daraz-orange hover:bg-daraz-orangeDark text-white px-6 py-2.5 rounded font-bold text-xs uppercase tracking-wider transition shadow-md">
-                Shop Dresses
-              </button>
+
+          <!-- Slide Content: Left Text Info + Right Real Product Card -->
+          <div class="relative z-10 w-full h-full px-6 sm:px-10 py-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <!-- Left Info -->
+            <div class="max-w-md text-white space-y-3">
+              <div class="inline-flex items-center gap-2 bg-daraz-orange text-white px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider shadow">
+                <i class="fa-solid fa-fire text-amber-300"></i> RUNWAY COLLECTIONS
+              </div>
+              <h1 class="text-2xl sm:text-4xl lg:text-5xl font-black leading-tight tracking-tight text-white drop-shadow">
+                Evening Gowns  <span style="color: #FB7185">&  Party Wear</span>
+              </h1>
+              <p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-light drop-shadow max-w-sm">
+                Elegant lace sleeve dresses and fashion silhouettes up to 60% off.
+              </p>
+              <div class="pt-2 flex items-center gap-3">
+                <button onclick="filterCategory('Dresses & Gowns')" class="bg-daraz-orange hover:bg-daraz-orangeDark text-white px-6 py-2.5 rounded-lg font-bold text-xs uppercase tracking-wider transition shadow-lg flex items-center gap-2">
+                  <span>Explore Dresses</span>
+                  <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </button>
+                <span class="px-2.5 py-1 rounded-md bg-white/20 backdrop-blur text-white text-[10px] font-bold tracking-wide border border-white/20">LIMITED RUNWAY EDITION</span>
+              </div>
+            </div>
+
+            <!-- Right Featured Product Showcase Card -->
+            <div class="hidden sm:flex items-center gap-3 flex-shrink-0">
+              <div onclick="filterCategory('Dresses & Gowns')" class="bg-white/95 backdrop-blur rounded-2xl p-3 shadow-2xl border-2 border-white/80 max-w-[210px] cursor-pointer hover:scale-105 transition duration-300 group/card">
+                <div class="aspect-square w-40 h-40 rounded-xl overflow-hidden bg-slate-50 mb-2.5 relative">
+                  <img src="https://cdn.shopify.com/s/files/1/1107/7573/0514/files/12df75d0-85d2-45d3-99bd-d84522350aff.jpg?v=1790419105" alt="Shiny Finish Long Sleeve Dress Shirt" class="w-full h-full object-cover group-hover/card:scale-110 transition duration-300" onerror="this.src='favicon.svg'">
+                  <span class="absolute top-2 left-2 bg-daraz-orange text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow">HOT DEAL</span>
+                </div>
+                <div class="text-[11px] font-bold text-slate-900 line-clamp-1 leading-snug">Shiny Finish Long Sleeve Dress Shirt</div>
+                <div class="text-xs font-black text-daraz-orange mt-1">Featured in Dresses</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Slide 4: Luxury Watches -->
+        <div class="carousel-slide absolute inset-0 transition-opacity duration-700 ease-in-out opacity-0 z-0 flex items-center overflow-hidden" id="slide-3">
+          <!-- Full Background Image of Product 1 -->
+          <div class="absolute inset-0 z-0">
+            <img src="https://cdn.shopify.com/s/files/1/1107/7573/0514/files/195178486413.jpg?v=1790418947" alt="Chronograph & Quartz Watches" class="w-full h-full object-cover" onerror="this.src='favicon.svg'">
+            <!-- Smooth Gradient Overlay for Contrast & Text Readability -->
+            <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-slate-950/20"></div>
+          </div>
+
+          <!-- Slide Content: Left Text Info + Right Real Product Card -->
+          <div class="relative z-10 w-full h-full px-6 sm:px-10 py-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <!-- Left Info -->
+            <div class="max-w-md text-white space-y-3">
+              <div class="inline-flex items-center gap-2 bg-daraz-orange text-white px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider shadow">
+                <i class="fa-solid fa-fire text-amber-300"></i> PRECISION TIMEPIECES
+              </div>
+              <h1 class="text-2xl sm:text-4xl lg:text-5xl font-black leading-tight tracking-tight text-white drop-shadow">
+                Chronograph  <span style="color: #CBD5E1">&  Quartz Watches</span>
+              </h1>
+              <p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-light drop-shadow max-w-sm">
+                Waterproof quartz movements and designer metal wristwatches.
+              </p>
+              <div class="pt-2 flex items-center gap-3">
+                <button onclick="filterCategory('Luxury Watches')" class="bg-daraz-orange hover:bg-daraz-orangeDark text-white px-6 py-2.5 rounded-lg font-bold text-xs uppercase tracking-wider transition shadow-lg flex items-center gap-2">
+                  <span>Explore Luxury</span>
+                  <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </button>
+                <span class="px-2.5 py-1 rounded-md bg-white/20 backdrop-blur text-white text-[10px] font-bold tracking-wide border border-white/20">OFFICIAL 2-YEAR WARRANTY</span>
+              </div>
+            </div>
+
+            <!-- Right Featured Product Showcase Card -->
+            <div class="hidden sm:flex items-center gap-3 flex-shrink-0">
+              <div onclick="filterCategory('Luxury Watches')" class="bg-white/95 backdrop-blur rounded-2xl p-3 shadow-2xl border-2 border-white/80 max-w-[210px] cursor-pointer hover:scale-105 transition duration-300 group/card">
+                <div class="aspect-square w-40 h-40 rounded-xl overflow-hidden bg-slate-50 mb-2.5 relative">
+                  <img src="https://cdn.shopify.com/s/files/1/1107/7573/0514/files/1849505459821.jpg?v=1790418715" alt="Time to run the watch" class="w-full h-full object-cover group-hover/card:scale-110 transition duration-300" onerror="this.src='favicon.svg'">
+                  <span class="absolute top-2 left-2 bg-daraz-orange text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow">HOT DEAL</span>
+                </div>
+                <div class="text-[11px] font-bold text-slate-900 line-clamp-1 leading-snug">Time to run the watch</div>
+                <div class="text-xs font-black text-daraz-orange mt-1">Featured in Luxury</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Slide 5: Sunglasses & Eyewear -->
+        <div class="carousel-slide absolute inset-0 transition-opacity duration-700 ease-in-out opacity-0 z-0 flex items-center overflow-hidden" id="slide-4">
+          <!-- Full Background Image of Product 1 -->
+          <div class="absolute inset-0 z-0">
+            <img src="https://cdn.shopify.com/s/files/1/1107/7573/0514/files/1619516261252.jpg?v=1790418965" alt="Designer Sunglasses & Frames" class="w-full h-full object-cover" onerror="this.src='favicon.svg'">
+            <!-- Smooth Gradient Overlay for Contrast & Text Readability -->
+            <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-slate-950/20"></div>
+          </div>
+
+          <!-- Slide Content: Left Text Info + Right Real Product Card -->
+          <div class="relative z-10 w-full h-full px-6 sm:px-10 py-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <!-- Left Info -->
+            <div class="max-w-md text-white space-y-3">
+              <div class="inline-flex items-center gap-2 bg-daraz-orange text-white px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider shadow">
+                <i class="fa-solid fa-fire text-amber-300"></i> SUMMER SHADES
+              </div>
+              <h1 class="text-2xl sm:text-4xl lg:text-5xl font-black leading-tight tracking-tight text-white drop-shadow">
+                Designer Sunglasses  <span style="color: #2DD4BF">&  Frames</span>
+              </h1>
+              <p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-light drop-shadow max-w-sm">
+                UV400 protective polarized metal frames and retro oversized sunglasses.
+              </p>
+              <div class="pt-2 flex items-center gap-3">
+                <button onclick="filterCategory('Sunglasses & Eyewear')" class="bg-daraz-orange hover:bg-daraz-orangeDark text-white px-6 py-2.5 rounded-lg font-bold text-xs uppercase tracking-wider transition shadow-lg flex items-center gap-2">
+                  <span>Explore Sunglasses</span>
+                  <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </button>
+                <span class="px-2.5 py-1 rounded-md bg-white/20 backdrop-blur text-white text-[10px] font-bold tracking-wide border border-white/20">POLARIZED UV400</span>
+              </div>
+            </div>
+
+            <!-- Right Featured Product Showcase Card -->
+            <div class="hidden sm:flex items-center gap-3 flex-shrink-0">
+              <div onclick="filterCategory('Sunglasses & Eyewear')" class="bg-white/95 backdrop-blur rounded-2xl p-3 shadow-2xl border-2 border-white/80 max-w-[210px] cursor-pointer hover:scale-105 transition duration-300 group/card">
+                <div class="aspect-square w-40 h-40 rounded-xl overflow-hidden bg-slate-50 mb-2.5 relative">
+                  <img src="https://cdn.shopify.com/s/files/1/1107/7573/0514/files/058742cb-0f0f-4900-9ddf-810d6bd0b529_fine.jpg?v=1790418964" alt="Square Sunglasses Fashion Couple Sunglasses" class="w-full h-full object-cover group-hover/card:scale-110 transition duration-300" onerror="this.src='favicon.svg'">
+                  <span class="absolute top-2 left-2 bg-daraz-orange text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow">HOT DEAL</span>
+                </div>
+                <div class="text-[11px] font-bold text-slate-900 line-clamp-1 leading-snug">Square Sunglasses Fashion Couple Sunglasses</div>
+                <div class="text-xs font-black text-daraz-orange mt-1">Featured in Sunglasses</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Slide 6: Wigs & Hair -->
+        <div class="carousel-slide absolute inset-0 transition-opacity duration-700 ease-in-out opacity-0 z-0 flex items-center overflow-hidden" id="slide-5">
+          <!-- Full Background Image of Product 1 -->
+          <div class="absolute inset-0 z-0">
+            <img src="https://cdn.shopify.com/s/files/1/1107/7573/0514/files/2164196648422.jpg?v=1792326227" alt="Natural Human Hair & Styled Wigs" class="w-full h-full object-cover" onerror="this.src='favicon.svg'">
+            <!-- Smooth Gradient Overlay for Contrast & Text Readability -->
+            <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-slate-950/20"></div>
+          </div>
+
+          <!-- Slide Content: Left Text Info + Right Real Product Card -->
+          <div class="relative z-10 w-full h-full px-6 sm:px-10 py-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <!-- Left Info -->
+            <div class="max-w-md text-white space-y-3">
+              <div class="inline-flex items-center gap-2 bg-daraz-orange text-white px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider shadow">
+                <i class="fa-solid fa-fire text-amber-300"></i> SALON PERFECTION
+              </div>
+              <h1 class="text-2xl sm:text-4xl lg:text-5xl font-black leading-tight tracking-tight text-white drop-shadow">
+                Natural Human Hair  <span style="color: #FBBF24">&  Styled Wigs</span>
+              </h1>
+              <p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-light drop-shadow max-w-sm">
+                Heat-resistant lace front wigs, big wave curls, and rich natural tones.
+              </p>
+              <div class="pt-2 flex items-center gap-3">
+                <button onclick="filterCategory('Wigs & Hair')" class="bg-daraz-orange hover:bg-daraz-orangeDark text-white px-6 py-2.5 rounded-lg font-bold text-xs uppercase tracking-wider transition shadow-lg flex items-center gap-2">
+                  <span>Explore Wigs</span>
+                  <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </button>
+                <span class="px-2.5 py-1 rounded-md bg-white/20 backdrop-blur text-white text-[10px] font-bold tracking-wide border border-white/20">SALON HEAT-RESISTANT</span>
+              </div>
+            </div>
+
+            <!-- Right Featured Product Showcase Card -->
+            <div class="hidden sm:flex items-center gap-3 flex-shrink-0">
+              <div onclick="filterCategory('Wigs & Hair')" class="bg-white/95 backdrop-blur rounded-2xl p-3 shadow-2xl border-2 border-white/80 max-w-[210px] cursor-pointer hover:scale-105 transition duration-300 group/card">
+                <div class="aspect-square w-40 h-40 rounded-xl overflow-hidden bg-slate-50 mb-2.5 relative">
+                  <img src="https://cdn.shopify.com/s/files/1/1107/7573/0514/files/1619931105515.jpg?v=1792326178" alt="Brown Pink Big Wave Long Curly Hair" class="w-full h-full object-cover group-hover/card:scale-110 transition duration-300" onerror="this.src='favicon.svg'">
+                  <span class="absolute top-2 left-2 bg-daraz-orange text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow">HOT DEAL</span>
+                </div>
+                <div class="text-[11px] font-bold text-slate-900 line-clamp-1 leading-snug">Brown Pink Big Wave Long Curly Hair</div>
+                <div class="text-xs font-black text-daraz-orange mt-1">Featured in Wigs</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Slide 7: Beauty & Cosmetics -->
+        <div class="carousel-slide absolute inset-0 transition-opacity duration-700 ease-in-out opacity-0 z-0 flex items-center overflow-hidden" id="slide-6">
+          <!-- Full Background Image of Product 1 -->
+          <div class="absolute inset-0 z-0">
+            <img src="https://cdn.shopify.com/s/files/1/1107/7573/0514/files/1620181943034.jpg?v=1790418944" alt="Lipsticks, Balms & Makeup" class="w-full h-full object-cover" onerror="this.src='favicon.svg'">
+            <!-- Smooth Gradient Overlay for Contrast & Text Readability -->
+            <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-slate-950/20"></div>
+          </div>
+
+          <!-- Slide Content: Left Text Info + Right Real Product Card -->
+          <div class="relative z-10 w-full h-full px-6 sm:px-10 py-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <!-- Left Info -->
+            <div class="max-w-md text-white space-y-3">
+              <div class="inline-flex items-center gap-2 bg-daraz-orange text-white px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider shadow">
+                <i class="fa-solid fa-fire text-amber-300"></i> GLAMOUR GLOW
+              </div>
+              <h1 class="text-2xl sm:text-4xl lg:text-5xl font-black leading-tight tracking-tight text-white drop-shadow">
+                Lipsticks, Balms  <span style="color: #E879F9">&  Makeup</span>
+              </h1>
+              <p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-light drop-shadow max-w-sm">
+                Long-lasting matte liquid lipsticks and temperature color change balms.
+              </p>
+              <div class="pt-2 flex items-center gap-3">
+                <button onclick="filterCategory('Beauty & Cosmetics')" class="bg-daraz-orange hover:bg-daraz-orangeDark text-white px-6 py-2.5 rounded-lg font-bold text-xs uppercase tracking-wider transition shadow-lg flex items-center gap-2">
+                  <span>Explore Beauty</span>
+                  <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </button>
+                <span class="px-2.5 py-1 rounded-md bg-white/20 backdrop-blur text-white text-[10px] font-bold tracking-wide border border-white/20">DERMATOLOGIST TESTED</span>
+              </div>
+            </div>
+
+            <!-- Right Featured Product Showcase Card -->
+            <div class="hidden sm:flex items-center gap-3 flex-shrink-0">
+              <div onclick="filterCategory('Beauty & Cosmetics')" class="bg-white/95 backdrop-blur rounded-2xl p-3 shadow-2xl border-2 border-white/80 max-w-[210px] cursor-pointer hover:scale-105 transition duration-300 group/card">
+                <div class="aspect-square w-40 h-40 rounded-xl overflow-hidden bg-slate-50 mb-2.5 relative">
+                  <img src="https://cdn.shopify.com/s/files/1/1107/7573/0514/files/1622276766049.jpg?v=1790418943" alt="Matte Non-stick Cup Lip Gloss, Non-fading Matte Liquid Lipstick" class="w-full h-full object-cover group-hover/card:scale-110 transition duration-300" onerror="this.src='favicon.svg'">
+                  <span class="absolute top-2 left-2 bg-daraz-orange text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow">HOT DEAL</span>
+                </div>
+                <div class="text-[11px] font-bold text-slate-900 line-clamp-1 leading-snug">Matte Non-stick Cup Lip Gloss, Non-fading Matte Liquid Lipstick</div>
+                <div class="text-xs font-black text-daraz-orange mt-1">Featured in Beauty</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Slide 8: Rings & Bands -->
+        <div class="carousel-slide absolute inset-0 transition-opacity duration-700 ease-in-out opacity-0 z-0 flex items-center overflow-hidden" id="slide-7">
+          <!-- Full Background Image of Product 1 -->
+          <div class="absolute inset-0 z-0">
+            <img src="https://cdn.shopify.com/s/files/1/1107/7573/0514/files/2f0e5e59-36d8-4687-9ab9-aa3a6c4fedc7.jpg?v=1790418986" alt="Openwork Flower & Zircon Rings" class="w-full h-full object-cover" onerror="this.src='favicon.svg'">
+            <!-- Smooth Gradient Overlay for Contrast & Text Readability -->
+            <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-slate-950/20"></div>
+          </div>
+
+          <!-- Slide Content: Left Text Info + Right Real Product Card -->
+          <div class="relative z-10 w-full h-full px-6 sm:px-10 py-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <!-- Left Info -->
+            <div class="max-w-md text-white space-y-3">
+              <div class="inline-flex items-center gap-2 bg-daraz-orange text-white px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider shadow">
+                <i class="fa-solid fa-fire text-amber-300"></i> ETERNAL ELEGANCE
+              </div>
+              <h1 class="text-2xl sm:text-4xl lg:text-5xl font-black leading-tight tracking-tight text-white drop-shadow">
+                Openwork Flower  <span style="color: #34D399">&  Zircon Rings</span>
+              </h1>
+              <p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-light drop-shadow max-w-sm">
+                Exquisite cocktail rings and stackable crystal bands.
+              </p>
+              <div class="pt-2 flex items-center gap-3">
+                <button onclick="filterCategory('Rings & Bands')" class="bg-daraz-orange hover:bg-daraz-orangeDark text-white px-6 py-2.5 rounded-lg font-bold text-xs uppercase tracking-wider transition shadow-lg flex items-center gap-2">
+                  <span>Explore Rings</span>
+                  <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </button>
+                <span class="px-2.5 py-1 rounded-md bg-white/20 backdrop-blur text-white text-[10px] font-bold tracking-wide border border-white/20">ZIRCON CRYSTALS</span>
+              </div>
+            </div>
+
+            <!-- Right Featured Product Showcase Card -->
+            <div class="hidden sm:flex items-center gap-3 flex-shrink-0">
+              <div onclick="filterCategory('Rings & Bands')" class="bg-white/95 backdrop-blur rounded-2xl p-3 shadow-2xl border-2 border-white/80 max-w-[210px] cursor-pointer hover:scale-105 transition duration-300 group/card">
+                <div class="aspect-square w-40 h-40 rounded-xl overflow-hidden bg-slate-50 mb-2.5 relative">
+                  <img src="https://cdn.shopify.com/s/files/1/1107/7573/0514/files/f008bf58-f7b0-480f-b191-e9ea6f05a68d.jpg?v=1790418985" alt="Christmas Tree Drop Earrings" class="w-full h-full object-cover group-hover/card:scale-110 transition duration-300" onerror="this.src='favicon.svg'">
+                  <span class="absolute top-2 left-2 bg-daraz-orange text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow">HOT DEAL</span>
+                </div>
+                <div class="text-[11px] font-bold text-slate-900 line-clamp-1 leading-snug">Christmas Tree Drop Earrings</div>
+                <div class="text-xs font-black text-daraz-orange mt-1">Featured in Rings</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Slide 9: Jackets & Outerwear -->
+        <div class="carousel-slide absolute inset-0 transition-opacity duration-700 ease-in-out opacity-0 z-0 flex items-center overflow-hidden" id="slide-8">
+          <!-- Full Background Image of Product 1 -->
+          <div class="absolute inset-0 z-0">
+            <img src="https://cdn.shopify.com/s/files/1/1107/7573/0514/files/e532211d-0cd3-4447-8e4d-6058f0d5c57a.jpg?v=1790419021" alt="Fluffy Lapel Coats & Warm Jackets" class="w-full h-full object-cover" onerror="this.src='favicon.svg'">
+            <!-- Smooth Gradient Overlay for Contrast & Text Readability -->
+            <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-slate-950/20"></div>
+          </div>
+
+          <!-- Slide Content: Left Text Info + Right Real Product Card -->
+          <div class="relative z-10 w-full h-full px-6 sm:px-10 py-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <!-- Left Info -->
+            <div class="max-w-md text-white space-y-3">
+              <div class="inline-flex items-center gap-2 bg-daraz-orange text-white px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider shadow">
+                <i class="fa-solid fa-fire text-amber-300"></i> COZY ESSENTIALS
+              </div>
+              <h1 class="text-2xl sm:text-4xl lg:text-5xl font-black leading-tight tracking-tight text-white drop-shadow">
+                Fluffy Lapel Coats  <span style="color: #FCD34D">&  Warm Jackets</span>
+              </h1>
+              <p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-light drop-shadow max-w-sm">
+                Ultra-soft winter lapel jackets and loose button outerwear.
+              </p>
+              <div class="pt-2 flex items-center gap-3">
+                <button onclick="filterCategory('Jackets & Outerwear')" class="bg-daraz-orange hover:bg-daraz-orangeDark text-white px-6 py-2.5 rounded-lg font-bold text-xs uppercase tracking-wider transition shadow-lg flex items-center gap-2">
+                  <span>Explore Jackets</span>
+                  <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </button>
+                <span class="px-2.5 py-1 rounded-md bg-white/20 backdrop-blur text-white text-[10px] font-bold tracking-wide border border-white/20">WARMTH & STYLE</span>
+              </div>
+            </div>
+
+            <!-- Right Featured Product Showcase Card -->
+            <div class="hidden sm:flex items-center gap-3 flex-shrink-0">
+              <div onclick="filterCategory('Jackets & Outerwear')" class="bg-white/95 backdrop-blur rounded-2xl p-3 shadow-2xl border-2 border-white/80 max-w-[210px] cursor-pointer hover:scale-105 transition duration-300 group/card">
+                <div class="aspect-square w-40 h-40 rounded-xl overflow-hidden bg-slate-50 mb-2.5 relative">
+                  <img src="https://cdn.shopify.com/s/files/1/1107/7573/0514/files/dcd705c2-fb0c-4a2a-a97e-ceeee0bb98e9.jpg?v=1790419016" alt="Lapel Double-breasted Trench Coat With Belt" class="w-full h-full object-cover group-hover/card:scale-110 transition duration-300" onerror="this.src='favicon.svg'">
+                  <span class="absolute top-2 left-2 bg-daraz-orange text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow">HOT DEAL</span>
+                </div>
+                <div class="text-[11px] font-bold text-slate-900 line-clamp-1 leading-snug">Lapel Double-breasted Trench Coat With Belt</div>
+                <div class="text-xs font-black text-daraz-orange mt-1">Featured in Jackets</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Slide 10: Bracelets & Bangles -->
+        <div class="carousel-slide absolute inset-0 transition-opacity duration-700 ease-in-out opacity-0 z-0 flex items-center overflow-hidden" id="slide-9">
+          <!-- Full Background Image of Product 1 -->
+          <div class="absolute inset-0 z-0">
+            <img src="https://cdn.shopify.com/s/files/1/1107/7573/0514/files/b799ddff-1329-403d-8635-bca2f072fbff.jpg?v=1790418984" alt="Luminous Lotus & Energy Bangles" class="w-full h-full object-cover" onerror="this.src='favicon.svg'">
+            <!-- Smooth Gradient Overlay for Contrast & Text Readability -->
+            <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-slate-950/20"></div>
+          </div>
+
+          <!-- Slide Content: Left Text Info + Right Real Product Card -->
+          <div class="relative z-10 w-full h-full px-6 sm:px-10 py-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <!-- Left Info -->
+            <div class="max-w-md text-white space-y-3">
+              <div class="inline-flex items-center gap-2 bg-daraz-orange text-white px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider shadow">
+                <i class="fa-solid fa-fire text-amber-300"></i> SPIRITUAL STONES
+              </div>
+              <h1 class="text-2xl sm:text-4xl lg:text-5xl font-black leading-tight tracking-tight text-white drop-shadow">
+                Luminous Lotus  <span style="color: #38BDF8">&  Energy Bangles</span>
+              </h1>
+              <p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-light drop-shadow max-w-sm">
+                Natural healing stone bracelets and radiant energy charms.
+              </p>
+              <div class="pt-2 flex items-center gap-3">
+                <button onclick="filterCategory('Bracelets & Bangles')" class="bg-daraz-orange hover:bg-daraz-orangeDark text-white px-6 py-2.5 rounded-lg font-bold text-xs uppercase tracking-wider transition shadow-lg flex items-center gap-2">
+                  <span>Explore Bracelets</span>
+                  <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </button>
+                <span class="px-2.5 py-1 rounded-md bg-white/20 backdrop-blur text-white text-[10px] font-bold tracking-wide border border-white/20">HANDMADE CHARMS</span>
+              </div>
+            </div>
+
+            <!-- Right Featured Product Showcase Card -->
+            <div class="hidden sm:flex items-center gap-3 flex-shrink-0">
+              <div onclick="filterCategory('Bracelets & Bangles')" class="bg-white/95 backdrop-blur rounded-2xl p-3 shadow-2xl border-2 border-white/80 max-w-[210px] cursor-pointer hover:scale-105 transition duration-300 group/card">
+                <div class="aspect-square w-40 h-40 rounded-xl overflow-hidden bg-slate-50 mb-2.5 relative">
+                  <img src="https://cdn.shopify.com/s/files/1/1107/7573/0514/files/ceee9c04-ac12-4989-889d-1464991ec7a0.jpg?v=1790418981" alt="Double Layer Chain Bracelet" class="w-full h-full object-cover group-hover/card:scale-110 transition duration-300" onerror="this.src='favicon.svg'">
+                  <span class="absolute top-2 left-2 bg-daraz-orange text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow">HOT DEAL</span>
+                </div>
+                <div class="text-[11px] font-bold text-slate-900 line-clamp-1 leading-snug">Double Layer Chain Bracelet</div>
+                <div class="text-xs font-black text-daraz-orange mt-1">Featured in Bracelets</div>
+              </div>
             </div>
           </div>
         </div>
@@ -222,9 +591,16 @@
 
         <!-- Slide Dots -->
         <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2">
-          <button onclick="goToSlide(0)" class="slide-dot w-2.5 h-2.5 rounded-full bg-daraz-orange transition" id="dot-0"></button>
-          <button onclick="goToSlide(1)" class="slide-dot w-2.5 h-2.5 rounded-full bg-white/50 transition" id="dot-1"></button>
-          <button onclick="goToSlide(2)" class="slide-dot w-2.5 h-2.5 rounded-full bg-white/50 transition" id="dot-2"></button>
+<button onclick="goToSlide(0)" class="slide-dot w-2.5 h-2.5 rounded-full bg-daraz-orange w-6 transition-all" id="dot-0" title="Slide 1"></button>
+<button onclick="goToSlide(1)" class="slide-dot w-2.5 h-2.5 rounded-full bg-white/50 transition-all" id="dot-1" title="Slide 2"></button>
+<button onclick="goToSlide(2)" class="slide-dot w-2.5 h-2.5 rounded-full bg-white/50 transition-all" id="dot-2" title="Slide 3"></button>
+<button onclick="goToSlide(3)" class="slide-dot w-2.5 h-2.5 rounded-full bg-white/50 transition-all" id="dot-3" title="Slide 4"></button>
+<button onclick="goToSlide(4)" class="slide-dot w-2.5 h-2.5 rounded-full bg-white/50 transition-all" id="dot-4" title="Slide 5"></button>
+<button onclick="goToSlide(5)" class="slide-dot w-2.5 h-2.5 rounded-full bg-white/50 transition-all" id="dot-5" title="Slide 6"></button>
+<button onclick="goToSlide(6)" class="slide-dot w-2.5 h-2.5 rounded-full bg-white/50 transition-all" id="dot-6" title="Slide 7"></button>
+<button onclick="goToSlide(7)" class="slide-dot w-2.5 h-2.5 rounded-full bg-white/50 transition-all" id="dot-7" title="Slide 8"></button>
+<button onclick="goToSlide(8)" class="slide-dot w-2.5 h-2.5 rounded-full bg-white/50 transition-all" id="dot-8" title="Slide 9"></button>
+<button onclick="goToSlide(9)" class="slide-dot w-2.5 h-2.5 rounded-full bg-white/50 transition-all" id="dot-9" title="Slide 10"></button>
         </div>
 
       </div>
@@ -589,7 +965,7 @@
     let currentQvProduct = null;
     let currentQvQty = 1;
     let currentSlide = 0;
-    const TOTAL_SLIDES = 3;
+    const TOTAL_SLIDES = 10;
 
     const currencyConfig = {
       GBP: { symbol: '£', rateKey: 'price_gbp', compareKey: 'compare_gbp', decimals: 2 },
@@ -633,7 +1009,7 @@
         }
         if (dot) {
           if (i === currentSlide) {
-            dot.className = 'slide-dot w-2.5 h-2.5 rounded-full bg-daraz-orange transition';
+            dot.className = 'slide-dot w-6 h-2.5 rounded-full bg-daraz-orange transition-all';
           } else {
             dot.className = 'slide-dot w-2.5 h-2.5 rounded-full bg-white/50 transition';
           }

@@ -903,9 +903,15 @@
           </div>
         </div>
 
-        <a href="#productsCatalog" class="text-xs font-bold text-daraz-orange hover:bg-orange-50 px-3 py-1 rounded border border-daraz-orange uppercase transition">
-          SHOP MORE
-        </a>
+        <div class="flex items-center gap-2">
+          <button onclick="renderFlashSale()" class="text-xs font-bold text-slate-500 hover:text-daraz-orange bg-slate-50 hover:bg-orange-50 px-3 py-1 rounded border border-slate-200 transition flex items-center gap-1.5" title="Refresh Deals With New Products">
+            <i class="fa-solid fa-arrows-rotate text-[10px]"></i>
+            <span class="hidden sm:inline">Refresh Deals</span>
+          </button>
+          <a href="#productsCatalog" class="text-xs font-bold text-daraz-orange hover:bg-orange-50 px-3 py-1 rounded border border-daraz-orange uppercase transition">
+            SHOP MORE
+          </a>
+        </div>
       </div>
 
       <!-- EXACT 6 DIVERSE PRODUCTS PER ROW -->
@@ -932,10 +938,29 @@
   <section id="productsCatalog" class="max-w-[1240px] mx-auto px-4 pb-16">
     
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4">
-      <h2 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
-        <span>Just For You</span>
-        <span class="text-xs font-medium text-slate-400" id="activeFilterBadge">(805 Products Available)</span>
-      </h2>
+      <div class="flex flex-wrap items-center gap-2.5">
+        <h2 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
+          <span>Just For You</span>
+          <span class="text-xs font-medium text-slate-400" id="activeFilterBadge">(805 Products Available)</span>
+        </h2>
+        
+        <!-- Personalized Affinity Badge -->
+        <div id="personalizedBadgeContainer" class="hidden">
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-orange-100 text-daraz-orange text-[11px] font-bold border border-orange-200 shadow-sm">
+            <i class="fa-solid fa-wand-magic-sparkles text-[10px]"></i>
+            <span>Recommended: <strong id="personalizedCategoryName" class="underline">Jewelry</strong></span>
+            <button onclick="resetPersonalization(event)" class="ml-1 text-slate-500 hover:text-slate-900 transition" title="Clear preference and show mixed catalog">
+              <i class="fa-solid fa-circle-xmark text-xs"></i>
+            </button>
+          </span>
+        </div>
+
+        <!-- Refresh / Reshuffle Feed Button -->
+        <button onclick="reshuffleFeed()" class="text-xs font-medium text-slate-500 hover:text-daraz-orange bg-slate-50 hover:bg-orange-50 px-2.5 py-0.5 rounded-full border border-slate-200 transition flex items-center gap-1" title="Reshuffle Catalog Mix">
+          <i class="fa-solid fa-shuffle text-[10px]"></i>
+          <span>Shuffle</span>
+        </button>
+      </div>
 
       <!-- Category Filter Pills -->
       <div class="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1 scrollbar-hide" id="categoryFilterPills">
@@ -1043,6 +1068,20 @@
               Buy Now
             </button>
           </div>
+        </div>
+      </div>
+
+      <!-- Smart Related Products in Same Category -->
+      <div class="mt-6 pt-4 border-t border-slate-200">
+        <div class="flex items-center justify-between mb-2.5">
+          <h4 class="font-bold text-xs uppercase text-slate-800 flex items-center gap-1.5">
+            <i class="fa-solid fa-sparkles text-daraz-orange"></i>
+            <span>Customers Also Viewed In <span id="qvSimilarCategoryName" class="text-daraz-orange font-bold">This Category</span></span>
+          </h4>
+          <span class="text-[10px] text-slate-400 font-medium">✨ Smart Match</span>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5" id="qvSimilarProductsRow">
+          <!-- 4 Related Products rendered dynamically -->
         </div>
       </div>
     </div>
@@ -1285,22 +1324,193 @@
       }
     }
 
+    let allRawProducts = [];
+    let shuffledCatalog = [];
+    let activeAffinityCategory = null;
+
+    // AI Personalization Cluster Map
+    const categoryAffinityMap = {
+      'Necklaces & Pendants': ['Rings & Bands', 'Bracelets & Bangles', 'Luxury Watches'],
+      'Rings & Bands': ['Necklaces & Pendants', 'Bracelets & Bangles', 'Luxury Watches'],
+      'Bracelets & Bangles': ['Necklaces & Pendants', 'Rings & Bands', 'Luxury Watches'],
+      'Luxury Watches': ['Bracelets & Bangles', 'Sunglasses & Eyewear', 'Bags & Handbags'],
+      'Sunglasses & Eyewear': ['Bags & Handbags', 'Tops & Shirts', 'Luxury Watches'],
+      'Bags & Handbags': ['Dresses & Gowns', 'Sunglasses & Eyewear', 'Luxury Watches'],
+      'Dresses & Gowns': ['Tops & Shirts', 'Bags & Handbags', 'Beauty & Cosmetics'],
+      'Tops & Shirts': ['Pants & Bottoms', 'Jackets & Outerwear', 'Dresses & Gowns'],
+      'Pants & Bottoms': ['Tops & Shirts', 'Jackets & Outerwear', 'Dresses & Gowns'],
+      'Jackets & Outerwear': ['Tops & Shirts', 'Pants & Bottoms'],
+      'Beauty & Cosmetics': ['Dresses & Gowns', 'Wigs & Hair', 'Necklaces & Pendants'],
+      'Wigs & Hair': ['Beauty & Cosmetics', 'Necklaces & Pendants', 'Dresses & Gowns'],
+      'Fashion & Lifestyle': ['Dresses & Gowns', 'Bags & Handbags', 'Sunglasses & Eyewear'],
+      'Weddings & Events': ['Necklaces & Pendants', 'Dresses & Gowns', 'Rings & Bands']
+    };
+
+    // Client-side Balanced Interleaving across all categories
+    function generateBalancedShuffle(productList) {
+      const groups = {};
+      productList.forEach(p => {
+        if (!groups[p.category]) groups[p.category] = [];
+        groups[p.category].push(p);
+      });
+
+      // Randomize inside each category group
+      Object.keys(groups).forEach(cat => {
+        groups[cat].sort(() => 0.5 - Math.random());
+      });
+
+      // Randomize category priority sequence
+      const cats = Object.keys(groups).sort(() => 0.5 - Math.random());
+      const result = [];
+      let added = true;
+      let idx = 0;
+
+      while (added) {
+        added = false;
+        for (const c of cats) {
+          if (groups[c].length > idx) {
+            result.push(groups[c][idx]);
+            added = true;
+          }
+        }
+        idx++;
+      }
+      return result;
+    }
+
     async function loadProducts() {
       try {
-        const res = await fetch('products.json');
-        products = await res.json();
+        // Cache-busting timestamp guarantees fresh response on every load
+        const res = await fetch('products.json?v=' + Date.now());
+        allRawProducts = await res.json();
         
         const localProds = JSON.parse(localStorage.getItem('shoppaza_custom_products') || '[]');
         if (localProds.length > 0) {
-          products = [...localProds, ...products];
+          allRawProducts = [...localProds, ...allRawProducts];
         }
+
+        products = allRawProducts;
 
         buildCategoriesList();
         renderFlashSale();
-        filterAndRenderProducts();
+        initCatalogWithShuffling();
       } catch (err) {
         console.error('Failed to load products:', err);
       }
+    }
+
+    function initCatalogWithShuffling() {
+      shuffledCatalog = generateBalancedShuffle(allRawProducts);
+      
+      // Check if user previously inspected a category in session
+      const savedAffinity = sessionStorage.getItem('shoppaza_affinity_cat');
+      if (savedAffinity && savedAffinity !== 'all') {
+        applyAffinityBoost(savedAffinity, false);
+      } else {
+        filterAndRenderProducts();
+      }
+    }
+
+    // Dynamic Flash Sale: Always 6 DIFFERENT categories on every refresh/click
+    function renderFlashSale() {
+      const container = document.getElementById('flashSaleProductsRow');
+      if (!container || allRawProducts.length === 0) return;
+
+      const groups = {};
+      allRawProducts.forEach(p => {
+        if (!groups[p.category]) groups[p.category] = [];
+        groups[p.category].push(p);
+      });
+
+      const availableCats = Object.keys(groups);
+      // Shuffle categories randomly
+      const shuffledCats = [...availableCats].sort(() => 0.5 - Math.random());
+      
+      // Select 6 distinct categories
+      const selectedCats = shuffledCats.slice(0, 6);
+      const flashItems = selectedCats.map(cat => {
+        const list = groups[cat];
+        const randomItem = list[Math.floor(Math.random() * list.length)];
+        const discount = randomItem.discount || (30 + Math.floor(Math.random() * 25));
+        const sold = randomItem.sold_count || (15 + Math.floor(Math.random() * 80));
+        return { ...randomItem, discount, sold_count: sold };
+      });
+
+      container.innerHTML = flashItems.map(p => `
+        <div onclick="openQuickView(${p.id})" class="bg-white rounded border border-slate-200 overflow-hidden hover:shadow-md transition cursor-pointer group flex flex-col justify-between">
+          <div class="aspect-square relative overflow-hidden bg-slate-50">
+            <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.src='favicon.svg'">
+            <span class="absolute top-1.5 left-1.5 bg-daraz-orange text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow">-${p.discount}%</span>
+          </div>
+          <div class="p-2 space-y-1">
+            <div class="text-[9px] font-bold text-slate-400 uppercase truncate">${p.category}</div>
+            <div class="font-bold text-daraz-orange text-sm">${formatPrice(p)}</div>
+            <div class="text-[10px] text-slate-400 line-through">${formatPrice(p, true)}</div>
+            <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mt-1">
+              <div class="bg-daraz-orange h-full" style="width: ${Math.min(95, Math.max(25, p.sold_count))}%"></div>
+            </div>
+            <div class="text-[9px] text-slate-500 font-medium">${p.sold_count} Sold</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Recommendation Algorithm: Boosts category + cluster when user views or collects items
+    function applyAffinityBoost(targetCategory, triggerRerender = true) {
+      if (!targetCategory || targetCategory === 'all') return;
+      activeAffinityCategory = targetCategory;
+      sessionStorage.setItem('shoppaza_affinity_cat', targetCategory);
+
+      // Show recommendation pill in UI
+      const badgeContainer = document.getElementById('personalizedBadgeContainer');
+      const badgeName = document.getElementById('personalizedCategoryName');
+      if (badgeContainer && badgeName) {
+        badgeName.innerText = targetCategory;
+        badgeContainer.classList.remove('hidden');
+      }
+
+      const relatedCats = categoryAffinityMap[targetCategory] || [];
+      const primary = allRawProducts.filter(p => p.category === targetCategory).sort(() => 0.5 - Math.random());
+      const secondary = allRawProducts.filter(p => relatedCats.includes(p.category)).sort(() => 0.5 - Math.random());
+      const other = allRawProducts.filter(p => p.category !== targetCategory && !relatedCats.includes(p.category)).sort(() => 0.5 - Math.random());
+
+      // 6-item desktop row: 3 primary + 2 secondary + 1 diverse other
+      const personalized = [];
+      let pIdx = 0, sIdx = 0, oIdx = 0;
+
+      while (pIdx < primary.length || sIdx < secondary.length || oIdx < other.length) {
+        for (let i = 0; i < 3 && pIdx < primary.length; i++) personalized.push(primary[pIdx++]);
+        for (let i = 0; i < 2 && sIdx < secondary.length; i++) personalized.push(secondary[sIdx++]);
+        for (let i = 0; i < 1 && oIdx < other.length; i++) personalized.push(other[oIdx++]);
+        if (pIdx >= primary.length && sIdx >= secondary.length && oIdx < other.length) {
+          personalized.push(other[oIdx++]);
+        }
+      }
+
+      shuffledCatalog = personalized;
+
+      if (triggerRerender) {
+        page = 1;
+        filterAndRenderProducts();
+      }
+    }
+
+    function resetPersonalization(e) {
+      if (e) e.stopPropagation();
+      activeAffinityCategory = null;
+      sessionStorage.removeItem('shoppaza_affinity_cat');
+      const badgeContainer = document.getElementById('personalizedBadgeContainer');
+      if (badgeContainer) badgeContainer.classList.add('hidden');
+
+      shuffledCatalog = generateBalancedShuffle(allRawProducts);
+      page = 1;
+      filterAndRenderProducts();
+    }
+
+    function reshuffleFeed() {
+      resetPersonalization();
+      renderFlashSale();
+      document.getElementById('productsCatalog').scrollIntoView({ behavior: 'smooth' });
     }
 
     function formatPrice(prod, isCompare = false) {
@@ -1326,7 +1536,7 @@
     }
 
     function buildCategoriesList() {
-      const cats = Array.from(new Set(products.map(p => p.category))).filter(Boolean).sort();
+      const cats = Array.from(new Set(allRawProducts.map(p => p.category))).filter(Boolean).sort();
       
       // Hero menu (Left Sidebar)
       const heroMenu = document.getElementById('heroCategoryMenu');
@@ -1356,31 +1566,6 @@
       });
     }
 
-    // FLASH SALE (STRICT 6 ITEMS WITH BALANCED MIX)
-    function renderFlashSale() {
-      const container = document.getElementById('flashSaleProductsRow');
-      if (!container || products.length === 0) return;
-      
-      // Pick 6 items from different categories
-      const flashItems = products.slice(0, 6);
-      container.innerHTML = flashItems.map(p => `
-        <div onclick="openQuickView(${p.id})" class="bg-white rounded border border-slate-200 overflow-hidden hover:shadow-md transition cursor-pointer group flex flex-col justify-between">
-          <div class="aspect-square relative overflow-hidden bg-slate-50">
-            <img src="${p.image}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.src='favicon.svg'">
-            <span class="absolute top-1.5 left-1.5 bg-daraz-orange text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow">-${p.discount || 35}%</span>
-          </div>
-          <div class="p-2 space-y-1">
-            <div class="font-bold text-daraz-orange text-sm">${formatPrice(p)}</div>
-            <div class="text-[10px] text-slate-400 line-through">${formatPrice(p, true)}</div>
-            <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mt-1">
-              <div class="bg-daraz-orange h-full w-[70%]"></div>
-            </div>
-            <div class="text-[9px] text-slate-500 font-medium">${p.sold_count || 45} Sold</div>
-          </div>
-        </div>
-      `).join('');
-    }
-
     function filterCategory(cat) {
       currentCategory = cat;
       page = 1;
@@ -1393,6 +1578,10 @@
           btn.className = 'category-pill px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition bg-white text-slate-700 hover:bg-slate-100 border border-slate-200';
         }
       });
+
+      if (cat !== 'all') {
+        applyAffinityBoost(cat, false);
+      }
 
       filterAndRenderProducts();
       document.getElementById('productsCatalog').scrollIntoView({ behavior: 'smooth' });
@@ -1408,7 +1597,7 @@
     }
 
     function filterAndRenderProducts() {
-      displayedProducts = products.filter(p => {
+      displayedProducts = shuffledCatalog.filter(p => {
         const matchesCategory = (currentCategory === 'all' || p.category === currentCategory);
         const matchesQuery = (!searchQuery || (p.title || '').toLowerCase().includes(searchQuery) || (p.category || '').toLowerCase().includes(searchQuery));
         return matchesCategory && matchesQuery;
@@ -1465,12 +1654,15 @@
       renderProductsGrid();
     }
 
-    // Quick View
+    // Quick View with AI Personalization trigger
     function openQuickView(id) {
-      const prod = products.find(p => p.id === id);
+      const prod = allRawProducts.find(p => p.id === id);
       if (!prod) return;
       currentQvProduct = prod;
       currentQvQty = 1;
+
+      // AI Recommendation Algorithm: Immediately boost this category in Just For You feed!
+      applyAffinityBoost(prod.category, true);
 
       document.getElementById('qvMainImage').src = prod.image;
       document.getElementById('qvCategory').innerText = prod.category;
@@ -1488,7 +1680,31 @@
         <img src="${img}" onclick="document.getElementById('qvMainImage').src='${img}'" class="w-12 h-12 object-cover rounded border border-slate-200 cursor-pointer hover:border-daraz-orange">
       `).join('');
 
+      // Populate Similar Products in Same Category inside Modal
+      renderQvSimilarProducts(prod);
+
       document.getElementById('quickViewModal').classList.remove('hidden');
+    }
+
+    function renderQvSimilarProducts(currentProd) {
+      const simRow = document.getElementById('qvSimilarProductsRow');
+      const catName = document.getElementById('qvSimilarCategoryName');
+      if (!simRow) return;
+
+      if (catName) catName.innerText = currentProd.category;
+
+      const sameCat = allRawProducts.filter(p => p.category === currentProd.category && p.id !== currentProd.id);
+      const shuffledSame = [...sameCat].sort(() => 0.5 - Math.random()).slice(0, 4);
+
+      simRow.innerHTML = shuffledSame.map(p => `
+        <div onclick="openQuickView(${p.id})" class="p-1.5 rounded-lg border border-slate-200 hover:border-daraz-orange bg-slate-50 hover:bg-white transition cursor-pointer flex flex-col justify-between group">
+          <div class="aspect-square rounded overflow-hidden mb-1 bg-white">
+            <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition" onerror="this.src='favicon.svg'">
+          </div>
+          <div class="text-[10px] font-semibold text-slate-800 line-clamp-1 group-hover:text-daraz-orange">${p.title}</div>
+          <div class="text-[11px] font-bold text-daraz-orange mt-0.5">${formatPrice(p)}</div>
+        </div>
+      `).join('');
     }
 
     function renderQuickViewPrice() {

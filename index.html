@@ -3,29 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shoppaza | Modern E-Commerce Software & Digital Cloud Solutions</title>
-  <meta name="description" content="Shoppaza delivers high-performance digital commerce software, business automation tools, and scalable cloud solutions by SAJID SERVICES LTD.">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234F46E5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polygon points='12 2 2 7 12 12 22 7 12 2'/><polyline points='2 17 12 22 22 17'/><polyline points='2 12 12 17 22 12'/></svg>">
+  <title>Shoppaza | Global Mega Online Shopping Mall</title>
+  <meta name="description" content="Shoppaza - Premier global e-commerce marketplace by SAJID SERVICES LTD (SC874640). Explore 800+ authentic fashion, jewelry, wigs, and lifestyle items. Multi-currency checkout in GBP, USD, USDT, and PKR.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-          },
+          fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
           colors: {
-            brand: {
-              50: '#eef2ff',
-              100: '#e0e7ff',
-              500: '#6366f1',
-              600: '#4f46e5',
-              700: '#4338ca',
-              900: '#312e81',
+            daraz: {
+              orange: '#F85606',
+              orangeHover: '#d94700',
+              lightOrange: '#fff4ed',
+              dark: '#0f172a',
+              cardBg: '#ffffff',
+              border: '#e2e8f0',
+              price: '#F85606',
+              discount: '#ffefe8',
+              accent: '#6366F1'
             }
           }
         }
@@ -33,495 +34,1020 @@
     }
   </script>
   <style>
-    .gradient-mesh {
-      background: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
-                  radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.15) 0px, transparent 50%),
-                  radial-gradient(at 50% 50%, rgba(59, 130, 246, 0.1) 0px, transparent 50%);
+    body { background-color: #f5f5f5; color: #1e293b; }
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-indigo-500 selection:text-white">
+<body class="font-sans antialiased selection:bg-daraz-orange selection:text-white">
 
-  <!-- TOP ANNOUNCEMENT BAR -->
-  <div class="bg-indigo-600/90 backdrop-blur text-white text-xs py-2 px-4 text-center font-medium">
-    <span>🚀 Enterprise-grade digital solutions & automated tools by <strong>SAJID SERVICES LTD</strong> (UK Registered SC874640)</span>
+  <!-- ================= TOP NOTICE & UTILITY BAR ================= -->
+  <div class="bg-slate-900 text-slate-300 text-xs py-2 px-4 border-b border-slate-800">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div class="flex items-center gap-4 text-[11px]">
+        <span class="flex items-center gap-1.5 text-amber-400 font-semibold">
+          <i class="fa-solid fa-bolt"></i> Mega Flash Deals Live!
+        </span>
+        <span class="hidden md:inline text-slate-500">|</span>
+        <span class="hidden md:inline">
+          Operated by <strong>SAJID SERVICES LTD</strong> (UK Registered SC874640)
+        </span>
+      </div>
+
+      <div class="flex items-center gap-5 text-[11px]">
+        <!-- Multi-Currency Selector -->
+        <div class="flex items-center gap-1.5 bg-slate-800/80 px-2.5 py-1 rounded-md border border-slate-700">
+          <span class="text-slate-400">Currency:</span>
+          <select id="currencySelector" onchange="changeCurrency(this.value)" class="bg-transparent text-white font-bold focus:outline-none cursor-pointer">
+            <option value="GBP" class="bg-slate-900 text-white">GBP (£) - Stripe UK</option>
+            <option value="USD" class="bg-slate-900 text-white">USD ($) - Global</option>
+            <option value="USDT" class="bg-slate-900 text-white">USDT (₮) - Crypto</option>
+            <option value="PKR" class="bg-slate-900 text-white">PKR (₨) - Pakistan</option>
+          </select>
+        </div>
+
+        <a href="contact.html" class="hover:text-white transition">Help & Support</a>
+        <a href="about.html" class="hover:text-white transition">About Us</a>
+        <a href="admin.html" class="text-orange-400 hover:text-orange-300 font-bold transition flex items-center gap-1">
+          <i class="fa-solid fa-lock text-[10px]"></i> Merchant Login
+        </a>
+      </div>
+    </div>
   </div>
 
-  <!-- NAVIGATION -->
-  <header class="sticky top-0 z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/80">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-      <a href="index.html" class="flex items-center gap-3 group">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-transform">
-          <i class="fa-solid fa-layer-group text-lg"></i>
-        </div>
-        <div class="flex flex-col">
-          <span class="text-2xl font-bold tracking-tight text-white font-sans">Shoppaza<span class="text-indigo-500">.</span></span>
-          <span class="text-[10px] text-slate-400 font-medium -mt-1 tracking-wider uppercase">Software & Cloud</span>
-        </div>
+  <!-- ================= MAIN DARAZ-STYLE HEADER ================= -->
+  <header class="bg-white sticky top-0 z-50 shadow-sm border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4 sm:gap-8">
+      
+      <!-- Brand Logo -->
+      <a href="index.html" class="flex-shrink-0 flex items-center">
+        <img src="logo.svg" alt="Shoppaza Global Store" class="h-10 sm:h-12 w-auto object-contain">
       </a>
 
-      <!-- Desktop Nav -->
-      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
-        <a href="index.html" class="text-indigo-400 font-semibold hover:text-white transition">Home</a>
-        <a href="#solutions" class="hover:text-white transition">Solutions</a>
-        <a href="#software-catalog" class="hover:text-white transition">Software Catalog</a>
-        <a href="#pricing" class="hover:text-white transition">Pricing</a>
-        <a href="about.html" class="hover:text-white transition">About Us</a>
-        <a href="contact.html" class="hover:text-white transition">Contact</a>
-      </nav>
-
-      <div class="hidden md:flex items-center gap-4">
-        <a href="contact.html" class="text-sm font-semibold text-slate-300 hover:text-white px-4 py-2">Support</a>
-        <a href="#pricing" class="text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-500 px-5 py-2.5 rounded-xl shadow-lg shadow-indigo-600/30 transition hover:-translate-y-0.5">Explore Licenses</a>
+      <!-- Daraz-style Big Search Bar with Categories -->
+      <div class="flex-1 max-w-2xl relative hidden sm:block">
+        <form onsubmit="handleSearch(event)" class="flex items-center bg-slate-100 rounded-xl overflow-hidden border-2 border-daraz-orange focus-within:ring-2 focus-within:ring-daraz-orange/30 transition">
+          <!-- Category dropdown inside search -->
+          <select id="searchCategorySelect" class="bg-slate-200/80 text-xs text-slate-700 font-semibold px-3 py-3 border-r border-slate-300 focus:outline-none cursor-pointer">
+            <option value="all">All Categories</option>
+          </select>
+          <input type="text" id="searchInput" placeholder="Search across 800+ authentic fashion, jewelry, wigs & luxury items..." class="w-full bg-transparent px-4 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none">
+          <button type="submit" class="bg-daraz-orange hover:bg-daraz-orangeHover text-white px-6 py-3 text-sm font-bold transition flex items-center gap-1.5 flex-shrink-0">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <span class="hidden md:inline">Search</span>
+          </button>
+        </form>
       </div>
 
-      <!-- Mobile Menu Button -->
-      <button id="mobileMenuBtn" class="md:hidden text-slate-300 hover:text-white text-2xl p-2" aria-label="Toggle Menu">
-        <i class="fa-solid fa-bars"></i>
-      </button>
+      <!-- Header Actions: Wishlist & Cart Drawer Trigger -->
+      <div class="flex items-center gap-4 sm:gap-6 flex-shrink-0">
+        
+        <!-- Wishlist -->
+        <button onclick="alert('Wishlist feature saved to your browser session!')" class="text-slate-600 hover:text-daraz-orange transition relative p-1.5" title="Wishlist">
+          <i class="fa-regular fa-heart text-2xl"></i>
+          <span class="absolute -top-1 -right-1 bg-slate-800 text-white font-bold text-[10px] w-4 h-4 rounded-full flex items-center justify-center">0</span>
+        </button>
+
+        <!-- Cart Button (Triggers Drawer) -->
+        <button onclick="toggleCartDrawer()" class="flex items-center gap-2.5 bg-daraz-lightOrange border border-daraz-orange/30 px-3.5 py-2 rounded-xl text-daraz-orange hover:bg-daraz-orange hover:text-white transition shadow-sm group">
+          <div class="relative">
+            <i class="fa-solid fa-cart-shopping text-xl"></i>
+            <span id="cartCountBadge" class="absolute -top-2.5 -right-2.5 bg-daraz-orange group-hover:bg-slate-900 text-white font-extrabold text-[10px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow">0</span>
+          </div>
+          <div class="hidden sm:block text-left leading-tight">
+            <div class="text-[10px] uppercase font-bold text-slate-500 group-hover:text-white">My Cart</div>
+            <div class="text-xs font-black" id="cartTotalHeader">£0.00</div>
+          </div>
+        </button>
+
+      </div>
     </div>
 
-    <!-- Mobile Nav Dropdown -->
-    <div id="mobileMenu" class="hidden md:hidden bg-slate-900 border-b border-slate-800 px-6 py-6 space-y-4">
-      <a href="index.html" class="block text-indigo-400 font-semibold">Home</a>
-      <a href="#solutions" class="block text-slate-300 hover:text-white">Solutions</a>
-      <a href="#software-catalog" class="block text-slate-300 hover:text-white">Software Catalog</a>
-      <a href="#pricing" class="block text-slate-300 hover:text-white">Pricing</a>
-      <a href="about.html" class="block text-slate-300 hover:text-white">About Us</a>
-      <a href="contact.html" class="block text-slate-300 hover:text-white">Contact</a>
-      <div class="pt-4 border-t border-slate-800">
-        <a href="#pricing" class="block text-center text-sm font-semibold text-white bg-indigo-600 py-3 rounded-xl">Explore Licenses</a>
-      </div>
+    <!-- Mobile Search Bar -->
+    <div class="sm:hidden px-4 pb-3">
+      <form onsubmit="handleSearch(event)" class="flex items-center bg-slate-100 rounded-xl overflow-hidden border border-daraz-orange">
+        <input type="text" id="mobileSearchInput" placeholder="Search 800+ products..." class="w-full bg-transparent px-3 py-2 text-xs text-slate-800 focus:outline-none">
+        <button type="submit" class="bg-daraz-orange text-white px-4 py-2 text-xs font-bold">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+      </form>
     </div>
   </header>
 
-  <!-- HERO SECTION -->
-  <section class="relative pt-24 pb-20 overflow-hidden gradient-mesh">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+  <!-- ================= MEGA HERO & CATEGORIES SECTION (DARAZ SIGNATURE) ================= -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-6">
+    <div class="grid lg:grid-cols-12 gap-4 items-stretch">
       
-      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs sm:text-sm font-medium mb-8">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        UK Registered Software Publisher • SIC 58290
+      <!-- Left Category Tree (Desktop) -->
+      <aside class="hidden lg:block lg:col-span-3 bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
+        <div class="flex items-center gap-2 pb-3 mb-2 border-b border-slate-100 font-bold text-xs uppercase tracking-wider text-slate-700">
+          <i class="fa-solid fa-bars text-daraz-orange"></i> Categories Catalog
+        </div>
+        <ul class="space-y-1 text-xs font-medium text-slate-600" id="heroCategoryMenu">
+          <!-- Dynamically populated categories -->
+        </ul>
+      </aside>
+
+      <!-- Center Hero Carousel / Banner -->
+      <div class="lg:col-span-9 rounded-2xl overflow-hidden relative shadow-sm min-h-[300px] sm:min-h-[380px] bg-slate-900 flex items-center">
+        <!-- Slide Background & Content -->
+        <div class="absolute inset-0 z-0">
+          <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1600&auto=format&fit=crop&q=80" alt="Shoppaza Fashion Mega Sale" class="w-full h-full object-cover opacity-40">
+          <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/70 to-transparent"></div>
+        </div>
+
+        <div class="relative z-10 p-6 sm:p-12 max-w-xl text-white">
+          <div class="inline-flex items-center gap-2 bg-daraz-orange px-3 py-1 rounded-full text-white font-extrabold text-[11px] uppercase tracking-wider mb-4 shadow">
+            <i class="fa-solid fa-fire"></i> Daraz Mega Shopping Fest 2026
+          </div>
+          <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
+            Huge Discounts Up To <span class="text-amber-400">60% OFF</span>
+          </h1>
+          <p class="mt-3 text-xs sm:text-sm text-slate-300 leading-relaxed">
+            Over 800+ designer dresses, authentic human hair wigs, fine jewelry, luxury sunglasses & bags. Worldwide express air shipping!
+          </p>
+
+          <div class="mt-6 flex flex-wrap items-center gap-3">
+            <a href="#productsCatalog" class="bg-daraz-orange hover:bg-daraz-orangeHover text-white px-6 py-3 rounded-xl font-bold text-xs transition shadow-lg shadow-daraz-orange/30 flex items-center gap-2">
+              <span>Shop All Products</span>
+              <i class="fa-solid fa-arrow-right text-xs"></i>
+            </a>
+            <button onclick="filterCategory('Wigs & Hair')" class="bg-white/10 hover:bg-white/20 backdrop-blur text-white px-5 py-3 rounded-xl font-semibold text-xs border border-white/20 transition">
+              Trending Wigs & Hair
+            </button>
+          </div>
+        </div>
       </div>
 
-      <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white max-w-4xl mx-auto leading-[1.1]">
-        Next-Generation <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-300 to-indigo-200">Commerce Software</span> & Digital Engines
-      </h1>
+    </div>
+  </section>
 
-      <p class="mt-6 text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto font-normal leading-relaxed">
-        Shoppaza develops high-performance software utilities, inventory synchronization bridges, and headless automation toolkits engineered for high-growth global merchants.
-      </p>
+  <!-- ================= DARAZ TRUST BADGES ================= -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6">
+    <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-200 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+      
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-orange-50 text-daraz-orange flex items-center justify-center text-xl flex-shrink-0">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <div>
+          <div class="font-bold text-slate-800 text-xs sm:text-sm">100% Authentic</div>
+          <div class="text-[11px] text-slate-500">Verified UK Quality</div>
+        </div>
+      </div>
 
-      <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-        <a href="#software-catalog" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-indigo-600 text-white font-semibold text-base shadow-xl shadow-indigo-600/30 hover:bg-indigo-500 transition hover:-translate-y-0.5 flex items-center justify-center gap-3">
-          <span>Browse Software Catalog</span>
-          <i class="fa-solid fa-arrow-right text-sm"></i>
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl flex-shrink-0">
+          <i class="fa-solid fa-rotate-left"></i>
+        </div>
+        <div>
+          <div class="font-bold text-slate-800 text-xs sm:text-sm">14-Day Free Returns</div>
+          <div class="text-[11px] text-slate-500">UK Law Guarantee</div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl flex-shrink-0">
+          <i class="fa-solid fa-lock"></i>
+        </div>
+        <div>
+          <div class="font-bold text-slate-800 text-xs sm:text-sm">Stripe & Crypto</div>
+          <div class="text-[11px] text-slate-500">Cards, Apple Pay & USDT</div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl flex-shrink-0">
+          <i class="fa-solid fa-truck-fast"></i>
+        </div>
+        <div>
+          <div class="font-bold text-slate-800 text-xs sm:text-sm">Express Delivery</div>
+          <div class="text-[11px] text-slate-500">Tracked global freight</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= FLASH SALE SECTION (DARAZ SIGNATURE) ================= -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+    <div class="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200">
+      
+      <!-- Flash Sale Header with Live Timer -->
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-5 border-b border-slate-100">
+        <div class="flex items-center gap-4">
+          <span class="text-xl sm:text-2xl font-black text-daraz-orange tracking-tight flex items-center gap-2">
+            <i class="fa-solid fa-bolt"></i> Flash Sale
+          </span>
+          <div class="flex items-center gap-1.5 text-xs font-bold text-slate-600">
+            <span class="text-slate-400 font-normal">Ending in:</span>
+            <span class="bg-slate-900 text-white px-2 py-1 rounded" id="timerHours">08</span> :
+            <span class="bg-slate-900 text-white px-2 py-1 rounded" id="timerMins">45</span> :
+            <span class="bg-slate-900 text-white px-2 py-1 rounded" id="timerSecs">19</span>
+          </div>
+        </div>
+
+        <a href="#productsCatalog" class="text-xs font-bold text-daraz-orange hover:underline uppercase tracking-wider flex items-center gap-1">
+          Shop More <i class="fa-solid fa-chevron-right text-[10px]"></i>
         </a>
-        <a href="about.html" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-slate-900/90 text-slate-200 hover:text-white font-semibold text-base border border-slate-800 hover:border-slate-700 transition flex items-center justify-center gap-3">
-          <i class="fa-solid fa-shield-halved text-indigo-400"></i>
-          <span>Corporate Overview</span>
-        </a>
       </div>
 
-      <!-- Trust Badges -->
-      <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto border-t border-slate-800/80 pt-10 text-left">
-        <div class="flex items-center gap-3">
-          <i class="fa-solid fa-bolt text-indigo-400 text-2xl"></i>
-          <div>
-            <div class="text-sm font-bold text-white">Instant Delivery</div>
-            <div class="text-xs text-slate-400">Digital keys within 5 mins</div>
-          </div>
-        </div>
-        <div class="flex items-center gap-3">
-          <i class="fa-solid fa-building text-indigo-400 text-2xl"></i>
-          <div>
-            <div class="text-sm font-bold text-white">UK Registered</div>
-            <div class="text-xs text-slate-400">Companies House SC874640</div>
-          </div>
-        </div>
-        <div class="flex items-center gap-3">
-          <i class="fa-solid fa-lock text-indigo-400 text-2xl"></i>
-          <div>
-            <div class="text-sm font-bold text-white">Stripe Verified</div>
-            <div class="text-xs text-slate-400">256-Bit SSL Encrypted</div>
-          </div>
-        </div>
-        <div class="flex items-center gap-3">
-          <i class="fa-solid fa-rotate-left text-indigo-400 text-2xl"></i>
-          <div>
-            <div class="text-sm font-bold text-white">14-Day Guarantee</div>
-            <div class="text-xs text-slate-400">UK consumer compliant</div>
-          </div>
-        </div>
+      <!-- Flash Sale Cards Row (Scrollable or Grid) -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3.5 pt-5" id="flashSaleProductsRow">
+        <!-- Dynamically loaded flash sale cards -->
       </div>
 
     </div>
   </section>
 
-  <!-- SOLUTIONS SECTION -->
-  <section id="solutions" class="py-24 bg-slate-900/50 border-y border-slate-800/60">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center max-w-3xl mx-auto mb-16">
-        <h2 class="text-xs uppercase font-bold tracking-widest text-indigo-400 mb-3">Enterprise Software Capabilities</h2>
-        <p class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Built for scale, engineered for speed</p>
-        <p class="mt-4 text-slate-400">Our software products streamline complex retail workflows, multi-channel catalog feeds, and cloud automation.</p>
-      </div>
-
-      <div class="grid md:grid-cols-3 gap-8">
-        <!-- Feature 1 -->
-        <div class="p-8 rounded-2xl bg-slate-950 border border-slate-800 hover:border-indigo-500/50 transition duration-300 group">
-          <div class="w-14 h-14 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition">
-            <i class="fa-solid fa-arrows-rotate"></i>
-          </div>
-          <h3 class="text-xl font-bold text-white mb-3">Real-time Stock Sync Engine</h3>
-          <p class="text-slate-400 text-sm leading-relaxed mb-4">
-            Automated bi-directional inventory synchronization bridging independent storefronts, ERP databases, and major online marketplaces with sub-second latency.
-          </p>
-          <ul class="text-xs text-slate-400 space-y-2">
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Zero overselling protection</li>
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Automatic webhook triggers</li>
-          </ul>
-        </div>
-
-        <!-- Feature 2 -->
-        <div class="p-8 rounded-2xl bg-slate-950 border border-slate-800 hover:border-indigo-500/50 transition duration-300 group">
-          <div class="w-14 h-14 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition">
-            <i class="fa-solid fa-cubes-stacked"></i>
-          </div>
-          <h3 class="text-xl font-bold text-white mb-3">Headless Cart Accelerator</h3>
-          <p class="text-slate-400 text-sm leading-relaxed mb-4">
-            Lightweight client-side checkout scripts and edge worker adapters that increase purchase conversion by up to 28% while slashing page load times.
-          </p>
-          <ul class="text-xs text-slate-400 space-y-2">
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Ultra-compact JS payload (< 12KB)</li>
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Native multi-currency & tax calculator</li>
-          </ul>
-        </div>
-
-        <!-- Feature 3 -->
-        <div class="p-8 rounded-2xl bg-slate-950 border border-slate-800 hover:border-indigo-500/50 transition duration-300 group">
-          <div class="w-14 h-14 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition">
-            <i class="fa-solid fa-chart-line"></i>
-          </div>
-          <h3 class="text-xl font-bold text-white mb-3">Telemetry & Growth Analytics</h3>
-          <p class="text-slate-400 text-sm leading-relaxed mb-4">
-            Privacy-first business intelligence dashboards that identify customer drop-off points, cohort retention trends, and product margin breakdowns.
-          </p>
-          <ul class="text-xs text-slate-400 space-y-2">
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> 100% GDPR & UK DPA 2018 compliant</li>
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Automated executive weekly digests</li>
-          </ul>
-        </div>
+  <!-- ================= CATEGORIES CIRCULAR QUICK SELECTOR ================= -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+    <div class="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200">
+      <h2 class="font-extrabold text-slate-800 text-sm sm:text-base uppercase tracking-wider mb-4">Explore Top Collections</h2>
+      <div class="grid grid-cols-4 sm:grid-cols-7 gap-4 text-center" id="categoryCirclesGrid">
+        <!-- Populated via JS -->
       </div>
     </div>
   </section>
 
-  <!-- SOFTWARE CATALOG SECTION (STRICT TRANSPARENT PRICING FOR GATEWAYS) -->
-  <section id="software-catalog" class="py-24">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center max-w-3xl mx-auto mb-16">
-        <h2 class="text-xs uppercase font-bold tracking-widest text-indigo-400 mb-3">Direct Software Licenses</h2>
-        <p class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Software Products & Digital Tools</p>
-        <p class="mt-4 text-slate-400">Instant digital licensing. All purchases include 12 months of automated updates, technical support, and documentation.</p>
+  <!-- ================= MAIN PRODUCTS EXPLORATION GRID ("JUST FOR YOU") ================= -->
+  <section id="productsCatalog" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+    
+    <!-- Filter bar & Status -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+      <div>
+        <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+          <span>Just For You</span>
+          <span class="text-xs font-semibold bg-slate-200 text-slate-700 px-2.5 py-0.5 rounded-full" id="activeFilterBadge">All Products (805)</span>
+        </h2>
+        <p class="text-xs text-slate-500 mt-1">Authentic luxury apparel, hair accessories & jewelry guaranteed by SAJID SERVICES LTD.</p>
       </div>
 
-      <div class="grid lg:grid-cols-3 gap-8 items-stretch">
-        
-        <!-- Product 1 -->
-        <div class="bg-slate-900/60 rounded-3xl p-8 border border-slate-800 flex flex-col justify-between hover:border-slate-700 transition">
-          <div>
-            <div class="flex justify-between items-center mb-4">
-              <span class="px-3 py-1 text-xs font-semibold rounded-full bg-slate-800 text-indigo-400 border border-slate-700">Digital Tool</span>
-              <span class="text-xs text-emerald-400 font-medium"><i class="fa-solid fa-circle-check"></i> In Stock</span>
-            </div>
-            <h3 class="text-2xl font-bold text-white">Shoppaza Lite Sync</h3>
-            <p class="text-slate-400 text-sm mt-2">Essential inventory and catalog automation script for growing digital retailers.</p>
-            
-            <div class="my-6 p-4 rounded-2xl bg-slate-950 border border-slate-800/80">
-              <div class="flex items-baseline gap-2">
-                <span class="text-4xl font-extrabold text-white">£29.00</span>
-                <span class="text-xs text-slate-400 uppercase font-semibold">/ license</span>
-              </div>
-              <p class="text-[11px] text-slate-500 mt-1">One-time software license fee with 6 months support.</p>
-            </div>
-
-            <div class="space-y-3 text-sm text-slate-300">
-              <div class="flex items-center gap-3"><i class="fa-solid fa-check text-indigo-400 text-xs"></i> 1 Live Domain License</div>
-              <div class="flex items-center gap-3"><i class="fa-solid fa-check text-indigo-400 text-xs"></i> 5,000 SKUs automated sync</div>
-              <div class="flex items-center gap-3"><i class="fa-solid fa-check text-indigo-400 text-xs"></i> REST API & CSV Webhook connector</div>
-              <div class="flex items-center gap-3"><i class="fa-solid fa-check text-indigo-400 text-xs"></i> Digital download link sent instantly</div>
-            </div>
-          </div>
-
-          <div class="mt-8 pt-6 border-t border-slate-800">
-            <button onclick="openOrderModal('Shoppaza Lite Sync', '£29.00', 'Single Domain License')" class="w-full py-3.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm transition flex items-center justify-center gap-2">
-              <i class="fa-solid fa-cart-shopping"></i> Purchase License (£29.00)
-            </button>
-            <p class="text-[11px] text-center text-slate-500 mt-2">Instant download delivery via email</p>
-          </div>
-        </div>
-
-        <!-- Product 2 (Featured) -->
-        <div class="bg-gradient-to-b from-slate-900 to-indigo-950/40 rounded-3xl p-8 border-2 border-indigo-500 relative flex flex-col justify-between shadow-2xl shadow-indigo-500/10">
-          <div class="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-indigo-600 text-white text-xs font-bold rounded-full uppercase tracking-wider shadow-md">
-            Most Popular
-          </div>
-          <div>
-            <div class="flex justify-between items-center mb-4">
-              <span class="px-3 py-1 text-xs font-semibold rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">Pro Edition</span>
-              <span class="text-xs text-emerald-400 font-medium"><i class="fa-solid fa-circle-check"></i> In Stock</span>
-            </div>
-            <h3 class="text-2xl font-bold text-white">Shoppaza Commerce Engine</h3>
-            <p class="text-slate-400 text-sm mt-2">Complete headless storefront software suite with checkout acceleration and order telemetry.</p>
-            
-            <div class="my-6 p-4 rounded-2xl bg-slate-950 border border-indigo-500/30">
-              <div class="flex items-baseline gap-2">
-                <span class="text-4xl font-extrabold text-white">£79.00</span>
-                <span class="text-xs text-slate-400 uppercase font-semibold">/ license</span>
-              </div>
-              <p class="text-[11px] text-indigo-300/80 mt-1">Full commercial license with 12 months automated updates.</p>
-            </div>
-
-            <div class="space-y-3 text-sm text-slate-300">
-              <div class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400 text-xs"></i> Up to 5 Production Domains</div>
-              <div class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400 text-xs"></i> Unlimited SKU Catalog Processing</div>
-              <div class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400 text-xs"></i> High-Speed Edge Cart Workers</div>
-              <div class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400 text-xs"></i> Priority Developer Support (24h SLA)</div>
-              <div class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400 text-xs"></i> 14-Day Money Back Guarantee</div>
-            </div>
-          </div>
-
-          <div class="mt-8 pt-6 border-t border-slate-800">
-            <button onclick="openOrderModal('Shoppaza Commerce Engine', '£79.00', '5 Domains Commercial License')" class="w-full py-3.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm transition shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2">
-              <i class="fa-solid fa-cart-shopping"></i> Purchase Pro License (£79.00)
-            </button>
-            <p class="text-[11px] text-center text-slate-400 mt-2">Instant activation key + documentation</p>
-          </div>
-        </div>
-
-        <!-- Product 3 -->
-        <div class="bg-slate-900/60 rounded-3xl p-8 border border-slate-800 flex flex-col justify-between hover:border-slate-700 transition">
-          <div>
-            <div class="flex justify-between items-center mb-4">
-              <span class="px-3 py-1 text-xs font-semibold rounded-full bg-slate-800 text-indigo-400 border border-slate-700">Enterprise</span>
-              <span class="text-xs text-emerald-400 font-medium"><i class="fa-solid fa-circle-check"></i> In Stock</span>
-            </div>
-            <h3 class="text-2xl font-bold text-white">Shoppaza Cloud Suite</h3>
-            <p class="text-slate-400 text-sm mt-2">Full source code access and custom deployment scripts for enterprises and agencies.</p>
-            
-            <div class="my-6 p-4 rounded-2xl bg-slate-950 border border-slate-800/80">
-              <div class="flex items-baseline gap-2">
-                <span class="text-4xl font-extrabold text-white">£199.00</span>
-                <span class="text-xs text-slate-400 uppercase font-semibold">/ license</span>
-              </div>
-              <p class="text-[11px] text-slate-500 mt-1">Unlimited domain distribution & white-label rights.</p>
-            </div>
-
-            <div class="space-y-3 text-sm text-slate-300">
-              <div class="flex items-center gap-3"><i class="fa-solid fa-check text-indigo-400 text-xs"></i> Unlimited Domains & Client Sites</div>
-              <div class="flex items-center gap-3"><i class="fa-solid fa-check text-indigo-400 text-xs"></i> Full Unminified Source Code Access</div>
-              <div class="flex items-center gap-3"><i class="fa-solid fa-check text-indigo-400 text-xs"></i> Dedicated Technical Account Manager</div>
-              <div class="flex items-center gap-3"><i class="fa-solid fa-check text-indigo-400 text-xs"></i> White-label redistribution rights</div>
-            </div>
-          </div>
-
-          <div class="mt-8 pt-6 border-t border-slate-800">
-            <button onclick="openOrderModal('Shoppaza Cloud Suite', '£199.00', 'Enterprise Unlimited License')" class="w-full py-3.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm transition flex items-center justify-center gap-2">
-              <i class="fa-solid fa-cart-shopping"></i> Purchase Enterprise (£199.00)
-            </button>
-            <p class="text-[11px] text-center text-slate-500 mt-2">Full repository access delivered immediately</p>
-          </div>
-        </div>
-
+      <!-- Category Filter Pills (Mobile friendly) -->
+      <div class="flex items-center gap-2 overflow-x-auto max-w-full pb-2 scrollbar-hide" id="categoryFilterPills">
+        <!-- Pills injected by JS -->
       </div>
     </div>
-  </section>
 
-  <!-- HOW IT WORKS / DIGITAL DELIVERY NOTICE -->
-  <section class="py-16 bg-slate-900/30 border-y border-slate-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="max-w-3xl mx-auto text-center mb-12">
-        <h3 class="text-2xl font-bold text-white">How Digital Fulfillment Works</h3>
-        <p class="text-slate-400 text-sm mt-2">Transparent, instant, and frictionless purchasing for software products.</p>
-      </div>
-
-      <div class="grid md:grid-cols-3 gap-8">
-        <div class="text-center p-6 rounded-2xl bg-slate-950 border border-slate-800">
-          <div class="w-12 h-12 mx-auto rounded-full bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-lg mb-4">1</div>
-          <h4 class="font-bold text-white text-base">Select Your License</h4>
-          <p class="text-xs text-slate-400 mt-2">Choose the software edition that fits your scale. Pricing is completely transparent in GBP (£) with no hidden fees.</p>
-        </div>
-        <div class="text-center p-6 rounded-2xl bg-slate-950 border border-slate-800">
-          <div class="w-12 h-12 mx-auto rounded-full bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-lg mb-4">2</div>
-          <h4 class="font-bold text-white text-base">Secure Gateway Checkout</h4>
-          <p class="text-xs text-slate-400 mt-2">Process payment securely via Stripe with credit/debit card, Apple Pay, or Google Pay under 256-bit encryption.</p>
-        </div>
-        <div class="text-center p-6 rounded-2xl bg-slate-950 border border-slate-800">
-          <div class="w-12 h-12 mx-auto rounded-full bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-lg mb-4">3</div>
-          <h4 class="font-bold text-white text-base">Instant Digital Delivery</h4>
-          <p class="text-xs text-slate-400 mt-2">Your cryptographically signed license key, installation instructions, and invoice are dispatched to your email within 5 minutes.</p>
-        </div>
-      </div>
+    <!-- Products Responsive Grid -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4" id="mainProductsGrid">
+      <!-- 805 Products Injected dynamically -->
     </div>
+
+    <!-- Load More Button -->
+    <div class="mt-10 text-center">
+      <button id="loadMoreBtn" onclick="loadMoreProducts()" class="bg-white hover:bg-slate-50 text-slate-800 font-bold text-xs sm:text-sm px-8 py-3.5 rounded-xl border border-slate-300 shadow-sm transition hover:border-daraz-orange inline-flex items-center gap-2">
+        <span>Load More Products</span>
+        <i class="fa-solid fa-spinner animate-spin hidden" id="loadSpinner"></i>
+      </button>
+    </div>
+
   </section>
 
-  <!-- MODAL / CHECKOUT PREVIEW DIALOG -->
-  <div id="orderModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-6 sm:p-8 relative shadow-2xl">
-      <button onclick="closeOrderModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white text-xl">
+  <!-- ================= SLIDE-OUT CART DRAWER ================= -->
+  <div id="cartDrawer" class="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm hidden transition-opacity">
+    <div class="fixed inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl flex flex-col justify-between z-10">
+      
+      <!-- Drawer Header -->
+      <div class="p-5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-cart-shopping text-daraz-orange text-lg"></i>
+          <h3 class="font-bold text-slate-900 text-base">Shopping Cart</h3>
+          <span class="bg-daraz-orange text-white text-[11px] font-bold px-2 py-0.5 rounded-full" id="drawerCartCount">0</span>
+        </div>
+        <button onclick="toggleCartDrawer()" class="text-slate-400 hover:text-slate-700 p-2 text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Drawer Items Container -->
+      <div class="p-5 overflow-y-auto flex-1 space-y-4 divide-y divide-slate-100" id="cartDrawerItems">
+        <!-- Injected via JS -->
+      </div>
+
+      <!-- Drawer Footer & Checkout Action -->
+      <div class="p-5 border-t border-slate-200 bg-slate-50 space-y-3">
+        <div class="flex justify-between text-xs text-slate-600">
+          <span>Standard Tracked Shipping</span>
+          <span class="text-emerald-600 font-bold">FREE</span>
+        </div>
+        <div class="flex justify-between text-sm font-bold text-slate-900">
+          <span>Subtotal (<span id="cartDrawerCurrency">GBP</span>)</span>
+          <span class="text-lg text-daraz-orange font-black" id="cartDrawerSubtotal">£0.00</span>
+        </div>
+
+        <button onclick="openCheckoutModal()" class="w-full py-3.5 bg-daraz-orange hover:bg-daraz-orangeHover text-white rounded-xl font-bold text-sm transition shadow-lg shadow-daraz-orange/20 flex items-center justify-center gap-2">
+          <i class="fa-solid fa-lock"></i> Proceed to Checkout
+        </button>
+
+        <div class="text-[11px] text-center text-slate-500 flex items-center justify-center gap-3">
+          <span><i class="fa-solid fa-shield-check text-emerald-500"></i> Stripe Verified</span>
+          <span>•</span>
+          <span>14-Day Money Back</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= PRODUCT DETAIL QUICK VIEW MODAL ================= -->
+  <div id="quickViewModal" class="fixed inset-0 z-[70] bg-black/75 hidden backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-3xl w-full p-6 sm:p-8 relative shadow-2xl overflow-y-auto max-h-[90vh]">
+      <button onclick="closeQuickViewModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-800 text-xl">
         <i class="fa-solid fa-xmark"></i>
       </button>
 
-      <div class="flex items-center gap-3 mb-6">
-        <div class="w-10 h-10 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center">
-          <i class="fa-solid fa-cart-shopping"></i>
+      <div class="grid sm:grid-cols-2 gap-6 sm:gap-8 items-start">
+        <!-- Image & Gallery -->
+        <div>
+          <div class="aspect-square rounded-2xl overflow-hidden bg-slate-100 border border-slate-200">
+            <img id="qvMainImage" src="" alt="Product" class="w-full h-full object-cover">
+          </div>
+          <div class="flex gap-2 mt-3 overflow-x-auto pb-1" id="qvThumbnails">
+            <!-- Thumbs injected via JS -->
+          </div>
+        </div>
+
+        <!-- Details -->
+        <div class="space-y-4">
+          <span class="px-2.5 py-1 rounded-md bg-daraz-lightOrange text-daraz-orange text-[11px] font-bold" id="qvCategory">Category</span>
+          <h3 class="text-lg sm:text-xl font-bold text-slate-900 leading-snug" id="qvTitle">Product Title</h3>
+          
+          <div class="flex items-center gap-2 text-xs text-amber-500 font-bold">
+            <span id="qvRating">★ 4.9</span>
+            <span class="text-slate-400 font-normal">(<span id="qvReviews">140</span> ratings • <span id="qvSold">850</span> sold)</span>
+          </div>
+
+          <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+            <div class="flex items-baseline gap-3">
+              <span class="text-2xl sm:text-3xl font-black text-daraz-orange" id="qvPrice">£0.00</span>
+              <span class="text-xs text-slate-400 line-through" id="qvComparePrice">£0.00</span>
+              <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded" id="qvDiscount">-35%</span>
+            </div>
+            <div class="text-[11px] text-slate-500 mt-1">Multi-currency payment supported: GBP, USD, USDT & PKR</div>
+          </div>
+
+          <p class="text-xs text-slate-600 leading-relaxed" id="qvDescription">Description</p>
+
+          <!-- Quantity Stepper -->
+          <div class="flex items-center gap-3 pt-2">
+            <span class="text-xs font-semibold text-slate-700">Quantity:</span>
+            <div class="flex items-center border border-slate-300 rounded-lg overflow-hidden">
+              <button onclick="adjustQvQty(-1)" class="px-3 py-1 bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold">-</button>
+              <span id="qvQtyDisplay" class="px-4 py-1 text-xs font-bold text-slate-800">1</span>
+              <button onclick="adjustQvQty(1)" class="px-3 py-1 bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold">+</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 pt-4">
+            <button onclick="addQvToCart()" class="py-3 rounded-xl bg-daraz-lightOrange text-daraz-orange border border-daraz-orange/40 font-bold text-xs hover:bg-daraz-orange hover:text-white transition">
+              <i class="fa-solid fa-cart-plus mr-1"></i> Add to Cart
+            </button>
+            <button onclick="instantBuyFromQv()" class="py-3 rounded-xl bg-daraz-orange hover:bg-daraz-orangeHover text-white font-bold text-xs transition shadow-lg shadow-daraz-orange/20">
+              <i class="fa-solid fa-bolt mr-1"></i> Buy Now
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SECURE CHECKOUT MODAL (STRIPE & USDT) ================= -->
+  <div id="checkoutModal" class="fixed inset-0 z-[80] bg-black/80 hidden backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 relative shadow-2xl max-h-[92vh] overflow-y-auto">
+      <button onclick="closeCheckoutModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-800 text-xl">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-10 h-10 rounded-xl bg-daraz-orange text-white flex items-center justify-center font-bold">
+          <i class="fa-solid fa-lock"></i>
         </div>
         <div>
-          <h4 class="font-bold text-white text-lg" id="modalProductName">Product Name</h4>
-          <p class="text-xs text-slate-400" id="modalProductTier">Tier Details</p>
+          <h3 class="font-bold text-slate-900 text-lg">Secure Multi-Tender Checkout</h3>
+          <p class="text-xs text-slate-500">Processed under 256-Bit SSL Encryption • SAJID SERVICES LTD</p>
         </div>
       </div>
 
-      <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 mb-6 flex justify-between items-center">
+      <!-- Order Summary Card -->
+      <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 mb-5 flex justify-between items-center">
         <div>
-          <span class="text-xs text-slate-400">Total Due (GBP)</span>
-          <div class="text-2xl font-extrabold text-white" id="modalProductPrice">£0.00</div>
+          <span class="text-xs text-slate-500">Total Payable Amount</span>
+          <div class="text-2xl font-black text-slate-900" id="checkoutPayableAmount">£0.00</div>
         </div>
         <div class="text-right">
-          <span class="text-xs text-emerald-400 flex items-center gap-1"><i class="fa-solid fa-shield-halved"></i> 256-Bit SSL</span>
-          <span class="text-[11px] text-slate-500">VAT inclusive</span>
+          <span class="text-xs text-emerald-600 font-bold flex items-center gap-1"><i class="fa-solid fa-shield-check"></i> Buyer Protected</span>
+          <span class="text-[11px] text-slate-500" id="checkoutItemsCount">0 Items</span>
         </div>
       </div>
 
-      <form id="checkoutForm" onsubmit="handleCheckoutSubmit(event)" class="space-y-4">
+      <form id="checkoutForm" onsubmit="handleFinalCheckout(event)" class="space-y-4 text-xs">
+        <!-- Customer Details -->
         <div>
-          <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Business Email Address</label>
-          <input type="email" required placeholder="name@company.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500">
-          <p class="text-[11px] text-slate-500 mt-1">Your software license key will be sent to this email.</p>
+          <label class="block font-bold text-slate-700 uppercase mb-1">Full Name</label>
+          <input type="text" required placeholder="John Doe" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:border-daraz-orange">
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Company / Licensee Name</label>
-          <input type="text" required placeholder="Company or Individual Name" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500">
+          <label class="block font-bold text-slate-700 uppercase mb-1">Email Address</label>
+          <input type="email" required placeholder="buyer@example.com" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:border-daraz-orange">
+          <p class="text-[10px] text-slate-500 mt-1">Official VAT invoice and shipment tracking will be sent here.</p>
         </div>
 
-        <div class="pt-2">
-          <button type="submit" class="w-full py-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm transition shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2">
-            <i class="fa-solid fa-lock"></i> Proceed to Secure Stripe Checkout
-          </button>
+        <div>
+          <label class="block font-bold text-slate-700 uppercase mb-1">Delivery Address</label>
+          <input type="text" required placeholder="Street address, City, Country, Postal Code" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:border-daraz-orange">
         </div>
 
-        <div class="text-center text-xs text-slate-500 pt-2 flex items-center justify-center gap-4">
-          <span><i class="fa-solid fa-rotate-left"></i> 14-Day Refund Guarantee</span>
-          <span>•</span>
-          <span><i class="fa-solid fa-file-invoice"></i> Official VAT Receipt</span>
+        <!-- Payment Method Selection -->
+        <div>
+          <label class="block font-bold text-slate-700 uppercase mb-2">Select Payment Method</label>
+          <div class="grid grid-cols-2 gap-3">
+            <label class="p-3 rounded-xl border-2 border-daraz-orange bg-daraz-lightOrange cursor-pointer flex items-center gap-2">
+              <input type="radio" name="paymentMethod" value="card" checked class="text-daraz-orange">
+              <div>
+                <div class="font-bold text-slate-900">Card / Stripe</div>
+                <div class="text-[10px] text-slate-500">Visa, Mastercard, Apple Pay</div>
+              </div>
+            </label>
+
+            <label class="p-3 rounded-xl border border-slate-200 hover:border-slate-300 cursor-pointer flex items-center gap-2">
+              <input type="radio" name="paymentMethod" value="crypto" class="text-daraz-orange">
+              <div>
+                <div class="font-bold text-slate-900">USDT / Crypto</div>
+                <div class="text-[10px] text-slate-500">Tether TRC20 / ERC20</div>
+              </div>
+            </label>
+          </div>
         </div>
+
+        <button type="submit" class="w-full py-3.5 bg-daraz-orange hover:bg-daraz-orangeHover text-white font-bold text-sm rounded-xl shadow-lg shadow-daraz-orange/30 transition">
+          Confirm Order & Complete Payment
+        </button>
       </form>
     </div>
   </div>
 
-  <!-- UK CORPORATE DISCLOSURE & FOOTER (STRICT UNDERWRITING COMPLIANCE) -->
-  <footer class="bg-slate-950 border-t border-slate-800/80 pt-16 pb-12 text-slate-400 text-sm">
+  <!-- ================= COMPREHENSIVE LEGAL & CORPORATE FOOTER ================= -->
+  <footer class="bg-slate-900 text-slate-400 text-xs pt-16 pb-12 border-t border-slate-800">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-slate-800/80">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-slate-800">
         
-        <!-- Company Identity -->
+        <!-- Company & Logo -->
         <div class="md:col-span-2 space-y-4">
-          <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white">
-              <i class="fa-solid fa-layer-group text-base"></i>
-            </div>
-            <span class="text-xl font-bold text-white tracking-tight">Shoppaza<span class="text-indigo-500">.</span></span>
-          </div>
-          <p class="text-xs text-slate-400 max-w-md leading-relaxed">
-            Shoppaza is an innovative technology brand delivering scalable digital commerce software, inventory workflow engines, and performance toolkits.
+          <img src="logo-white.svg" alt="Shoppaza by SAJID SERVICES LTD" class="h-10 w-auto object-contain">
+          <p class="text-xs text-slate-400 leading-relaxed max-w-md">
+            Shoppaza is the premier global e-commerce marketplace offering authentic fashion apparel, wigs, fine jewelry, and lifestyle products with worldwide express fulfillment.
           </p>
-          <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800/80 text-xs text-slate-300 space-y-1.5 max-w-lg">
-            <div class="font-semibold text-white flex items-center gap-2">
-              <i class="fa-solid fa-landmark text-indigo-400"></i> Corporate Entity Disclosure:
+          
+          <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-300 space-y-1.5 max-w-lg">
+            <div class="font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-landmark text-amber-400"></i> Corporate Entity Disclosure (UK):
             </div>
             <div>Shoppaza is a trading name wholly owned and operated by <strong>SAJID SERVICES LTD</strong>.</div>
-            <div>Registered in Scotland, United Kingdom. Company Number: <strong>SC874640</strong>.</div>
+            <div>Registered in Scotland, United Kingdom • Company Registration No: <strong>SC874640</strong>.</div>
             <div>Registered Office: <strong>Office 146 18 Young St, Unit Lge, Edinburgh, Scotland, United Kingdom, EH2 4JB</strong>.</div>
-            <div>Standard Industrial Classification (SIC): <strong>58290 - Other software publishing</strong>.</div>
+            <div>Nature of Business (SIC): <strong>58290 - Other software publishing & digital commerce</strong>.</div>
           </div>
         </div>
 
         <!-- Quick Links -->
         <div>
-          <h4 class="text-xs uppercase font-bold text-white tracking-wider mb-4">Software Products</h4>
-          <ul class="space-y-2.5 text-xs">
-            <li><a href="#software-catalog" class="hover:text-indigo-400 transition">Shoppaza Lite Sync</a></li>
-            <li><a href="#software-catalog" class="hover:text-indigo-400 transition">Commerce Engine Pro</a></li>
-            <li><a href="#software-catalog" class="hover:text-indigo-400 transition">Cloud Suite Enterprise</a></li>
-            <li><a href="#solutions" class="hover:text-indigo-400 transition">API Connectors</a></li>
-            <li><a href="about.html" class="hover:text-indigo-400 transition">Company Verification</a></li>
+          <h4 class="text-xs uppercase font-bold text-white tracking-wider mb-4">Customer Care</h4>
+          <ul class="space-y-2.5">
+            <li><a href="contact.html" class="hover:text-white transition">Help Center & Support</a></li>
+            <li><a href="about.html" class="hover:text-white transition">About SAJID SERVICES LTD</a></li>
+            <li><a href="#productsCatalog" class="hover:text-white transition">Browse All 800+ Products</a></li>
+            <li><a href="admin.html" class="hover:text-white text-orange-400 font-bold transition">Merchant Portal</a></li>
           </ul>
         </div>
 
-        <!-- Compliance & Legal Pages (CRUCIAL FOR STRIPE) -->
+        <!-- Compliance & Gateways -->
         <div>
-          <h4 class="text-xs uppercase font-bold text-white tracking-wider mb-4">Legal & Compliance</h4>
-          <ul class="space-y-2.5 text-xs">
-            <li><a href="terms.html" class="hover:text-indigo-400 transition">Terms & Conditions</a></li>
-            <li><a href="privacy.html" class="hover:text-indigo-400 transition">Privacy Policy (GDPR)</a></li>
-            <li><a href="refund-policy.html" class="hover:text-indigo-400 transition">Refund & Cancellation Policy</a></li>
-            <li><a href="contact.html" class="hover:text-indigo-400 transition">Contact Customer Support</a></li>
-            <li><a href="about.html" class="hover:text-indigo-400 transition">About SAJID SERVICES LTD</a></li>
+          <h4 class="text-xs uppercase font-bold text-white tracking-wider mb-4">Legal & Consumer Rights</h4>
+          <ul class="space-y-2.5">
+            <li><a href="terms.html" class="hover:text-white transition">Terms & Conditions</a></li>
+            <li><a href="privacy.html" class="hover:text-white transition">Privacy Policy (UK GDPR)</a></li>
+            <li><a href="refund-policy.html" class="hover:text-white transition">14-Day Refund & Returns Policy</a></li>
+            <li><a href="contact.html" class="hover:text-white transition">Contact Legal Team</a></li>
           </ul>
-          <div class="mt-6 pt-4 border-t border-slate-800 text-xs">
-            <span class="text-slate-500 block mb-1">Customer Support Email:</span>
-            <a href="mailto:support@shoppaza.com" class="text-indigo-400 hover:underline font-medium">support@shoppaza.com</a>
+          <div class="mt-4 pt-3 border-t border-slate-800 text-[11px]">
+            <span class="text-slate-500">Official Support Email:</span><br>
+            <a href="mailto:support@shoppaza.com" class="text-amber-400 hover:underline font-semibold">support@shoppaza.com</a>
           </div>
         </div>
 
       </div>
 
-      <!-- Payment Gateways & Copyright -->
+      <!-- Payment Badges & Copyright -->
       <div class="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
         <div>
           © 2026 SAJID SERVICES LTD (Company No. SC874640). All rights reserved.
         </div>
-        
-        <!-- Accepted Payment Methods Badges -->
+
         <div class="flex items-center gap-3 text-lg text-slate-400">
-          <span class="text-xs uppercase font-semibold text-slate-500 mr-1">Secured By:</span>
-          <i class="fa-brands fa-stripe text-2xl text-indigo-400" title="Stripe Verified"></i>
+          <span class="text-xs uppercase font-bold text-slate-500 mr-1">Secured By:</span>
+          <i class="fa-brands fa-stripe text-2xl text-indigo-400" title="Stripe Secured"></i>
           <i class="fa-brands fa-cc-visa text-xl" title="Visa"></i>
           <i class="fa-brands fa-cc-mastercard text-xl" title="Mastercard"></i>
           <i class="fa-brands fa-cc-amex text-xl" title="American Express"></i>
           <i class="fa-brands fa-apple-pay text-2xl" title="Apple Pay"></i>
           <i class="fa-brands fa-google-pay text-2xl" title="Google Pay"></i>
+          <span class="text-xs font-bold text-emerald-400 px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20">USDT (TRC20)</span>
         </div>
       </div>
 
     </div>
   </footer>
 
-  <!-- SCRIPT FOR MODALS & INTERACTIONS -->
+  <!-- ================= COMPLETE MULTI-CURRENCY & CATALOG SCRIPT ================= -->
   <script>
-    const mobileBtn = document.getElementById('mobileMenuBtn');
-    const mobileMenu = document.getElementById('mobileMenu');
-    mobileBtn.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
+    // State
+    let products = [];
+    let displayedProducts = [];
+    let currentCurrency = 'GBP';
+    let currentCategory = 'all';
+    let searchQuery = '';
+    let page = 1;
+    const PAGE_SIZE = 25;
+    let cart = [];
+    let currentQvProduct = null;
+    let currentQvQty = 1;
+
+    // Currency Formatting Config
+    const currencyConfig = {
+      GBP: { symbol: '£', rateKey: 'price_gbp', compareKey: 'compare_gbp', decimals: 2 },
+      USD: { symbol: '$', rateKey: 'price_usd', compareKey: 'compare_usd', decimals: 2 },
+      USDT: { symbol: '₮', rateKey: 'price_usdt', compareKey: 'compare_usdt', decimals: 2 },
+      PKR: { symbol: '₨ ', rateKey: 'price_pkr', compareKey: 'compare_pkr', decimals: 0 }
+    };
+
+    // Initialize
+    window.addEventListener('DOMContentLoaded', async () => {
+      // Check saved currency & cart
+      const savedCurr = localStorage.getItem('shoppaza_currency');
+      if (savedCurr && currencyConfig[savedCurr]) {
+        currentCurrency = savedCurr;
+        document.getElementById('currencySelector').value = currentCurrency;
+      }
+
+      const savedCart = localStorage.getItem('shoppaza_cart');
+      if (savedCart) {
+        try { cart = JSON.parse(savedCart); } catch(e) {}
+      }
+      updateCartUI();
+
+      // Start countdown clock
+      startFlashCountdown();
+
+      // Fetch products.json
+      await loadProducts();
     });
 
-    function openOrderModal(name, price, tier) {
-      document.getElementById('modalProductName').innerText = name;
-      document.getElementById('modalProductPrice').innerText = price;
-      document.getElementById('modalProductTier').innerText = tier;
-      document.getElementById('orderModal').classList.remove('hidden');
+    async function loadProducts() {
+      try {
+        const res = await fetch('products.json');
+        products = await res.json();
+        
+        // Check local custom products added from Admin
+        const localProds = JSON.parse(localStorage.getItem('shoppaza_custom_products') || '[]');
+        if (localProds.length > 0) {
+          products = [...localProds, ...products];
+        }
+
+        buildCategoriesList();
+        renderFlashSale();
+        filterAndRenderProducts();
+      } catch (err) {
+        console.error('Failed to load products:', err);
+      }
     }
 
-    function closeOrderModal() {
-      document.getElementById('orderModal').classList.add('hidden');
+    function formatPrice(prod, isCompare = false) {
+      const cfg = currencyConfig[currentCurrency];
+      const key = isCompare ? cfg.compareKey : cfg.rateKey;
+      const val = prod[key] || (isCompare ? (prod.price_usd * 1.35) : prod.price_usd);
+      return cfg.symbol + Number(val).toLocaleString(undefined, {
+        minimumFractionDigits: cfg.decimals,
+        maximumFractionDigits: cfg.decimals
+      });
     }
 
-    function handleCheckoutSubmit(e) {
+    function changeCurrency(newCurr) {
+      if (!currencyConfig[newCurr]) return;
+      currentCurrency = newCurr;
+      localStorage.setItem('shoppaza_currency', currentCurrency);
+      document.getElementById('cartDrawerCurrency').innerText = currentCurrency;
+
+      // Re-render UI
+      renderFlashSale();
+      renderProductsGrid();
+      updateCartUI();
+      if (currentQvProduct) renderQuickViewPrice();
+    }
+
+    function buildCategoriesList() {
+      const cats = Array.from(new Set(products.map(p => p.category))).filter(Boolean).sort();
+      
+      // 1. Search dropdown
+      const searchCat = document.getElementById('searchCategorySelect');
+      cats.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c;
+        opt.innerText = c;
+        searchCat.appendChild(opt);
+      });
+
+      // 2. Hero category menu
+      const heroMenu = document.getElementById('heroCategoryMenu');
+      heroMenu.innerHTML = '';
+      cats.slice(0, 10).forEach(c => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <button onclick="filterCategory('${c}')" class="w-full text-left py-1.5 px-2.5 rounded-lg hover:bg-slate-100 hover:text-daraz-orange transition flex items-center justify-between group">
+            <span class="truncate">${c}</span>
+            <i class="fa-solid fa-chevron-right text-[9px] text-slate-300 group-hover:text-daraz-orange"></i>
+          </button>
+        `;
+        heroMenu.appendChild(li);
+      });
+
+      // 3. Category Filter Pills
+      const pillsContainer = document.getElementById('categoryFilterPills');
+      pillsContainer.innerHTML = `
+        <button onclick="filterCategory('all')" class="category-pill px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition bg-daraz-orange text-white">All</button>
+      `;
+      cats.forEach(c => {
+        const btn = document.createElement('button');
+        btn.onclick = () => filterCategory(c);
+        btn.className = 'category-pill px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition bg-white text-slate-700 hover:bg-slate-100 border border-slate-200';
+        btn.innerText = c;
+        pillsContainer.appendChild(btn);
+      });
+
+      // 4. Circular Quick Selector
+      const circlesContainer = document.getElementById('categoryCirclesGrid');
+      const icons = [
+        { cat: 'Wigs & Hair', icon: 'fa-scissors', bg: 'bg-rose-50 text-rose-600' },
+        { cat: 'Dresses & Gowns', icon: 'fa-person-dress', bg: 'bg-purple-50 text-purple-600' },
+        { cat: 'Necklaces & Pendants', icon: 'fa-gem', bg: 'bg-amber-50 text-amber-600' },
+        { cat: 'Bags & Handbags', icon: 'fa-bag-shopping', bg: 'bg-blue-50 text-blue-600' },
+        { cat: 'Sunglasses & Eyewear', icon: 'fa-glasses', bg: 'bg-emerald-50 text-emerald-600' },
+        { cat: 'Luxury Watches', icon: 'fa-clock', bg: 'bg-indigo-50 text-indigo-600' },
+        { cat: 'Beauty & Cosmetics', icon: 'fa-wand-magic-sparkles', bg: 'bg-pink-50 text-pink-600' }
+      ];
+
+      circlesContainer.innerHTML = icons.map(i => `
+        <button onclick="filterCategory('${i.cat}')" class="flex flex-col items-center group">
+          <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl ${i.bg} flex items-center justify-center text-xl sm:text-2xl group-hover:scale-110 transition shadow-sm border border-slate-100">
+            <i class="fa-solid ${i.icon}"></i>
+          </div>
+          <span class="text-[11px] font-bold text-slate-700 mt-2 group-hover:text-daraz-orange transition truncate max-w-full">${i.cat.split(' ')[0]}</span>
+        </button>
+      `).join('');
+    }
+
+    function renderFlashSale() {
+      const container = document.getElementById('flashSaleProductsRow');
+      if (!container || products.length === 0) return;
+      
+      const flashItems = products.slice(0, 6);
+      container.innerHTML = flashItems.map(p => `
+        <div onclick="openQuickView(${p.id})" class="bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-md transition cursor-pointer group flex flex-col justify-between">
+          <div class="aspect-square relative overflow-hidden bg-slate-50">
+            <img src="${p.image}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.src='favicon.svg'">
+            <span class="absolute top-2 left-2 bg-daraz-orange text-white text-[10px] font-black px-1.5 py-0.5 rounded shadow">-${p.discount || 35}%</span>
+          </div>
+          <div class="p-2.5 space-y-1">
+            <div class="font-extrabold text-daraz-orange text-sm">${formatPrice(p)}</div>
+            <div class="text-[10px] text-slate-400 line-through">${formatPrice(p, true)}</div>
+            <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mt-1">
+              <div class="bg-daraz-orange h-full w-[70%]"></div>
+            </div>
+            <div class="text-[9px] text-slate-500 font-semibold mt-0.5">${p.sold_count || 45} Sold</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterCategory(cat) {
+      currentCategory = cat;
+      page = 1;
+      
+      // Update badge
+      document.getElementById('activeFilterBadge').innerText = (cat === 'all' ? 'All Products (805)' : cat);
+
+      // Update pills styles
+      document.querySelectorAll('.category-pill').forEach(btn => {
+        if (btn.innerText === cat || (cat === 'all' && btn.innerText === 'All')) {
+          btn.className = 'category-pill px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition bg-daraz-orange text-white';
+        } else {
+          btn.className = 'category-pill px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition bg-white text-slate-700 hover:bg-slate-100 border border-slate-200';
+        }
+      });
+
+      filterAndRenderProducts();
+      
+      // Smooth scroll to catalog
+      document.getElementById('productsCatalog').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function handleSearch(e) {
       e.preventDefault();
-      alert('Your order request has been received! Our secure Stripe payment gateway will process this software license once your live gateway keys are connected.');
-      closeOrderModal();
+      const input = document.getElementById('searchInput') || document.getElementById('mobileSearchInput');
+      const catSelect = document.getElementById('searchCategorySelect');
+      
+      searchQuery = (input ? input.value : '').toLowerCase().trim();
+      if (catSelect && catSelect.value !== 'all') {
+        currentCategory = catSelect.value;
+      }
+      page = 1;
+      filterAndRenderProducts();
+      document.getElementById('productsCatalog').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function filterAndRenderProducts() {
+      displayedProducts = products.filter(p => {
+        const matchesCategory = (currentCategory === 'all' || p.category === currentCategory);
+        const matchesQuery = (!searchQuery || (p.title || '').toLowerCase().includes(searchQuery) || (p.category || '').toLowerCase().includes(searchQuery));
+        return matchesCategory && matchesQuery;
+      });
+
+      renderProductsGrid();
+    }
+
+    function renderProductsGrid() {
+      const grid = document.getElementById('mainProductsGrid');
+      const count = page * PAGE_SIZE;
+      const visible = displayedProducts.slice(0, count);
+
+      grid.innerHTML = visible.map(p => `
+        <div class="bg-white rounded-2xl border border-slate-200 hover:border-daraz-orange overflow-hidden hover:shadow-lg transition duration-200 flex flex-col justify-between group">
+          <!-- Image -->
+          <div onclick="openQuickView(${p.id})" class="aspect-square relative overflow-hidden bg-slate-50 cursor-pointer">
+            <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.src='favicon.svg'">
+            <span class="absolute top-2 left-2 bg-daraz-orange text-white text-[10px] font-black px-1.5 py-0.5 rounded shadow">-${p.discount || 30}%</span>
+            <span class="absolute bottom-2 left-2 bg-emerald-600/90 text-white text-[9px] font-bold px-1.5 py-0.5 rounded backdrop-blur">Free Shipping</span>
+          </div>
+
+          <!-- Body -->
+          <div class="p-3 flex-1 flex flex-col justify-between space-y-2">
+            <div>
+              <div class="text-[10px] font-bold text-slate-400 uppercase">${p.category}</div>
+              <h4 onclick="openQuickView(${p.id})" class="text-xs font-semibold text-slate-800 line-clamp-2 hover:text-daraz-orange transition cursor-pointer mt-0.5" title="${p.title}">
+                ${p.title}
+              </h4>
+            </div>
+
+            <!-- Price & Rating -->
+            <div>
+              <div class="flex items-baseline gap-2">
+                <span class="text-sm sm:text-base font-black text-daraz-orange">${formatPrice(p)}</span>
+                <span class="text-[10px] text-slate-400 line-through">${formatPrice(p, true)}</span>
+              </div>
+
+              <div class="flex items-center justify-between text-[10px] text-slate-500 pt-1">
+                <span class="text-amber-500 font-bold">★ ${p.rating || 4.8}</span>
+                <span>${p.sold_count || 120}+ sold</span>
+              </div>
+
+              <!-- Quick Add to Cart button -->
+              <button onclick="addToCartDirect(${p.id}, event)" class="w-full mt-2 py-2 rounded-xl bg-daraz-lightOrange text-daraz-orange hover:bg-daraz-orange hover:text-white border border-daraz-orange/30 font-bold text-xs transition flex items-center justify-center gap-1.5 shadow-sm">
+                <i class="fa-solid fa-cart-shopping"></i> Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      // Toggle Load More button
+      const loadBtn = document.getElementById('loadMoreBtn');
+      if (loadBtn) {
+        loadBtn.style.display = (visible.length >= displayedProducts.length) ? 'none' : 'inline-flex';
+      }
+    }
+
+    function loadMoreProducts() {
+      page++;
+      renderProductsGrid();
+    }
+
+    // Quick View
+    function openQuickView(id) {
+      const prod = products.find(p => p.id === id);
+      if (!prod) return;
+      currentQvProduct = prod;
+      currentQvQty = 1;
+
+      document.getElementById('qvMainImage').src = prod.image;
+      document.getElementById('qvCategory').innerText = prod.category;
+      document.getElementById('qvTitle').innerText = prod.title;
+      document.getElementById('qvRating').innerText = '★ ' + (prod.rating || 4.9);
+      document.getElementById('qvReviews').innerText = prod.reviews_count || 120;
+      document.getElementById('qvSold').innerText = prod.sold_count || 450;
+      document.getElementById('qvDescription').innerText = prod.description || 'Authentic quality product backed by UK warranty.';
+      document.getElementById('qvQtyDisplay').innerText = '1';
+
+      renderQuickViewPrice();
+
+      // Thumbnails
+      const thumbContainer = document.getElementById('qvThumbnails');
+      thumbContainer.innerHTML = (prod.images || [prod.image]).map(img => `
+        <img src="${img}" onclick="document.getElementById('qvMainImage').src='${img}'" class="w-12 h-12 object-cover rounded-lg border border-slate-200 cursor-pointer hover:border-daraz-orange">
+      `).join('');
+
+      document.getElementById('quickViewModal').classList.remove('hidden');
+    }
+
+    function renderQuickViewPrice() {
+      if (!currentQvProduct) return;
+      document.getElementById('qvPrice').innerText = formatPrice(currentQvProduct);
+      document.getElementById('qvComparePrice').innerText = formatPrice(currentQvProduct, true);
+      document.getElementById('qvDiscount').innerText = `-${currentQvProduct.discount || 30}%`;
+    }
+
+    function closeQuickViewModal() {
+      document.getElementById('quickViewModal').classList.add('hidden');
+    }
+
+    function adjustQvQty(delta) {
+      currentQvQty = Math.max(1, currentQvQty + delta);
+      document.getElementById('qvQtyDisplay').innerText = currentQvQty;
+    }
+
+    function addQvToCart() {
+      if (!currentQvProduct) return;
+      addToCart(currentQvProduct, currentQvQty);
+      closeQuickViewModal();
+      toggleCartDrawer(true);
+    }
+
+    function instantBuyFromQv() {
+      if (!currentQvProduct) return;
+      addToCart(currentQvProduct, currentQvQty);
+      closeQuickViewModal();
+      openCheckoutModal();
+    }
+
+    // Cart Management
+    function addToCartDirect(id, event) {
+      if (event) event.stopPropagation();
+      const prod = products.find(p => p.id === id);
+      if (prod) {
+        addToCart(prod, 1);
+        toggleCartDrawer(true);
+      }
+    }
+
+    function addToCart(prod, qty = 1) {
+      const existing = cart.find(i => i.id === prod.id);
+      if (existing) {
+        existing.qty += qty;
+      } else {
+        cart.push({ ...prod, qty });
+      }
+      saveCart();
+      updateCartUI();
+    }
+
+    function saveCart() {
+      localStorage.setItem('shoppaza_cart', JSON.stringify(cart));
+    }
+
+    function updateCartUI() {
+      const totalCount = cart.reduce((sum, i) => sum + i.qty, 0);
+      document.getElementById('cartCountBadge').innerText = totalCount;
+      document.getElementById('drawerCartCount').innerText = totalCount;
+
+      // Subtotal calculation in active currency
+      const cfg = currencyConfig[currentCurrency];
+      const subtotal = cart.reduce((sum, item) => {
+        const p = item[cfg.rateKey] || item.price_usd;
+        return sum + (p * item.qty);
+      }, 0);
+
+      const formattedSubtotal = cfg.symbol + subtotal.toLocaleString(undefined, {
+        minimumFractionDigits: cfg.decimals,
+        maximumFractionDigits: cfg.decimals
+      });
+
+      document.getElementById('cartTotalHeader').innerText = formattedSubtotal;
+      document.getElementById('cartDrawerSubtotal').innerText = formattedSubtotal;
+      document.getElementById('checkoutPayableAmount').innerText = formattedSubtotal;
+      document.getElementById('checkoutItemsCount').innerText = `${totalCount} Items`;
+
+      // Drawer Items HTML
+      const itemsContainer = document.getElementById('cartDrawerItems');
+      if (cart.length === 0) {
+        itemsContainer.innerHTML = `
+          <div class="text-center py-16 text-slate-400">
+            <i class="fa-solid fa-bag-shopping text-4xl mb-3 text-slate-300"></i>
+            <p class="text-xs">Your shopping cart is empty.</p>
+            <a href="#productsCatalog" onclick="toggleCartDrawer(false)" class="inline-block mt-3 px-4 py-2 bg-daraz-orange text-white font-bold text-xs rounded-xl">Start Shopping</a>
+          </div>
+        `;
+      } else {
+        itemsContainer.innerHTML = cart.map(item => `
+          <div class="flex items-center gap-3 pt-3">
+            <img src="${item.image}" class="w-14 h-14 object-cover rounded-xl border border-slate-200 flex-shrink-0" onerror="this.src='favicon.svg'">
+            <div class="flex-1 overflow-hidden">
+              <h5 class="font-bold text-slate-800 text-xs truncate">${item.title}</h5>
+              <div class="text-xs text-daraz-orange font-extrabold mt-0.5">${formatPrice(item)}</div>
+              
+              <div class="flex items-center gap-2 mt-2">
+                <button onclick="changeCartQty(${item.id}, -1)" class="w-5 h-5 bg-slate-200 text-slate-700 rounded flex items-center justify-center font-bold text-xs">-</button>
+                <span class="text-xs font-bold text-slate-800">${item.qty}</span>
+                <button onclick="changeCartQty(${item.id}, 1)" class="w-5 h-5 bg-slate-200 text-slate-700 rounded flex items-center justify-center font-bold text-xs">+</button>
+              </div>
+            </div>
+            <button onclick="removeFromCart(${item.id})" class="text-slate-400 hover:text-red-500 p-2">
+              <i class="fa-solid fa-trash-can text-sm"></i>
+            </button>
+          </div>
+        `).join('');
+      }
+    }
+
+    function changeCartQty(id, delta) {
+      const item = cart.find(i => i.id === id);
+      if (item) {
+        item.qty += delta;
+        if (item.qty <= 0) {
+          cart = cart.filter(i => i.id !== id);
+        }
+        saveCart();
+        updateCartUI();
+      }
+    }
+
+    function removeFromCart(id) {
+      cart = cart.filter(i => i.id !== id);
+      saveCart();
+      updateCartUI();
+    }
+
+    function toggleCartDrawer(forceOpen = null) {
+      const drawer = document.getElementById('cartDrawer');
+      if (forceOpen === true) {
+        drawer.classList.remove('hidden');
+      } else if (forceOpen === false) {
+        drawer.classList.add('hidden');
+      } else {
+        drawer.classList.toggle('hidden');
+      }
+    }
+
+    // Checkout
+    function openCheckoutModal() {
+      if (cart.length === 0) {
+        alert('Your cart is empty! Please add products before checking out.');
+        return;
+      }
+      toggleCartDrawer(false);
+      document.getElementById('checkoutModal').classList.remove('hidden');
+    }
+
+    function closeCheckoutModal() {
+      document.getElementById('checkoutModal').classList.add('hidden');
+    }
+
+    function handleFinalCheckout(e) {
+      e.preventDefault();
+      const method = document.querySelector('input[name="paymentMethod"]:checked').value;
+      const payable = document.getElementById('checkoutPayableAmount').innerText;
+
+      if (method === 'crypto') {
+        alert(`Order Received! For USDT Payment: Please transfer ${payable} (TRC20) to company wallet: TShpza874640EdinUK99x2. Your order will be dispatched once confirmed on blockchain.`);
+      } else {
+        alert(`Order Received! Redirecting to Stripe 256-Bit SSL payment session for ${payable}. An official VAT invoice from SAJID SERVICES LTD will be delivered to your email.`);
+      }
+
+      cart = [];
+      saveCart();
+      updateCartUI();
+      closeCheckoutModal();
+    }
+
+    // Flash sale countdown timer
+    function startFlashCountdown() {
+      let seconds = 31519;
+      setInterval(() => {
+        seconds--;
+        if (seconds < 0) seconds = 86400;
+        const h = Math.floor(seconds / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+        const s = seconds % 60;
+        document.getElementById('timerHours').innerText = String(h).padStart(2, '0');
+        document.getElementById('timerMins').innerText = String(m).padStart(2, '0');
+        document.getElementById('timerSecs').innerText = String(s).padStart(2, '0');
+      }, 1000);
     }
   </script>
 </body>

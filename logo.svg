@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 64" fill="none">
+  <defs>
+    <linearGradient id="shopGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F85606" />
+      <stop offset="60%" stop-color="#FF7A00" />
+      <stop offset="100%" stop-color="#6366F1" />
+    </linearGradient>
+    <linearGradient id="iconGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F85606" />
+      <stop offset="100%" stop-color="#EA580C" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#F85606" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Brand Icon -->
+  <g transform="translate(6, 6)" filter="url(#glow)">
+    <rect width="52" height="52" rx="14" fill="url(#iconGrad)"/>
+    <!-- Bag handles -->
+    <path d="M21 21C21 17.5 23.5 14.5 26 14.5C28.5 14.5 31 17.5 31 21" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+    <!-- Bag body & cart smile -->
+    <path d="M16 22H36L34.5 39C34.5 40.5 33.2 41.5 31.8 41.5H20.2C18.8 41.5 17.5 40.5 17.5 39L16 22Z" fill="#FFFFFF" fill-opacity="0.2" stroke="#FFFFFF" stroke-width="2.5" stroke-linejoin="round"/>
+    <!-- Dynamic Lightning Spark -->
+    <path d="M27 25L22 32H27L25 39L32 31H26.5L28.5 25H27Z" fill="#FFFFFF"/>
+  </g>
+
+  <!-- Typography: Shoppaza -->
+  <text x="70" y="42" font-family="'Plus Jakarta Sans', system-ui, -apple-system, sans-serif" font-weight="900" font-size="32" letter-spacing="-0.5" fill="#1E293B">
+    Shop<tspan fill="#F85606">paza</tspan>
+  </text>
+  
+  <!-- Dot / Accent -->
+  <circle cx="218" cy="40" r="4.5" fill="#F85606"/>
+
+  <!-- Subtitle -->
+  <text x="71" y="55" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="9" letter-spacing="2.5" fill="#94A3B8">
+    GLOBAL MEGA STORE
+  </text>
+</svg>

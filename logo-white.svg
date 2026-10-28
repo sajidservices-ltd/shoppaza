@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 64" fill="none">
+  <defs>
+    <linearGradient id="iconGradWhite" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F85606" />
+      <stop offset="100%" stop-color="#EA580C" />
+    </linearGradient>
+  </defs>
+
+  <g transform="translate(6, 6)">
+    <rect width="52" height="52" rx="14" fill="url(#iconGradWhite)"/>
+    <path d="M21 21C21 17.5 23.5 14.5 26 14.5C28.5 14.5 31 17.5 31 21" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+    <path d="M16 22H36L34.5 39C34.5 40.5 33.2 41.5 31.8 41.5H20.2C18.8 41.5 17.5 40.5 17.5 39L16 22Z" fill="#FFFFFF" fill-opacity="0.25" stroke="#FFFFFF" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M27 25L22 32H27L25 39L32 31H26.5L28.5 25H27Z" fill="#FFFFFF"/>
+  </g>
+
+  <text x="70" y="42" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="900" font-size="32" letter-spacing="-0.5" fill="#FFFFFF">
+    Shop<tspan fill="#F85606">paza</tspan>
+  </text>
+  
+  <circle cx="218" cy="40" r="4.5" fill="#F85606"/>
+
+  <text x="71" y="55" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="9" letter-spacing="2.5" fill="#CBD5E1">
+    GLOBAL MEGA STORE
+  </text>
+</svg>

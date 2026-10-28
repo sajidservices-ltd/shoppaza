@@ -60,11 +60,11 @@
   <div class="bg-[#18181B] text-slate-300 text-xs py-1.5 px-4 border-b border-orange-500/20">
     <div class="max-w-[1240px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
       <div class="flex items-center gap-4 text-[11px]">
-        <span class="flex items-center gap-1.5 text-amber-400 font-bold">
+        <span class="flex items-center gap-1.5 text-amber-400 font-bold" id="topAnnouncementPromo">
           <i class="fa-solid fa-bolt"></i> SAVE MORE ON APP & WEB
         </span>
         <span class="text-slate-600">|</span>
-        <span class="hidden md:inline text-slate-300">
+        <span class="hidden md:inline text-slate-300" id="topAnnouncementLegal">
           UK Registered Entity: <strong>SAJID SERVICES LTD</strong> (Companies House SC874640)
         </span>
       </div>
@@ -1342,11 +1342,11 @@
         <div>
           <h4 class="font-bold text-slate-800 text-sm mb-3 uppercase tracking-wide">Corporate Entity</h4>
           <div class="p-3 bg-slate-50 rounded border border-slate-200 space-y-1 text-[11px] text-slate-600">
-            <div class="font-bold text-slate-900">SAJID SERVICES LTD</div>
-            <div>Company Number: <strong>SC874640</strong> (Scotland, UK)</div>
-            <div>Registered Office: <strong>Office 146 18 Young St, Unit Lge, Edinburgh, Scotland, United Kingdom, EH2 4JB</strong></div>
+            <div class="font-bold text-slate-900" id="footerCompanyName">SAJID SERVICES LTD</div>
+            <div id="footerCompanyNumber">Company Number: <strong>SC874640</strong> (Scotland, UK)</div>
+            <div id="footerCompanyAddress">Registered Office: <strong>Office 146 18 Young St, Unit Lge, Edinburgh, Scotland, United Kingdom, EH2 4JB</strong></div>
             <div>SIC: <strong>58290 - Other software publishing</strong></div>
-            <div class="pt-1">Support: <a href="mailto:support@shoppaza.com" class="text-daraz-orange font-bold">support@shoppaza.com</a></div>
+            <div class="pt-1">Support: <a href="mailto:support@shoppaza.com" id="footerSupportEmail" class="text-daraz-orange font-bold">support@shoppaza.com</a></div>
           </div>
         </div>
 
@@ -1356,7 +1356,7 @@
       <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500">
         <div class="flex items-center gap-3">
           <img src="logo.svg?v=2" alt="Shoppaza" class="h-6 w-auto">
-          <span>© 2026 SAJID SERVICES LTD (Company No. SC874640). All Rights Reserved.</span>
+          <span id="footerCopyrightText">© 2026 SAJID SERVICES LTD (Company No. SC874640). All Rights Reserved.</span>
         </div>
         <div class="flex items-center gap-4">
           <span class="font-semibold text-slate-700">Available In:</span>
@@ -1402,11 +1402,51 @@
       }
       updateCartUI();
       updateCustomerHeader();
+      applyCustomThemeSettings();
       startFlashCountdown();
       startCarouselAutoRotate();
       await loadCategoriesData();
       await loadProducts();
     });
+
+    function applyCustomThemeSettings() {
+      try {
+        const theme = JSON.parse(localStorage.getItem('shoppaza_theme_settings') || '{}');
+        if (theme.announcementPromo) {
+          const promoEl = document.getElementById('topAnnouncementPromo');
+          if (promoEl) promoEl.innerHTML = `<i class="fa-solid fa-bolt"></i> ${theme.announcementPromo}`;
+        }
+        if (theme.announcementLegal) {
+          const legalEl = document.getElementById('topAnnouncementLegal');
+          if (legalEl) legalEl.innerHTML = theme.announcementLegal;
+        }
+        if (theme.supportEmail) {
+          const emailEl = document.getElementById('footerSupportEmail');
+          if (emailEl) {
+            emailEl.innerText = theme.supportEmail;
+            emailEl.href = 'mailto:' + theme.supportEmail;
+          }
+        }
+        if (theme.companyName) {
+          const coEl = document.getElementById('footerCompanyName');
+          if (coEl) coEl.innerText = theme.companyName;
+        }
+        if (theme.companyNumber) {
+          const numEl = document.getElementById('footerCompanyNumber');
+          if (numEl) numEl.innerHTML = `Company Number: <strong>${theme.companyNumber}</strong>`;
+        }
+        if (theme.companyAddress) {
+          const addrEl = document.getElementById('footerCompanyAddress');
+          if (addrEl) addrEl.innerHTML = `Registered Office: <strong>${theme.companyAddress}</strong>`;
+        }
+        if (theme.copyrightText) {
+          const copyEl = document.getElementById('footerCopyrightText');
+          if (copyEl) copyEl.innerText = theme.copyrightText;
+        }
+      } catch(e) {
+        console.warn('Error applying custom theme settings:', e);
+      }
+    }
 
     // Slider functions
     function goToSlide(idx) {
@@ -1540,9 +1580,25 @@
 
         allRawProducts = data;
         
+        // 1. Merge locally created products
         const localProds = JSON.parse(localStorage.getItem('shoppaza_custom_products') || '[]');
         if (localProds.length > 0) {
           allRawProducts = [...localProds, ...allRawProducts];
+        }
+
+        // 2. Apply admin product edits (titles, prices, categories, stock, images)
+        const editedProds = JSON.parse(localStorage.getItem('shoppaza_edited_products') || '{}');
+        allRawProducts = allRawProducts.map(p => {
+          if (editedProds[p.id]) {
+            return { ...p, ...editedProds[p.id] };
+          }
+          return p;
+        });
+
+        // 3. Apply admin product deletions
+        const deletedIds = JSON.parse(localStorage.getItem('shoppaza_deleted_products') || '[]');
+        if (deletedIds.length > 0) {
+          allRawProducts = allRawProducts.filter(p => !deletedIds.includes(p.id));
         }
 
         products = allRawProducts;

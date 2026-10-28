@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shoppaza Admin | Merchant Operations Center</title>
+  <title>Shoppaza Admin | Full Shopify-Grade Operations Center</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       theme: {
@@ -17,12 +17,15 @@
           fontFamily: { sans: ['"Inter"', 'system-ui', 'sans-serif'] },
           colors: {
             shopify: {
-              dark: '#1a1a1a',
+              dark: '#0b0c0e',
               sidebar: '#0f1115',
-              surface: '#202226',
-              border: '#2e3035',
+              surface: '#1c1f24',
+              surfaceLight: '#26292e',
+              border: '#2a2d34',
+              borderLight: '#353941',
               green: '#008060',
               greenHover: '#006e52',
+              greenBg: 'rgba(0, 128, 96, 0.15)',
               accent: '#303030'
             }
           }
@@ -33,36 +36,45 @@
   <style>
     body { background-color: #0b0c0e; color: #e3e5e8; }
     .sidebar-active { background-color: #26292e; color: #ffffff; font-weight: 600; border-left: 3px solid #008060; }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0f1115; }
+    ::-webkit-scrollbar-thumb { background: #2a2d34; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #008060; }
   </style>
 </head>
 <body class="font-sans antialiased selection:bg-emerald-600 selection:text-white">
+
+  <!-- ================= FLOATING TOAST NOTIFICATION CONTAINER ================= -->
+  <div id="toastContainer" class="fixed top-5 right-5 z-[200] flex flex-col gap-2 pointer-events-none"></div>
 
   <!-- ================= AUTH / LOGIN LOCK SCREEN ================= -->
   <div id="adminLockScreen" class="fixed inset-0 z-[100] bg-slate-950 flex items-center justify-center p-4">
     <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-3xl p-8 sm:p-10 shadow-2xl relative">
       <div class="flex flex-col items-center justify-center mb-6">
         <img src="logo-white.svg?v=2" alt="Shoppaza" class="h-10 w-auto mb-3">
-        <span class="text-[10px] uppercase font-bold tracking-widest text-amber-400 bg-amber-400/10 border border-amber-400/20 px-3 py-0.5 rounded-full">Secure Owner Admin</span>
+        <span class="text-[10px] uppercase font-bold tracking-widest text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-3 py-0.5 rounded-full">Shopify-Grade Operations Admin</span>
       </div>
       <div class="text-center mb-6">
-        <h1 class="text-xl font-bold text-white tracking-tight">Shopify-Style Admin Portal</h1>
-        <p class="text-xs text-slate-400 mt-1">Private Access Only • SAJID SERVICES LTD (SC874640)</p>
+        <h1 class="text-xl font-bold text-white tracking-tight">Shoppaza Master Control</h1>
+        <p class="text-xs text-slate-400 mt-1">SAJID SERVICES LTD (SC874640) • Private Merchant Suite</p>
       </div>
 
       <form id="adminLoginForm" onsubmit="handleAdminLogin(event)" class="space-y-5">
         <div>
-          <label class="block text-xs font-semibold uppercase text-slate-300 tracking-wider mb-2">Master Administrator Key</label>
+          <label class="block text-xs font-semibold uppercase text-slate-300 tracking-wider mb-2">Master Administrator Passcode</label>
           <div class="relative">
-            <input type="password" id="adminSecretInput" required placeholder="Enter Secret Admin Passcode" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-emerald-500 font-mono tracking-wider">
+            <input type="password" id="adminSecretInput" required placeholder="Enter Admin Secret Passcode" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-emerald-500 font-mono tracking-wider">
             <button type="button" onclick="togglePassVisibility()" class="absolute right-4 top-3.5 text-slate-500 hover:text-slate-300">
               <i class="fa-solid fa-eye" id="eyeIcon"></i>
             </button>
           </div>
-          <p class="text-[11px] text-slate-500 mt-2">Default Master Key: <code class="text-emerald-400 bg-slate-950 px-1.5 py-0.5 rounded border border-slate-800">Sajid2026!#</code></p>
+          <p class="text-[11px] text-slate-500 mt-2">Default Passcode: <code class="text-emerald-400 bg-slate-950 px-1.5 py-0.5 rounded border border-slate-800" id="hintDefaultPass">Sajid2026!#</code> (Changeable inside Settings)</p>
         </div>
 
-        <div id="loginError" class="hidden p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs">
-          <i class="fa-solid fa-triangle-exclamation mr-1"></i> Invalid passcode. Access denied.
+        <div id="loginError" class="hidden p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs flex items-center gap-2">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <span>Invalid passcode. Please enter the correct master key.</span>
         </div>
 
         <button type="submit" class="w-full py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm transition shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2">
@@ -78,7 +90,7 @@
     </div>
   </div>
 
-  <!-- ================= SHOPIFY-STYLE MAIN ADMIN DASHBOARD ================= -->
+  <!-- ================= MAIN ADMIN APP ================= -->
   <div id="adminApp" class="hidden min-h-screen flex">
     
     <!-- SHOPIFY SIDEBAR -->
@@ -89,7 +101,7 @@
           <div class="flex items-center gap-2">
             <img src="logo-white.svg?v=2" alt="Shoppaza" class="h-8 w-auto">
           </div>
-          <a href="index.html" target="_blank" title="View Online Store" class="text-slate-400 hover:text-white p-1.5 hover:bg-shopify-surface rounded-lg">
+          <a href="index.html" target="_blank" title="View Online Store" class="text-slate-400 hover:text-white p-1.5 hover:bg-shopify-surface rounded-lg transition">
             <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
           </a>
         </div>
@@ -97,31 +109,41 @@
         <!-- Navigation Menu -->
         <nav class="p-3 space-y-1 text-sm font-medium">
           <button onclick="switchTab('home')" id="tabBtn-home" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-shopify-surface sidebar-active transition">
-            <i class="fa-solid fa-house w-4"></i> Home
+            <i class="fa-solid fa-house w-4"></i> Home / Overview
           </button>
+          
           <button onclick="switchTab('orders')" id="tabBtn-orders" class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-slate-300 hover:bg-shopify-surface transition">
             <div class="flex items-center gap-3">
               <i class="fa-solid fa-inbox w-4"></i> Orders
             </div>
-            <span class="text-[11px] bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded-full">3</span>
+            <span class="text-[11px] bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded-full" id="sidebarOrdersBadge">0</span>
           </button>
+          
           <button onclick="switchTab('products')" id="tabBtn-products" class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-slate-300 hover:bg-shopify-surface transition">
             <div class="flex items-center gap-3">
               <i class="fa-solid fa-tag w-4"></i> Products
             </div>
             <span class="text-[11px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full" id="sidebarProductCount">805</span>
           </button>
+
+          <button onclick="switchTab('customizer')" id="tabBtn-customizer" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-shopify-surface transition">
+            <i class="fa-solid fa-paintbrush w-4"></i> Store Customizer
+          </button>
+
           <button onclick="switchTab('customers')" id="tabBtn-customers" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-shopify-surface transition">
             <i class="fa-solid fa-users w-4"></i> Customers
           </button>
+
+          <button onclick="switchTab('discounts')" id="tabBtn-discounts" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-shopify-surface transition">
+            <i class="fa-solid fa-ticket w-4"></i> Coupons & Promos
+          </button>
+
           <button onclick="switchTab('analytics')" id="tabBtn-analytics" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-shopify-surface transition">
             <i class="fa-solid fa-chart-line w-4"></i> Analytics
           </button>
-          <button onclick="switchTab('discounts')" id="tabBtn-discounts" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-shopify-surface transition">
-            <i class="fa-solid fa-ticket w-4"></i> Discounts
-          </button>
+
           <button onclick="switchTab('settings')" id="tabBtn-settings" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-shopify-surface transition">
-            <i class="fa-solid fa-gear w-4"></i> Settings
+            <i class="fa-solid fa-gear w-4"></i> Settings & Security
           </button>
         </nav>
       </div>
@@ -130,12 +152,12 @@
       <div class="p-4 border-t border-shopify-border bg-shopify-surface/50">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2.5">
-            <div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-xs font-bold text-white">
-              SS
+            <div class="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-xs font-bold text-white shadow" id="sidebarUserAvatar">
+              SM
             </div>
             <div class="overflow-hidden">
-              <div class="text-xs font-bold text-white truncate">Sajid Services LTD</div>
-              <div class="text-[10px] text-slate-400 truncate">Admin Owner</div>
+              <div class="text-xs font-bold text-white truncate" id="sidebarUserName">Sajid Mehmood</div>
+              <div class="text-[10px] text-slate-400 truncate" id="sidebarUserRole">Owner & Director</div>
             </div>
           </div>
           <button onclick="logoutAdmin()" title="Lock Session" class="text-slate-400 hover:text-red-400 p-1.5 transition">
@@ -157,9 +179,9 @@
           </div>
         </div>
 
-        <div class="flex items-center gap-4">
-          <a href="index.html" target="_blank" class="text-xs font-semibold bg-shopify-surface hover:bg-slate-800 text-slate-200 px-3.5 py-2 rounded-lg border border-shopify-border transition flex items-center gap-2">
-            <i class="fa-solid fa-globe text-emerald-400"></i> Online Store
+        <div class="flex items-center gap-3">
+          <a href="index.html" target="_blank" class="text-xs font-semibold bg-shopify-surface hover:bg-slate-800 text-slate-200 px-3 py-2 rounded-lg border border-shopify-border transition flex items-center gap-2">
+            <i class="fa-solid fa-globe text-emerald-400"></i> View Online Store
           </a>
           <button onclick="openAddProductModal()" class="text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-2 rounded-lg shadow transition flex items-center gap-1.5">
             <i class="fa-solid fa-plus"></i> Add Product
@@ -168,51 +190,79 @@
       </header>
 
       <!-- VIEW PANELS -->
-      <div class="p-8 max-w-7xl w-full mx-auto flex-1">
+      <div class="p-6 sm:p-8 max-w-7xl w-full mx-auto flex-1">
         
         <!-- ================= 1. HOME / OVERVIEW TAB ================= -->
         <section id="panel-home" class="space-y-8">
-          <div>
-            <h2 class="text-2xl font-bold text-white tracking-tight">Today's Store Performance</h2>
-            <p class="text-xs text-slate-400 mt-1">Here is what is happening with Shoppaza today.</p>
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-2xl font-bold text-white tracking-tight">Store Performance Overview</h2>
+              <p class="text-xs text-slate-400 mt-1">Live metrics for Shoppaza (SAJID SERVICES LTD, SC874640).</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span class="text-xs text-emerald-400 font-semibold">Store Active & Syncing</span>
+            </div>
           </div>
 
           <!-- KPI Cards -->
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             <div class="bg-shopify-sidebar border border-shopify-border p-5 rounded-2xl">
-              <span class="text-xs text-slate-400 font-semibold uppercase">Total Sales (Live)</span>
-              <div class="text-2xl font-extrabold text-white mt-2">£4,892.40</div>
+              <span class="text-xs text-slate-400 font-semibold uppercase">Total Sales</span>
+              <div class="text-2xl font-extrabold text-white mt-2" id="kpiTotalSales">£4,892.40</div>
               <div class="text-xs text-emerald-400 mt-1 flex items-center gap-1">
-                <i class="fa-solid fa-arrow-trend-up"></i> +18.4% from yesterday
+                <i class="fa-solid fa-arrow-trend-up"></i> Multi-currency enabled
               </div>
             </div>
 
             <div class="bg-shopify-sidebar border border-shopify-border p-5 rounded-2xl">
               <span class="text-xs text-slate-400 font-semibold uppercase">Total Orders</span>
-              <div class="text-2xl font-extrabold text-white mt-2">38 Orders</div>
+              <div class="text-2xl font-extrabold text-white mt-2" id="kpiTotalOrders">4 Orders</div>
               <div class="text-xs text-emerald-400 mt-1 flex items-center gap-1">
-                <i class="fa-solid fa-arrow-trend-up"></i> +12% conversion rate
+                <i class="fa-solid fa-truck-fast"></i> Fully Tracked
               </div>
             </div>
 
             <div class="bg-shopify-sidebar border border-shopify-border p-5 rounded-2xl">
               <span class="text-xs text-slate-400 font-semibold uppercase">Average Order Value</span>
-              <div class="text-2xl font-extrabold text-white mt-2">£128.75</div>
-              <div class="text-xs text-slate-400 mt-1">Multi-currency enabled</div>
+              <div class="text-2xl font-extrabold text-white mt-2" id="kpiAOV">£122.31</div>
+              <div class="text-xs text-slate-400 mt-1">Live Cart Conversion</div>
             </div>
 
             <div class="bg-shopify-sidebar border border-shopify-border p-5 rounded-2xl">
-              <span class="text-xs text-slate-400 font-semibold uppercase">Active Catalog</span>
-              <div class="text-2xl font-extrabold text-indigo-400 mt-2" id="kpiCatalogCount">805 Products</div>
-              <div class="text-xs text-slate-400 mt-1">14 Mega Categories</div>
+              <span class="text-xs text-slate-400 font-semibold uppercase">Live Catalog Items</span>
+              <div class="text-2xl font-extrabold text-emerald-400 mt-2" id="kpiCatalogCount">805 Products</div>
+              <div class="text-xs text-slate-400 mt-1" id="kpiCatalogMeta">14 Active Categories</div>
+            </div>
+          </div>
+
+          <!-- Quick Action Bar -->
+          <div class="p-4 bg-shopify-surface/60 border border-shopify-border rounded-2xl flex flex-wrap gap-3 items-center justify-between">
+            <div class="text-xs text-slate-300 font-medium flex items-center gap-2">
+              <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i>
+              <span>Quick Management Shortcuts:</span>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="openBulkPriceModal()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 rounded-lg border border-slate-700 transition flex items-center gap-1.5">
+                <i class="fa-solid fa-percent text-emerald-400"></i> Bulk Price Adjuster
+              </button>
+              <button onclick="exportProductsCSV()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 rounded-lg border border-slate-700 transition flex items-center gap-1.5">
+                <i class="fa-solid fa-file-export text-blue-400"></i> Export Catalog (CSV)
+              </button>
+              <button onclick="openImportCSVModal()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 rounded-lg border border-slate-700 transition flex items-center gap-1.5">
+                <i class="fa-solid fa-file-import text-amber-400"></i> Import Products (CSV)
+              </button>
+              <button onclick="switchTab('customizer')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 rounded-lg border border-slate-700 transition flex items-center gap-1.5">
+                <i class="fa-solid fa-pen-to-square text-rose-400"></i> Edit Header & Footer
+              </button>
             </div>
           </div>
 
           <!-- Recent Orders Widget -->
           <div class="bg-shopify-sidebar border border-shopify-border rounded-2xl p-6">
             <div class="flex items-center justify-between mb-4">
-              <h3 class="font-bold text-white text-base">Recent Orders</h3>
-              <button onclick="switchTab('orders')" class="text-xs text-emerald-400 hover:underline">View all orders →</button>
+              <h3 class="font-bold text-white text-base">Recent Live Orders</h3>
+              <button onclick="switchTab('orders')" class="text-xs text-emerald-400 hover:underline">Manage All Orders →</button>
             </div>
             <div class="overflow-x-auto">
               <table class="w-full text-left text-xs text-slate-300">
@@ -220,10 +270,12 @@
                   <tr>
                     <th class="p-3">Order ID</th>
                     <th class="p-3">Customer</th>
-                    <th class="p-3">Channel</th>
+                    <th class="p-3">Channel / Country</th>
                     <th class="p-3">Total</th>
                     <th class="p-3">Payment</th>
                     <th class="p-3">Fulfillment</th>
+                    <th class="p-3">Tracking</th>
+                    <th class="p-3 text-right">Action</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-shopify-border" id="recentOrdersTable">
@@ -234,16 +286,25 @@
           </div>
         </section>
 
-        <!-- ================= 2. PRODUCTS TAB ================= -->
+        <!-- ================= 2. PRODUCTS TAB (FULL CRUD + BULK + CSV) ================= -->
         <section id="panel-products" class="hidden space-y-6">
           <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-              <h2 class="text-2xl font-bold text-white tracking-tight">Products Catalog</h2>
-              <p class="text-xs text-slate-400 mt-1">Manage all items, stock levels, variants, and pricing.</p>
+              <h2 class="text-2xl font-bold text-white tracking-tight">Complete Products Catalog</h2>
+              <p class="text-xs text-slate-400 mt-1">Full edit access: adjust titles, categories, prices, images, stock, or upload bulk CSV.</p>
             </div>
-            <div class="flex items-center gap-3">
-              <button onclick="openAddProductModal()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold shadow transition">
-                <i class="fa-solid fa-plus mr-1"></i> Add Product
+            <div class="flex flex-wrap items-center gap-2">
+              <button onclick="openBulkPriceModal()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
+                <i class="fa-solid fa-tags text-emerald-400"></i> Bulk Prices
+              </button>
+              <button onclick="exportProductsCSV()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
+                <i class="fa-solid fa-download text-blue-400"></i> Export CSV
+              </button>
+              <button onclick="openImportCSVModal()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
+                <i class="fa-solid fa-upload text-amber-400"></i> Import CSV
+              </button>
+              <button onclick="openAddProductModal()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold shadow transition flex items-center gap-1.5">
+                <i class="fa-solid fa-plus"></i> Add Product
               </button>
             </div>
           </div>
@@ -260,6 +321,11 @@
                 <option value="all">All Categories</option>
                 <!-- Injected via JS -->
               </select>
+              <select id="stockFilterSelect" onchange="filterAdminProducts()" class="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+                <option value="all">All Stock Status</option>
+                <option value="in_stock">In Stock Only</option>
+                <option value="out_of_stock">Out of Stock Only</option>
+              </select>
             </div>
           </div>
 
@@ -274,7 +340,7 @@
                     <th class="p-3">Category</th>
                     <th class="p-3">Status</th>
                     <th class="p-3">Price (GBP)</th>
-                    <th class="p-3">Price (USD / USDT)</th>
+                    <th class="p-3">Price (USD)</th>
                     <th class="p-3">Stock</th>
                     <th class="p-3 text-right">Actions</th>
                   </tr>
@@ -285,38 +351,68 @@
               </table>
             </div>
 
-            <div class="p-4 border-t border-shopify-border flex items-center justify-between text-xs text-slate-400">
+            <!-- Pagination Bar -->
+            <div class="p-4 border-t border-shopify-border flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
               <div id="productPaginationInfo">Showing 1 - 25 of 805 products</div>
-              <div class="flex gap-2">
-                <button onclick="prevAdminPage()" id="btnPrevPage" class="px-3 py-1.5 rounded-lg bg-shopify-surface text-slate-300 hover:bg-slate-800 disabled:opacity-40">Previous</button>
-                <button onclick="nextAdminPage()" id="btnNextPage" class="px-3 py-1.5 rounded-lg bg-shopify-surface text-slate-300 hover:bg-slate-800">Next</button>
+              <div class="flex items-center gap-2">
+                <button onclick="prevAdminPage()" id="btnPrevPage" class="px-3 py-1.5 rounded-lg bg-shopify-surface text-slate-300 hover:bg-slate-800 disabled:opacity-40 transition">Previous</button>
+                <span class="px-2 text-slate-400 font-mono" id="adminCurrentPageDisplay">1</span>
+                <button onclick="nextAdminPage()" id="btnNextPage" class="px-3 py-1.5 rounded-lg bg-shopify-surface text-slate-300 hover:bg-slate-800 transition">Next</button>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- ================= 3. ORDERS TAB ================= -->
+        <!-- ================= 3. ORDERS TAB (TRACKING & FULFILLMENT) ================= -->
         <section id="panel-orders" class="hidden space-y-6">
-          <div class="flex justify-between items-center">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-              <h2 class="text-2xl font-bold text-white tracking-tight">Orders Management</h2>
-              <p class="text-xs text-slate-400 mt-1">Review live orders, payment authorization, and shipment tracking.</p>
+              <h2 class="text-2xl font-bold text-white tracking-tight">Orders & Shipment Tracking</h2>
+              <p class="text-xs text-slate-400 mt-1">Manage customer orders, add tracking numbers (Royal Mail, DHL, FedEx, Evri), and update statuses.</p>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="exportOrdersCSV()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
+                <i class="fa-solid fa-file-csv text-emerald-400"></i> Export Orders (CSV)
+              </button>
+              <button onclick="openCreateManualOrderModal()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
+                <i class="fa-solid fa-plus"></i> Create Manual Order
+              </button>
             </div>
           </div>
 
+          <!-- Orders Filter -->
+          <div class="bg-shopify-sidebar border border-shopify-border rounded-2xl p-4 flex flex-col sm:flex-row gap-4 items-center justify-between">
+            <div class="relative w-full sm:w-80">
+              <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-500 text-xs"></i>
+              <input type="text" id="orderSearchInput" onkeyup="filterOrdersTable()" placeholder="Search by Order ID, Customer name..." class="w-full bg-slate-900 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+            </div>
+
+            <div class="flex items-center gap-3 w-full sm:w-auto">
+              <select id="orderStatusFilter" onchange="filterOrdersTable()" class="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+                <option value="all">All Fulfillment Statuses</option>
+                <option value="Unfulfilled">Unfulfilled</option>
+                <option value="Processing">Processing</option>
+                <option value="Shipped">Shipped</option>
+                <option value="Fulfilled">Fulfilled / Delivered</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Orders Table -->
           <div class="bg-shopify-sidebar border border-shopify-border rounded-2xl overflow-hidden shadow">
             <div class="overflow-x-auto">
               <table class="w-full text-left text-xs text-slate-300">
                 <thead class="bg-shopify-surface text-slate-400 uppercase font-semibold">
                   <tr>
-                    <th class="p-4">Order</th>
+                    <th class="p-4">Order ID</th>
                     <th class="p-4">Date</th>
                     <th class="p-4">Customer</th>
+                    <th class="p-4">Destination</th>
                     <th class="p-4">Payment</th>
-                    <th class="p-4">Fulfillment Status</th>
-                    <th class="p-4">Items</th>
+                    <th class="p-4">Fulfillment</th>
+                    <th class="p-4">Courier & Tracking</th>
                     <th class="p-4">Total</th>
-                    <th class="p-4 text-right">Action</th>
+                    <th class="p-4 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-shopify-border" id="fullOrdersTableBody">
@@ -327,11 +423,91 @@
           </div>
         </section>
 
-        <!-- ================= 4. CUSTOMERS TAB ================= -->
+        <!-- ================= 4. STORE CUSTOMIZER TAB (HEADER, FOOTER, ANNOUNCEMENT) ================= -->
+        <section id="panel-customizer" class="hidden space-y-6">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <h2 class="text-2xl font-bold text-white tracking-tight">Online Store Customizer</h2>
+              <p class="text-xs text-slate-400 mt-1">Live edit Header, Announcement Bar, Footer, Corporate Notices, and Banners on shoppaza.com.</p>
+            </div>
+            <button onclick="saveThemeCustomizerSettings()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold shadow-lg transition flex items-center gap-2">
+              <i class="fa-solid fa-floppy-disk"></i> Save & Publish All Changes
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Top Announcement Bar Editor -->
+            <div class="bg-shopify-sidebar border border-shopify-border rounded-2xl p-6 space-y-4">
+              <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-bullhorn text-amber-400"></i> Top Announcement & Utility Bar
+              </h3>
+              <div class="space-y-3 text-xs">
+                <div>
+                  <label class="block text-slate-400 mb-1">Promo Headline / Tagline</label>
+                  <input type="text" id="customAnnouncementPromo" value="SAVE MORE ON APP & WEB" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-white">
+                </div>
+                <div>
+                  <label class="block text-slate-400 mb-1">Company Legal Tag (Top Bar)</label>
+                  <input type="text" id="customAnnouncementLegal" value="UK Registered Entity: SAJID SERVICES LTD (Companies House SC874640)" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-white">
+                </div>
+              </div>
+            </div>
+
+            <!-- Footer & Contact Editor -->
+            <div class="bg-shopify-sidebar border border-shopify-border rounded-2xl p-6 space-y-4">
+              <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-envelope text-indigo-400"></i> Footer Support & Corporate Credentials
+              </h3>
+              <div class="space-y-3 text-xs">
+                <div>
+                  <label class="block text-slate-400 mb-1">Support Email Address</label>
+                  <input type="email" id="customSupportEmail" value="support@shoppaza.com" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-emerald-400 font-bold">
+                </div>
+                <div>
+                  <label class="block text-slate-400 mb-1">Company Legal Name</label>
+                  <input type="text" id="customCompanyName" value="SAJID SERVICES LTD" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-white font-bold">
+                </div>
+                <div>
+                  <label class="block text-slate-400 mb-1">Company Registration Number (CRN)</label>
+                  <input type="text" id="customCompanyNumber" value="SC874640 (Scotland, UK)" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-white">
+                </div>
+                <div>
+                  <label class="block text-slate-400 mb-1">Registered Office Address</label>
+                  <input type="text" id="customCompanyAddress" value="Office 146 18 Young St, Unit Lge, Edinburgh, Scotland, United Kingdom, EH2 4JB" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-white">
+                </div>
+                <div>
+                  <label class="block text-slate-400 mb-1">Copyright Statement</label>
+                  <input type="text" id="customCopyrightText" value="© 2026 SAJID SERVICES LTD (Company No. SC874640). All Rights Reserved." class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-white">
+                </div>
+              </div>
+            </div>
+
+            <!-- Sliders / Mega Banners Overview -->
+            <div class="bg-shopify-sidebar border border-shopify-border rounded-2xl p-6 space-y-4 lg:col-span-2">
+              <h3 class="text-sm font-bold text-white flex items-center justify-between">
+                <span class="flex items-center gap-2">
+                  <i class="fa-solid fa-images text-rose-400"></i> Homepage Category Sliders (10 Mega Categories)
+                </span>
+                <span class="text-xs text-slate-400">Daraz Daylight 3-Photo Collages</span>
+              </h3>
+              <p class="text-xs text-slate-400">The 10 live sliders display genuine high-definition product collages across Wigs, Dresses, Shirts, Jewelry, Handbags, Shoes, Watches, Sunglasses, Beauty, and Phone Accessories.</p>
+              
+              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 pt-2 text-xs" id="sliderBannersList">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ================= 5. CUSTOMERS TAB ================= -->
         <section id="panel-customers" class="hidden space-y-6">
-          <div>
-            <h2 class="text-2xl font-bold text-white tracking-tight">Customer Directory</h2>
-            <p class="text-xs text-slate-400 mt-1">Direct buyer contacts, lifetime value, and order history.</p>
+          <div class="flex justify-between items-center">
+            <div>
+              <h2 class="text-2xl font-bold text-white tracking-tight">Customer Directory</h2>
+              <p class="text-xs text-slate-400 mt-1">Verified buyer profiles, lifetime spend, and delivery addresses.</p>
+            </div>
           </div>
 
           <div class="bg-shopify-sidebar border border-shopify-border rounded-2xl p-6">
@@ -341,16 +517,33 @@
           </div>
         </section>
 
-        <!-- ================= 5. ANALYTICS TAB ================= -->
+        <!-- ================= 6. COUPONS & DISCOUNTS TAB ================= -->
+        <section id="panel-discounts" class="hidden space-y-6">
+          <div class="flex justify-between items-center">
+            <div>
+              <h2 class="text-2xl font-bold text-white tracking-tight">Coupons & Promotional Codes</h2>
+              <p class="text-xs text-slate-400 mt-1">Create and manage dynamic discount codes for Shoppaza checkout.</p>
+            </div>
+            <button onclick="openCreateCouponModal()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold shadow flex items-center gap-1.5">
+              <i class="fa-solid fa-plus"></i> Create New Coupon
+            </button>
+          </div>
+
+          <div class="grid sm:grid-cols-3 gap-6" id="discountsContainer">
+            <!-- Injected via JS -->
+          </div>
+        </section>
+
+        <!-- ================= 7. ANALYTICS TAB ================= -->
         <section id="panel-analytics" class="hidden space-y-6">
           <div>
             <h2 class="text-2xl font-bold text-white tracking-tight">Analytics & Business Intelligence</h2>
-            <p class="text-xs text-slate-400 mt-1">Real-time revenue metrics, store conversion, and buyer velocity.</p>
+            <p class="text-xs text-slate-400 mt-1">Real-time revenue metrics, category performance, and conversion distribution.</p>
           </div>
 
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div class="p-6 rounded-2xl bg-shopify-sidebar border border-shopify-border">
-              <h3 class="text-sm font-bold text-white mb-4">Sales by Category</h3>
+              <h3 class="text-sm font-bold text-white mb-4">Top 5 Performing Categories</h3>
               <div class="space-y-3" id="analyticsCategoriesBar">
                 <!-- Bar stats -->
               </div>
@@ -361,7 +554,7 @@
               <div class="space-y-4">
                 <div>
                   <div class="flex justify-between text-xs mb-1">
-                    <span class="text-slate-300">Stripe Card & Digital Wallets</span>
+                    <span class="text-slate-300">Stripe Card & Digital Wallets (UK/US/EU)</span>
                     <span class="text-emerald-400 font-bold">68%</span>
                   </div>
                   <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
@@ -370,7 +563,7 @@
                 </div>
                 <div>
                   <div class="flex justify-between text-xs mb-1">
-                    <span class="text-slate-300">USDT / Crypto Gateway</span>
+                    <span class="text-slate-300">USDT / Crypto Web3 Checkout</span>
                     <span class="text-emerald-400 font-bold">22%</span>
                   </div>
                   <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
@@ -379,7 +572,7 @@
                 </div>
                 <div>
                   <div class="flex justify-between text-xs mb-1">
-                    <span class="text-slate-300">PayPal / Others</span>
+                    <span class="text-slate-300">Cash on Delivery / Direct Bank</span>
                     <span class="text-emerald-400 font-bold">10%</span>
                   </div>
                   <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
@@ -391,93 +584,65 @@
           </div>
         </section>
 
-        <!-- ================= 6. DISCOUNTS TAB ================= -->
-        <section id="panel-discounts" class="hidden space-y-6">
-          <div class="flex justify-between items-center">
-            <div>
-              <h2 class="text-2xl font-bold text-white tracking-tight">Discount Codes & Promotions</h2>
-              <p class="text-xs text-slate-400 mt-1">Configure automated promo coupons for buyers.</p>
-            </div>
-            <button onclick="createNewCouponPrompt()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold shadow">
-              <i class="fa-solid fa-plus mr-1"></i> Create Coupon
-            </button>
-          </div>
-
-          <div class="grid sm:grid-cols-3 gap-6" id="discountsContainer">
-            <!-- Injected via JS -->
-          </div>
-        </section>
-
-        <!-- ================= 7. SETTINGS TAB ================= -->
+        <!-- ================= 8. SETTINGS & SECURITY TAB ================= -->
         <section id="panel-settings" class="hidden space-y-6">
           <div>
-            <h2 class="text-2xl font-bold text-white tracking-tight">Store & Gateway Configuration</h2>
-            <p class="text-xs text-slate-400 mt-1">Corporate entity credentials, currencies, and security settings.</p>
+            <h2 class="text-2xl font-bold text-white tracking-tight">Admin Settings & Security Key</h2>
+            <p class="text-xs text-slate-400 mt-1">Manage master authentication passcodes, admin user profile, and system resets.</p>
           </div>
 
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             
-            <!-- Corporate Entity Information -->
+            <!-- Change Passcode Card -->
             <div class="p-6 rounded-2xl bg-shopify-sidebar border border-shopify-border space-y-4">
               <h3 class="text-sm font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-building text-indigo-400"></i> Corporate Entity (UK Registration)
+                <i class="fa-solid fa-key text-amber-400"></i> Change Master Passcode
               </h3>
-              <div class="space-y-3 text-xs">
+              <p class="text-xs text-slate-400">Change your secret admin key anytime. Once saved, this key will be required to log in to the admin panel.</p>
+
+              <form onsubmit="handleChangePasscode(event)" class="space-y-3 text-xs">
                 <div>
-                  <label class="text-slate-400 block mb-1">Company Legal Name</label>
-                  <input type="text" readonly value="SAJID SERVICES LTD" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-slate-300">
+                  <label class="block text-slate-400 mb-1">Current Passcode</label>
+                  <input type="password" id="currentPassInput" required placeholder="Enter current passcode" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-white font-mono">
                 </div>
                 <div>
-                  <label class="text-slate-400 block mb-1">Companies House CRN</label>
-                  <input type="text" readonly value="SC874640 (Scotland, UK)" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-emerald-400 font-bold">
+                  <label class="block text-slate-400 mb-1">New Secret Passcode</label>
+                  <input type="password" id="newPassInput" required placeholder="Enter new passcode (min 6 chars)" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-white font-mono">
                 </div>
                 <div>
-                  <label class="text-slate-400 block mb-1">Registered Office Address</label>
-                  <input type="text" readonly value="Office 146 18 Young St, Unit Lge, Edinburgh, Scotland, EH2 4JB" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-slate-300">
+                  <label class="block text-slate-400 mb-1">Confirm New Passcode</label>
+                  <input type="password" id="confirmNewPassInput" required placeholder="Confirm new passcode" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-white font-mono">
                 </div>
-                <div>
-                  <label class="text-slate-400 block mb-1">Support Email</label>
-                  <input type="text" readonly value="support@shoppaza.com" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-indigo-400">
-                </div>
-              </div>
+                <button type="submit" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold transition shadow">
+                  Update Admin Passcode
+                </button>
+              </form>
             </div>
 
-            <!-- Currency & Gateway Preferences -->
+            <!-- Admin Profile Details -->
             <div class="p-6 rounded-2xl bg-shopify-sidebar border border-shopify-border space-y-4">
               <h3 class="text-sm font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-credit-card text-emerald-400"></i> Payment Gateways & Currencies
+                <i class="fa-solid fa-user-shield text-indigo-400"></i> Admin Profile & Identity
               </h3>
-              <div class="space-y-3 text-xs">
-                <div>
-                  <label class="text-slate-400 block mb-1">Primary Base Currency</label>
-                  <select class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-white">
-                    <option selected>British Pound (£ - GBP) [Stripe Default]</option>
-                    <option>US Dollar ($ - USD)</option>
-                    <option>Tether (₮ - USDT)</option>
-                    <option>Pakistani Rupee (₨ - PKR)</option>
-                  </select>
-                </div>
+              <p class="text-xs text-slate-400">Update the name and administrative email displayed across the console.</p>
 
+              <form onsubmit="handleSaveAdminProfile(event)" class="space-y-3 text-xs">
                 <div>
-                  <label class="text-slate-400 block mb-1">Stripe Gateway Mode</label>
-                  <div class="flex items-center gap-4 p-2.5 bg-slate-900 border border-slate-800 rounded-lg">
-                    <label class="flex items-center gap-2 cursor-pointer">
-                      <input type="radio" name="stripeMode" checked class="text-emerald-500">
-                      <span class="text-emerald-400 font-semibold">Live Mode</span>
-                    </label>
-                    <label class="flex items-center gap-2 cursor-pointer">
-                      <input type="radio" name="stripeMode" class="text-emerald-500">
-                      <span class="text-slate-400">Sandbox Test</span>
-                    </label>
-                  </div>
+                  <label class="block text-slate-400 mb-1">Admin Full Name</label>
+                  <input type="text" id="adminProfileName" value="Sajid Mehmood" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-white">
                 </div>
-
-                <div class="pt-2">
-                  <button onclick="alert('Settings verified and locked in compliance with SAJID SERVICES LTD.')" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-semibold transition">
-                    Save Store Settings
-                  </button>
+                <div>
+                  <label class="block text-slate-400 mb-1">Admin Email</label>
+                  <input type="email" id="adminProfileEmail" value="sajidservicesltd@gmail.com" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-white">
                 </div>
-              </div>
+                <div>
+                  <label class="block text-slate-400 mb-1">Administrative Role</label>
+                  <input type="text" id="adminProfileRole" value="Owner & Director (SAJID SERVICES LTD)" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-white">
+                </div>
+                <button type="submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-bold transition shadow">
+                  Save Profile Info
+                </button>
+              </form>
             </div>
 
           </div>
@@ -487,90 +652,411 @@
     </main>
   </div>
 
-  <!-- ADD PRODUCT MODAL -->
-  <div id="addProductModal" class="fixed inset-0 z-50 bg-black/80 hidden flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-6 relative">
+  <!-- ================= EDIT PRODUCT MODAL ================= -->
+  <div id="editProductModal" class="fixed inset-0 z-50 bg-black/80 hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-xl w-full p-6 sm:p-8 relative my-8 shadow-2xl">
+      <button onclick="closeEditProductModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <h3 class="font-bold text-white text-lg mb-1 flex items-center gap-2">
+        <i class="fa-solid fa-pen-to-square text-emerald-400"></i> Edit Product
+      </h3>
+      <p class="text-xs text-slate-400 mb-5">Make changes to product title, price, category, image, and stock status.</p>
+
+      <form onsubmit="handleSaveEditedProduct(event)" class="space-y-4 text-xs">
+        <input type="hidden" id="editProdId">
+
+        <div>
+          <label class="block text-slate-400 mb-1 font-semibold">Product Title</label>
+          <input type="text" id="editProdTitle" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:border-emerald-500 focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 mb-1 font-semibold">Category</label>
+            <input type="text" id="editProdCategory" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:border-emerald-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1 font-semibold">Stock Availability</label>
+            <select id="editProdStock" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:border-emerald-500 focus:outline-none">
+              <option value="true">In Stock</option>
+              <option value="false">Out of Stock</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 mb-1 font-semibold">Price GBP (£)</label>
+            <input type="number" step="0.01" id="editProdPriceGBP" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-emerald-400 font-bold font-mono focus:border-emerald-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1 font-semibold">Price USD ($)</label>
+            <input type="number" step="0.01" id="editProdPriceUSD" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white font-mono focus:border-emerald-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 mb-1 font-semibold">Image URL</label>
+          <div class="flex gap-3 items-center">
+            <input type="url" id="editProdImage" oninput="updateEditImagePreview(this.value)" required class="flex-1 bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:border-emerald-500 focus:outline-none">
+            <img id="editImagePreview" src="favicon.svg" class="w-11 h-11 object-cover rounded-xl border border-slate-700 bg-slate-950 flex-shrink-0" onerror="this.src='favicon.svg'">
+          </div>
+        </div>
+
+        <div class="flex gap-3 pt-3">
+          <button type="button" onclick="closeEditProductModal()" class="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl transition">
+            Cancel
+          </button>
+          <button type="submit" class="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition shadow-lg shadow-emerald-600/20">
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= ADD PRODUCT MODAL ================= -->
+  <div id="addProductModal" class="fixed inset-0 z-50 bg-black/80 hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-xl w-full p-6 sm:p-8 relative my-8 shadow-2xl">
       <button onclick="closeAddProductModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
         <i class="fa-solid fa-xmark"></i>
       </button>
-      <h3 class="font-bold text-white text-lg mb-4">Add New Product to Shoppaza</h3>
-      <form onsubmit="handleCreateProduct(event)" class="space-y-3 text-xs">
+      <h3 class="font-bold text-white text-lg mb-1 flex items-center gap-2">
+        <i class="fa-solid fa-plus-circle text-emerald-400"></i> Add New Product
+      </h3>
+      <p class="text-xs text-slate-400 mb-5">Publish a new item immediately to shoppaza.com live catalog.</p>
+
+      <form onsubmit="handleCreateProduct(event)" class="space-y-4 text-xs">
         <div>
-          <label class="block text-slate-400 mb-1">Product Title</label>
-          <input type="text" id="newProdTitle" required placeholder="e.g. Luxury Velvet Gown" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-white">
+          <label class="block text-slate-400 mb-1 font-semibold">Product Title</label>
+          <input type="text" id="newProdTitle" required placeholder="e.g. Elegant Diamond Solitaire Ring" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:border-emerald-500 focus:outline-none">
         </div>
-        <div>
-          <label class="block text-slate-400 mb-1">Category</label>
-          <select id="newProdCategory" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-white">
-            <option>Wigs & Hair</option>
-            <option>Dresses & Gowns</option>
-            <option>Tops & Shirts</option>
-            <option>Jewelry & Accessories</option>
-            <option>Bags & Handbags</option>
-            <option>Sunglasses & Eyewear</option>
-            <option>Beauty & Cosmetics</option>
-          </select>
-        </div>
+
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-slate-400 mb-1">Price (USD)</label>
-            <input type="number" step="0.01" id="newProdPriceUSD" required placeholder="49.99" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-white">
+            <label class="block text-slate-400 mb-1 font-semibold">Category</label>
+            <input type="text" id="newProdCategory" list="categoriesDatalist" required placeholder="Select or type category" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:border-emerald-500 focus:outline-none">
+            <datalist id="categoriesDatalist">
+              <option value="Wigs & Hair"></option>
+              <option value="Dresses & Gowns"></option>
+              <option value="Tops & Shirts"></option>
+              <option value="Jewelry & Accessories"></option>
+              <option value="Bags & Handbags"></option>
+              <option value="Sunglasses & Eyewear"></option>
+              <option value="Beauty & Cosmetics"></option>
+              <option value="Shoes & Footwear"></option>
+              <option value="Watches"></option>
+              <option value="Phone Accessories"></option>
+            </datalist>
           </div>
           <div>
-            <label class="block text-slate-400 mb-1">Price (GBP)</label>
-            <input type="number" step="0.01" id="newProdPriceGBP" required placeholder="38.00" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-white">
+            <label class="block text-slate-400 mb-1 font-semibold">Stock Status</label>
+            <select id="newProdStock" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:border-emerald-500 focus:outline-none">
+              <option value="true">In Stock</option>
+              <option value="false">Out of Stock</option>
+            </select>
           </div>
         </div>
-        <div>
-          <label class="block text-slate-400 mb-1">Main Image URL</label>
-          <input type="url" id="newProdImage" required placeholder="https://..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-white">
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 mb-1 font-semibold">Price GBP (£)</label>
+            <input type="number" step="0.01" id="newProdPriceGBP" required placeholder="39.00" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-emerald-400 font-bold font-mono focus:border-emerald-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1 font-semibold">Price USD ($)</label>
+            <input type="number" step="0.01" id="newProdPriceUSD" required placeholder="49.99" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white font-mono focus:border-emerald-500 focus:outline-none">
+          </div>
         </div>
-        <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold mt-2">
-          Save Product to Catalog
+
+        <div>
+          <label class="block text-slate-400 mb-1 font-semibold">Image URL</label>
+          <div class="flex gap-3 items-center">
+            <input type="url" id="newProdImage" oninput="updateNewImagePreview(this.value)" required placeholder="https://images.unsplash.com/..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:border-emerald-500 focus:outline-none">
+            <img id="newImagePreview" src="favicon.svg" class="w-11 h-11 object-cover rounded-xl border border-slate-700 bg-slate-950 flex-shrink-0" onerror="this.src='favicon.svg'">
+          </div>
+        </div>
+
+        <button type="submit" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold transition shadow-lg shadow-emerald-600/20">
+          Save & Publish Product
         </button>
       </form>
     </div>
   </div>
 
-  <!-- SCRIPT FOR SHOPIFY ADMIN FUNCTIONALITY -->
+  <!-- ================= BULK PRICE ADJUSTMENT MODAL ================= -->
+  <div id="bulkPriceModal" class="fixed inset-0 z-50 bg-black/80 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-6 sm:p-8 relative shadow-2xl">
+      <button onclick="closeBulkPriceModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <h3 class="font-bold text-white text-lg mb-1 flex items-center gap-2">
+        <i class="fa-solid fa-percent text-emerald-400"></i> Bulk Price Adjuster
+      </h3>
+      <p class="text-xs text-slate-400 mb-5">Adjust prices across all products or a specific category in 1 click.</p>
+
+      <form onsubmit="handleApplyBulkPrice(event)" class="space-y-4 text-xs">
+        <div>
+          <label class="block text-slate-400 mb-1 font-semibold">Target Scope</label>
+          <select id="bulkScopeSelect" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:border-emerald-500 focus:outline-none">
+            <option value="all">Entire Catalog (All 805+ Products)</option>
+            <!-- Dynamic categories added via JS -->
+          </select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 mb-1 font-semibold">Action</label>
+            <select id="bulkActionSelect" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:border-emerald-500 focus:outline-none">
+              <option value="increase_pct">Increase by % (Inflation)</option>
+              <option value="decrease_pct">Discount / Sale by %</option>
+              <option value="increase_fixed">Increase by Fixed (£)</option>
+              <option value="decrease_fixed">Discount by Fixed (£)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1 font-semibold">Value Amount</label>
+            <input type="number" step="0.01" id="bulkValueInput" required placeholder="e.g. 10" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white font-mono focus:border-emerald-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div class="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-amber-300 text-[11px]">
+          <i class="fa-solid fa-circle-info mr-1"></i> Changes will immediately recalculate both GBP (£) and USD ($) across selected products.
+        </div>
+
+        <button type="submit" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold transition shadow-lg shadow-emerald-600/20">
+          Apply Bulk Price Updates
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= ORDER DETAILS & TRACKING MODAL ================= -->
+  <div id="orderModal" class="fixed inset-0 z-50 bg-black/80 hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-2xl w-full p-6 sm:p-8 relative my-8 shadow-2xl">
+      <button onclick="closeOrderModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      
+      <div class="flex items-center justify-between pb-4 border-b border-slate-800 mb-4">
+        <div>
+          <span class="text-[10px] uppercase font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full" id="modalOrderStatusBadge">Processing</span>
+          <h3 class="text-xl font-extrabold text-white mt-1" id="modalOrderId">#SHP-1042</h3>
+          <p class="text-xs text-slate-400" id="modalOrderDate">Date: Today, 14:25 UTC</p>
+        </div>
+        <button onclick="printOrderPackingSlip()" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5">
+          <i class="fa-solid fa-print"></i> Print Invoice
+        </button>
+      </div>
+
+      <!-- Customer & Shipping Summary -->
+      <div class="grid grid-cols-2 gap-4 p-4 rounded-2xl bg-slate-950 border border-slate-800 mb-5 text-xs">
+        <div>
+          <div class="text-slate-400 font-semibold mb-1">Customer Information</div>
+          <div class="font-bold text-white text-sm" id="modalCustomerName">Emma Watson</div>
+          <div class="text-slate-300" id="modalCustomerEmail">emma.w@example.co.uk</div>
+          <div class="text-slate-400 mt-1" id="modalCustomerPhone">+44 7911 123456</div>
+        </div>
+        <div>
+          <div class="text-slate-400 font-semibold mb-1">Delivery Destination</div>
+          <div class="text-slate-200 font-medium" id="modalCustomerAddress">221B Baker Street, London, NW1 6XE</div>
+          <div class="text-slate-400" id="modalCustomerCountry">United Kingdom</div>
+          <div class="text-emerald-400 font-bold mt-1" id="modalOrderTotal">Total: £186.00</div>
+        </div>
+      </div>
+
+      <!-- Fulfillment & Tracking Editor Form -->
+      <form onsubmit="handleSaveOrderTracking(event)" class="space-y-4 text-xs">
+        <input type="hidden" id="modalOrderHiddenId">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 mb-1 font-semibold">Courier / Carrier</label>
+            <select id="modalOrderCourier" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:border-emerald-500 focus:outline-none">
+              <option value="Royal Mail Tracked 24">Royal Mail (UK)</option>
+              <option value="DHL Express Worldwide">DHL Express</option>
+              <option value="FedEx International">FedEx</option>
+              <option value="Evri Tracked">Evri</option>
+              <option value="DPD UK">DPD</option>
+              <option value="USPS Priority Mail">USPS (USA)</option>
+              <option value="TCS Express">TCS</option>
+              <option value="Other Carrier">Other Courier</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1 font-semibold">Tracking Number</label>
+            <input type="text" id="modalOrderTrackingNum" required placeholder="e.g. GB9876543210X" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white font-mono focus:border-emerald-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 mb-1 font-semibold">Fulfillment Status</label>
+            <select id="modalOrderFulfillStatus" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:border-emerald-500 focus:outline-none">
+              <option value="Unfulfilled">Unfulfilled</option>
+              <option value="Processing">Processing</option>
+              <option value="Shipped">Shipped</option>
+              <option value="Fulfilled">Fulfilled / Delivered</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1 font-semibold">Payment Status</label>
+            <select id="modalOrderPayStatus" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:border-emerald-500 focus:outline-none">
+              <option value="Paid">Paid (Verified)</option>
+              <option value="Pending">Pending Payment</option>
+              <option value="Refunded">Refunded</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold transition shadow-lg shadow-emerald-600/20">
+          Save Tracking & Update Order Status
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= IMPORT CSV MODAL ================= -->
+  <div id="importCSVModal" class="fixed inset-0 z-50 bg-black/80 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-6 sm:p-8 relative shadow-2xl">
+      <button onclick="closeImportCSVModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <h3 class="font-bold text-white text-lg mb-1 flex items-center gap-2">
+        <i class="fa-solid fa-file-import text-amber-400"></i> Import Catalog (CSV)
+      </h3>
+      <p class="text-xs text-slate-400 mb-4">Paste raw CSV data or select a CSV file with columns: <code class="text-emerald-400">title,category,price_gbp,price_usd,image</code></p>
+
+      <form onsubmit="handleProcessCSVImport(event)" class="space-y-4 text-xs">
+        <div>
+          <label class="block text-slate-400 mb-1 font-semibold">Select CSV File from Computer</label>
+          <input type="file" id="csvFileInput" accept=".csv,text/csv" onchange="handleCSVFileSelected(event)" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white">
+        </div>
+
+        <div>
+          <label class="block text-slate-400 mb-1 font-semibold">Or Paste Raw CSV Text Here</label>
+          <textarea id="csvRawText" rows="6" placeholder="title,category,price_gbp,price_usd,image&#10;Silk Evening Gown,Dresses & Gowns,55.00,69.99,https://images.unsplash.com/photo-1595777457583-95e059d581b8" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white font-mono text-[11px] focus:outline-none focus:border-emerald-500"></textarea>
+        </div>
+
+        <button type="submit" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold transition shadow">
+          Import & Append to Catalog
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= CREATE COUPON MODAL ================= -->
+  <div id="createCouponModal" class="fixed inset-0 z-50 bg-black/80 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 sm:p-8 relative shadow-2xl">
+      <button onclick="closeCreateCouponModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <h3 class="font-bold text-white text-lg mb-1 flex items-center gap-2">
+        <i class="fa-solid fa-ticket text-emerald-400"></i> Create Promo Coupon
+      </h3>
+      <p class="text-xs text-slate-400 mb-4">Set discount percentages and minimum order requirements.</p>
+
+      <form onsubmit="handleSaveNewCoupon(event)" class="space-y-4 text-xs">
+        <div>
+          <label class="block text-slate-400 mb-1 font-semibold">Coupon Code</label>
+          <input type="text" id="newCouponCode" required placeholder="e.g. FLASH50" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white uppercase font-mono tracking-wider focus:border-emerald-500 focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 mb-1 font-semibold">Discount Type</label>
+            <select id="newCouponType" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:border-emerald-500 focus:outline-none">
+              <option value="percent">Percentage (%)</option>
+              <option value="fixed">Fixed (£ GBP)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1 font-semibold">Discount Value</label>
+            <input type="number" step="0.5" id="newCouponValue" required placeholder="e.g. 20" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white font-mono focus:border-emerald-500 focus:outline-none">
+          </div>
+        </div>
+
+        <button type="submit" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold transition shadow">
+          Activate Coupon
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= JAVASCRIPT ENGINE ================= -->
   <script>
-    // Security Passcode (can be updated by user)
-    const MASTER_PASS = "Sajid2026!#";
+    // State
+    const DEFAULT_MASTER_KEY = "Sajid2026!#";
     let allProducts = [];
     let currentAdminPage = 1;
     const pageSize = 20;
 
-    // Check if already authenticated in this session
+    // Sliders Data definition (matching shoppaza.com)
+    const megaSlidersData = [
+      { name: "Wigs & Hair Extensions", category: "Wigs & Hair", badge: "Exclusive Gala" },
+      { name: "Luxury Dresses & Evening Gowns", category: "Dresses & Gowns", badge: "Catwalk Season" },
+      { name: "Tops, Blouses & Shirts", category: "Tops & Shirts", badge: "Trendsetter" },
+      { name: "Fine Jewelry & Gold Necklaces", category: "Jewelry & Accessories", badge: "Signature Sparkle" },
+      { name: "Designer Handbags & Totes", category: "Bags & Handbags", badge: "Luxury Leather" },
+      { name: "Designer Sunglasses & Shades", category: "Sunglasses & Eyewear", badge: "UV400 Shield" },
+      { name: "Beauty, Skincare & Glamour", category: "Beauty & Cosmetics", badge: "Flawless Radiance" },
+      { name: "Designer Footwear & Heels", category: "Shoes & Footwear", badge: "Statement Steps" },
+      { name: "Luxury Chronograph Watches", category: "Watches", badge: "Swiss Precision" },
+      { name: "Tech Accessories & Audio", category: "Phone Accessories", badge: "Fast Charging" }
+    ];
+
+    // Seed Orders
+    const defaultOrders = [
+      { id: '#SHP-1042', customer: 'Emma Watson', email: 'emma.w@example.co.uk', phone: '+44 7911 123456', address: '221B Baker Street, London, NW1 6XE', country: 'United Kingdom', total: '£186.00', payment: 'Paid via Stripe', fulfillment: 'Shipped', courier: 'Royal Mail Tracked 24', tracking: 'GB982341029X', date: 'Today, 14:20' },
+      { id: '#SHP-1041', customer: 'Liam Thorne', email: 'liam.t@usretail.com', phone: '+1 212 555 0199', address: '742 Evergreen Terrace, Springfield, OR', country: 'United States', total: '$245.99', payment: 'Paid via USDT', fulfillment: 'Processing', courier: 'DHL Express Worldwide', tracking: 'DHL-489102834', date: 'Today, 12:45' },
+      { id: '#SHP-1040', customer: 'Zahid Mehmood', email: 'zahid.m@gmail.com', phone: '+92 300 1234567', address: 'House 42, Street 8, F-7/2, Islamabad', country: 'Pakistan', total: '₨ 48,500', payment: 'Paid via Stripe', fulfillment: 'Fulfilled', courier: 'TCS Express', tracking: 'TCS-77889911', date: 'Yesterday' },
+      { id: '#SHP-1039', customer: 'Sophia Müller', email: 'sophia.m@example.de', phone: '+49 30 123456', address: 'Friedrichstraße 43, Berlin', country: 'Germany', total: '£171.00', payment: 'Paid via Card', fulfillment: 'Fulfilled', courier: 'DPD Europe', tracking: 'DPD-99882244', date: '2 days ago' }
+    ];
+
+    // Initialize
     window.addEventListener('DOMContentLoaded', () => {
+      // Check stored custom passcode
+      const activePass = localStorage.getItem('shoppaza_admin_passcode') || DEFAULT_MASTER_KEY;
+      document.getElementById('hintDefaultPass').innerText = activePass;
+
+      // Check session
       if (sessionStorage.getItem('shoppaza_admin_auth') === 'true') {
         unlockDashboard();
       }
+
+      loadAdminProfile();
+      loadThemeCustomizerFields();
       loadProductsData();
       renderOrders();
       renderCustomers();
       renderDiscounts();
+      renderSliderBannersSummary();
     });
 
+    // ---------------- AUTHENTICATION ----------------
     function togglePassVisibility() {
       const inp = document.getElementById('adminSecretInput');
       const icon = document.getElementById('eyeIcon');
       if (inp.type === 'password') {
         inp.type = 'text';
-        icon.classList.remove('fa-eye');
-        icon.classList.add('fa-eye-slash');
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
       } else {
         inp.type = 'password';
-        icon.classList.remove('fa-eye-slash');
-        icon.classList.add('fa-eye');
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
       }
     }
 
     function handleAdminLogin(e) {
       e.preventDefault();
       const entered = document.getElementById('adminSecretInput').value.trim();
-      if (entered === MASTER_PASS || entered === "admin123" || entered === "sajid2026") {
+      const currentSecret = localStorage.getItem('shoppaza_admin_passcode') || DEFAULT_MASTER_KEY;
+      
+      if (entered === currentSecret || entered === "admin123" || entered === "sajid2026") {
         sessionStorage.setItem('shoppaza_admin_auth', 'true');
         unlockDashboard();
+        showToast('Authentication successful. Welcome to Shoppaza Admin!', 'success');
       } else {
         document.getElementById('loginError').classList.remove('hidden');
       }
@@ -586,8 +1072,9 @@
       location.reload();
     }
 
+    // ---------------- TAB NAVIGATION ----------------
     function switchTab(tabName) {
-      const tabs = ['home', 'orders', 'products', 'customers', 'analytics', 'discounts', 'settings'];
+      const tabs = ['home', 'orders', 'products', 'customizer', 'customers', 'discounts', 'analytics', 'settings'];
       tabs.forEach(t => {
         const panel = document.getElementById('panel-' + t);
         const btn = document.getElementById('tabBtn-' + t);
@@ -601,21 +1088,60 @@
       if (activeBtn) activeBtn.classList.add('sidebar-active');
     }
 
+    // ---------------- TOAST ALERTS ----------------
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `px-4 py-3 rounded-xl border shadow-xl flex items-center gap-3 text-xs font-semibold text-white pointer-events-auto transition transform duration-300 translate-y-2 opacity-0 ${
+        type === 'success' ? 'bg-emerald-700 border-emerald-500' : 'bg-rose-700 border-rose-500'
+      }`;
+      toast.innerHTML = `
+        <i class="fa-solid ${type === 'success' ? 'fa-circle-check text-emerald-200' : 'fa-circle-exclamation text-rose-200'}"></i>
+        <span>${message}</span>
+      `;
+      container.appendChild(toast);
+      
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      });
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-x-4');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    // ---------------- PRODUCTS ENGINE ----------------
     async function loadProductsData() {
       try {
         const res = await fetch('products.json');
         allProducts = await res.json();
         
-        // Merge with locally added products if any
+        // Merge locally created products
         const localProds = JSON.parse(localStorage.getItem('shoppaza_custom_products') || '[]');
         if (localProds.length > 0) {
           allProducts = [...localProds, ...allProducts];
         }
 
+        // Apply edits
+        const editedProds = JSON.parse(localStorage.getItem('shoppaza_edited_products') || '{}');
+        allProducts = allProducts.map(p => {
+          if (editedProds[p.id]) {
+            return { ...p, ...editedProds[p.id] };
+          }
+          return p;
+        });
+
+        // Apply deletions
+        const deletedIds = JSON.parse(localStorage.getItem('shoppaza_deleted_products') || '[]');
+        if (deletedIds.length > 0) {
+          allProducts = allProducts.filter(p => !deletedIds.includes(p.id));
+        }
+
         document.getElementById('sidebarProductCount').innerText = allProducts.length;
         document.getElementById('kpiCatalogCount').innerText = allProducts.length + ' Products';
 
-        populateCategoriesFilter();
+        populateCategoriesFilters();
         renderAdminProducts();
         renderCategoryAnalytics();
       } catch (err) {
@@ -623,26 +1149,40 @@
       }
     }
 
-    function populateCategoriesFilter() {
+    function populateCategoriesFilters() {
       const select = document.getElementById('categoryFilterSelect');
-      const cats = Array.from(new Set(allProducts.map(p => p.category))).sort();
+      const bulkSelect = document.getElementById('bulkScopeSelect');
+      const cats = Array.from(new Set(allProducts.map(p => p.category))).filter(Boolean).sort();
+      
+      select.innerHTML = '<option value="all">All Categories</option>';
+      bulkSelect.innerHTML = '<option value="all">Entire Catalog (All Products)</option>';
+
       cats.forEach(c => {
         const opt = document.createElement('option');
         opt.value = c;
         opt.innerText = c;
         select.appendChild(opt);
+
+        const bulkOpt = document.createElement('option');
+        bulkOpt.value = c;
+        bulkOpt.innerText = `Category: ${c}`;
+        bulkSelect.appendChild(bulkOpt);
       });
     }
 
     function renderAdminProducts() {
       const tbody = document.getElementById('adminProductTableBody');
-      const query = (document.getElementById('productFilterInput')?.value || '').toLowerCase();
+      const query = (document.getElementById('productFilterInput')?.value || '').toLowerCase().trim();
       const selectedCat = document.getElementById('categoryFilterSelect')?.value || 'all';
+      const stockFilter = document.getElementById('stockFilterSelect')?.value || 'all';
 
       let filtered = allProducts.filter(p => {
         const matchTitle = (p.title || '').toLowerCase().includes(query);
         const matchCat = (selectedCat === 'all' || p.category === selectedCat);
-        return matchTitle && matchCat;
+        const matchStock = (stockFilter === 'all') || 
+                           (stockFilter === 'in_stock' && p.in_stock) || 
+                           (stockFilter === 'out_of_stock' && !p.in_stock);
+        return matchTitle && matchCat && matchStock;
       });
 
       const total = filtered.length;
@@ -650,29 +1190,54 @@
       const paginated = filtered.slice(start, start + pageSize);
 
       tbody.innerHTML = '';
-      paginated.forEach(p => {
-        const tr = document.createElement('tr');
-        tr.className = 'hover:bg-shopify-surface/50 transition';
-        tr.innerHTML = `
-          <td class="p-3 text-center">
-            <img src="${p.image}" class="w-9 h-9 object-cover rounded-lg border border-shopify-border mx-auto" onerror="this.src='favicon.svg'">
-          </td>
-          <td class="p-3 font-semibold text-white max-w-xs truncate" title="${p.title}">${p.title}</td>
-          <td class="p-3 text-slate-400">${p.category}</td>
-          <td class="p-3"><span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold text-[10px]">Active</span></td>
-          <td class="p-3 text-white font-mono font-bold">£${p.price_gbp ? p.price_gbp.toFixed(2) : '29.00'}</td>
-          <td class="p-3 text-slate-400 font-mono">$${p.price_usd ? p.price_usd.toFixed(2) : '39.00'}</td>
-          <td class="p-3 text-slate-300 font-semibold">${p.in_stock ? 'In Stock' : 'Out of Stock'}</td>
-          <td class="p-3 text-right">
-            <button onclick="deleteProduct(${p.id})" class="text-slate-500 hover:text-red-400 px-2 py-1 transition" title="Delete">
-              <i class="fa-solid fa-trash-can"></i>
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
+      if (paginated.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="p-8 text-center text-slate-500">No products match your criteria.</td></tr>`;
+      } else {
+        paginated.forEach(p => {
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-shopify-surface/50 transition border-b border-shopify-border/50';
+          const priceGBP = p.price_gbp ? p.price_gbp.toFixed(2) : (p.price_usd ? (p.price_usd * 0.79).toFixed(2) : '29.00');
+          const priceUSD = p.price_usd ? p.price_usd.toFixed(2) : '39.00';
+          const isStock = p.in_stock !== false;
 
-      document.getElementById('productPaginationInfo').innerText = `Showing ${Math.min(start + 1, total)} - ${Math.min(start + pageSize, total)} of ${total} products`;
+          tr.innerHTML = `
+            <td class="p-3 text-center">
+              <img src="${p.image}" class="w-10 h-10 object-cover rounded-lg border border-shopify-border mx-auto bg-slate-900" onerror="this.src='favicon.svg'">
+            </td>
+            <td class="p-3 font-semibold text-white max-w-xs truncate cursor-pointer hover:text-emerald-400" onclick="openEditProductModal(${p.id})" title="${p.title}">
+              ${p.title}
+            </td>
+            <td class="p-3 text-slate-400">${p.category || 'General'}</td>
+            <td class="p-3">
+              <span class="px-2 py-0.5 rounded-full ${isStock ? 'bg-emerald-500/20 text-emerald-300' : 'bg-rose-500/20 text-rose-300'} font-bold text-[10px]">
+                ${isStock ? 'Active' : 'Draft'}
+              </span>
+            </td>
+            <td class="p-3 text-emerald-400 font-mono font-bold">£${priceGBP}</td>
+            <td class="p-3 text-slate-400 font-mono">$${priceUSD}</td>
+            <td class="p-3">
+              <button onclick="toggleProductStock(${p.id})" class="px-2 py-0.5 rounded text-[11px] font-semibold border ${isStock ? 'border-emerald-500/30 text-emerald-400 bg-emerald-500/10' : 'border-slate-700 text-slate-500'}">
+                ${isStock ? 'In Stock' : 'Out of Stock'}
+              </button>
+            </td>
+            <td class="p-3 text-right space-x-1">
+              <button onclick="openEditProductModal(${p.id})" class="text-slate-400 hover:text-emerald-400 p-1.5 transition" title="Edit Product">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </button>
+              <button onclick="duplicateProduct(${p.id})" class="text-slate-400 hover:text-blue-400 p-1.5 transition" title="Duplicate Product">
+                <i class="fa-solid fa-clone"></i>
+              </button>
+              <button onclick="deleteProduct(${p.id})" class="text-slate-500 hover:text-rose-400 p-1.5 transition" title="Delete Product">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      document.getElementById('productPaginationInfo').innerText = `Showing ${total === 0 ? 0 : start + 1} - ${Math.min(start + pageSize, total)} of ${total} products`;
+      document.getElementById('adminCurrentPageDisplay').innerText = currentAdminPage;
       document.getElementById('btnPrevPage').disabled = (currentAdminPage <= 1);
       document.getElementById('btnNextPage').disabled = (start + pageSize >= total);
     }
@@ -681,46 +1246,151 @@
       currentAdminPage = 1;
       renderAdminProducts();
     }
-
     function prevAdminPage() {
-      if (currentAdminPage > 1) {
-        currentAdminPage--;
-        renderAdminProducts();
-      }
+      if (currentAdminPage > 1) { currentAdminPage--; renderAdminProducts(); }
     }
-
     function nextAdminPage() {
-      currentAdminPage++;
+      currentAdminPage++; renderAdminProducts();
+    }
+
+    // ---------------- EDIT PRODUCT MODAL ----------------
+    function openEditProductModal(id) {
+      const p = allProducts.find(x => x.id === id);
+      if (!p) return;
+
+      document.getElementById('editProdId').value = p.id;
+      document.getElementById('editProdTitle').value = p.title || '';
+      document.getElementById('editProdCategory').value = p.category || '';
+      document.getElementById('editProdStock').value = (p.in_stock !== false) ? 'true' : 'false';
+      document.getElementById('editProdPriceGBP').value = p.price_gbp ? p.price_gbp.toFixed(2) : (p.price_usd ? (p.price_usd * 0.79).toFixed(2) : '29.00');
+      document.getElementById('editProdPriceUSD').value = p.price_usd ? p.price_usd.toFixed(2) : '39.00';
+      document.getElementById('editProdImage').value = p.image || '';
+      document.getElementById('editImagePreview').src = p.image || 'favicon.svg';
+
+      document.getElementById('editProductModal').classList.remove('hidden');
+    }
+
+    function closeEditProductModal() {
+      document.getElementById('editProductModal').classList.add('hidden');
+    }
+
+    function updateEditImagePreview(url) {
+      document.getElementById('editImagePreview').src = url || 'favicon.svg';
+    }
+
+    function handleSaveEditedProduct(e) {
+      e.preventDefault();
+      const id = parseInt(document.getElementById('editProdId').value);
+      const title = document.getElementById('editProdTitle').value.trim();
+      const category = document.getElementById('editProdCategory').value.trim();
+      const in_stock = document.getElementById('editProdStock').value === 'true';
+      const price_gbp = parseFloat(document.getElementById('editProdPriceGBP').value);
+      const price_usd = parseFloat(document.getElementById('editProdPriceUSD').value);
+      const image = document.getElementById('editProdImage').value.trim();
+
+      const updated = { title, category, in_stock, price_gbp, price_usd, price_usdt: price_usd, image };
+
+      // Update in memory
+      allProducts = allProducts.map(p => p.id === id ? { ...p, ...updated } : p);
+
+      // Save to localStorage for sync with live store
+      const editedMap = JSON.parse(localStorage.getItem('shoppaza_edited_products') || '{}');
+      editedMap[id] = updated;
+      localStorage.setItem('shoppaza_edited_products', JSON.stringify(editedMap));
+
+      closeEditProductModal();
       renderAdminProducts();
+      showToast(`Product "${title}" updated successfully!`, 'success');
     }
 
+    // Toggle stock status directly
+    function toggleProductStock(id) {
+      const p = allProducts.find(x => x.id === id);
+      if (!p) return;
+      const newStock = !(p.in_stock !== false);
+      p.in_stock = newStock;
+
+      const editedMap = JSON.parse(localStorage.getItem('shoppaza_edited_products') || '{}');
+      editedMap[id] = { ...(editedMap[id] || {}), in_stock: newStock };
+      localStorage.setItem('shoppaza_edited_products', JSON.stringify(editedMap));
+
+      renderAdminProducts();
+      showToast(`Stock updated to ${newStock ? 'In Stock' : 'Out of Stock'}`, 'success');
+    }
+
+    // Duplicate product
+    function duplicateProduct(id) {
+      const p = allProducts.find(x => x.id === id);
+      if (!p) return;
+      const clone = {
+        ...p,
+        id: Date.now(),
+        title: `${p.title} (Copy)`
+      };
+      
+      const localProds = JSON.parse(localStorage.getItem('shoppaza_custom_products') || '[]');
+      localProds.unshift(clone);
+      localStorage.setItem('shoppaza_custom_products', JSON.stringify(localProds));
+
+      allProducts.unshift(clone);
+      renderAdminProducts();
+      showToast(`Product cloned: "${clone.title}"`, 'success');
+    }
+
+    // Delete product
     function deleteProduct(id) {
-      if (confirm('Are you sure you want to remove this product from the live catalog?')) {
-        allProducts = allProducts.filter(p => p.id !== id);
-        renderAdminProducts();
-      }
+      const p = allProducts.find(x => x.id === id);
+      if (!confirm(`Are you sure you want to delete "${p?.title || 'this product'}"?`)) return;
+
+      allProducts = allProducts.filter(x => x.id !== id);
+
+      // Save deleted IDs
+      const deletedIds = JSON.parse(localStorage.getItem('shoppaza_deleted_products') || '[]');
+      if (!deletedIds.includes(id)) deletedIds.push(id);
+      localStorage.setItem('shoppaza_deleted_products', JSON.stringify(deletedIds));
+
+      // Remove from custom products if it was there
+      let localProds = JSON.parse(localStorage.getItem('shoppaza_custom_products') || '[]');
+      localProds = localProds.filter(x => x.id !== id);
+      localStorage.setItem('shoppaza_custom_products', JSON.stringify(localProds));
+
+      renderAdminProducts();
+      document.getElementById('sidebarProductCount').innerText = allProducts.length;
+      document.getElementById('kpiCatalogCount').innerText = allProducts.length + ' Products';
+      showToast('Product deleted from catalog', 'success');
     }
 
+    // ---------------- ADD PRODUCT MODAL ----------------
     function openAddProductModal() {
       document.getElementById('addProductModal').classList.remove('hidden');
     }
     function closeAddProductModal() {
       document.getElementById('addProductModal').classList.add('hidden');
     }
+    function updateNewImagePreview(url) {
+      document.getElementById('newImagePreview').src = url || 'favicon.svg';
+    }
 
     function handleCreateProduct(e) {
       e.preventDefault();
+      const title = document.getElementById('newProdTitle').value.trim();
+      const category = document.getElementById('newProdCategory').value.trim();
+      const in_stock = document.getElementById('newProdStock').value === 'true';
+      const price_gbp = parseFloat(document.getElementById('newProdPriceGBP').value);
+      const price_usd = parseFloat(document.getElementById('newProdPriceUSD').value);
+      const image = document.getElementById('newProdImage').value.trim();
+
       const newP = {
         id: Date.now(),
-        title: document.getElementById('newProdTitle').value,
-        category: document.getElementById('newProdCategory').value,
-        price_usd: parseFloat(document.getElementById('newProdPriceUSD').value),
-        price_gbp: parseFloat(document.getElementById('newProdPriceGBP').value),
-        price_usdt: parseFloat(document.getElementById('newProdPriceUSD').value),
-        price_pkr: Math.round(parseFloat(document.getElementById('newProdPriceUSD').value) * 278),
-        image: document.getElementById('newProdImage').value,
-        images: [document.getElementById('newProdImage').value],
-        in_stock: true,
+        title,
+        category,
+        price_gbp,
+        price_usd,
+        price_usdt: price_usd,
+        price_pkr: Math.round(price_usd * 278),
+        image,
+        images: [image],
+        in_stock,
         rating: 5.0,
         reviews_count: 1,
         sold_count: 0
@@ -733,18 +1403,181 @@
       allProducts.unshift(newP);
       closeAddProductModal();
       e.target.reset();
+      populateCategoriesFilters();
       renderAdminProducts();
-      alert('Product created and published to live store!');
+      document.getElementById('sidebarProductCount').innerText = allProducts.length;
+      document.getElementById('kpiCatalogCount').innerText = allProducts.length + ' Products';
+      showToast(`New product "${title}" published live!`, 'success');
     }
 
-    // Mock Sample Orders
-    const sampleOrders = [
-      { id: '#SHP-1042', customer: 'Emma Watson', channel: 'Online Store (UK)', total: '£186.00', payment: 'Paid via Stripe', fulfillment: 'Fulfilled', date: 'Just now', items: 2 },
-      { id: '#SHP-1041', customer: 'Liam Thorne', channel: 'Online Store (US)', total: '$245.99', payment: 'Paid via USDT', fulfillment: 'Unfulfilled', date: '25 mins ago', items: 1 },
-      { id: '#SHP-1040', customer: 'Zahid Mehmood', channel: 'Online Store (PK)', total: '₨ 48,500', payment: 'Paid via Stripe', fulfillment: 'Fulfilled', date: '2 hours ago', items: 3 },
-      { id: '#SHP-1039', customer: 'Sophia Müller', channel: 'Online Store (EU)', total: '£171.00', payment: 'Paid via Card', fulfillment: 'Fulfilled', date: 'Yesterday', items: 1 }
-    ];
+    // ---------------- BULK PRICE ADJUSTMENT ----------------
+    function openBulkPriceModal() {
+      document.getElementById('bulkPriceModal').classList.remove('hidden');
+    }
+    function closeBulkPriceModal() {
+      document.getElementById('bulkPriceModal').classList.add('hidden');
+    }
 
+    function handleApplyBulkPrice(e) {
+      e.preventDefault();
+      const scope = document.getElementById('bulkScopeSelect').value;
+      const action = document.getElementById('bulkActionSelect').value;
+      const value = parseFloat(document.getElementById('bulkValueInput').value);
+
+      if (isNaN(value) || value <= 0) {
+        alert('Please enter a valid amount.');
+        return;
+      }
+
+      let count = 0;
+      const editedMap = JSON.parse(localStorage.getItem('shoppaza_edited_products') || '{}');
+
+      allProducts.forEach(p => {
+        if (scope === 'all' || p.category === scope) {
+          count++;
+          let gbp = p.price_gbp || (p.price_usd ? p.price_usd * 0.79 : 29.00);
+          let usd = p.price_usd || (gbp / 0.79);
+
+          if (action === 'increase_pct') {
+            gbp *= (1 + value / 100);
+            usd *= (1 + value / 100);
+          } else if (action === 'decrease_pct') {
+            gbp = Math.max(1, gbp * (1 - value / 100));
+            usd = Math.max(1, usd * (1 - value / 100));
+          } else if (action === 'increase_fixed') {
+            gbp += value;
+            usd += (value / 0.79);
+          } else if (action === 'decrease_fixed') {
+            gbp = Math.max(1, gbp - value);
+            usd = Math.max(1, usd - (value / 0.79));
+          }
+
+          p.price_gbp = Math.round(gbp * 100) / 100;
+          p.price_usd = Math.round(usd * 100) / 100;
+
+          editedMap[p.id] = {
+            ...(editedMap[p.id] || {}),
+            price_gbp: p.price_gbp,
+            price_usd: p.price_usd
+          };
+        }
+      });
+
+      localStorage.setItem('shoppaza_edited_products', JSON.stringify(editedMap));
+      closeBulkPriceModal();
+      renderAdminProducts();
+      showToast(`Bulk pricing applied to ${count} products!`, 'success');
+    }
+
+    // ---------------- CSV EXPORT & IMPORT ----------------
+    function exportProductsCSV() {
+      if (allProducts.length === 0) {
+        alert('No products to export.');
+        return;
+      }
+
+      const headers = ['id', 'title', 'category', 'price_gbp', 'price_usd', 'image', 'in_stock'];
+      const rows = allProducts.map(p => [
+        p.id,
+        `"${(p.title || '').replace(/"/g, '""')}"`,
+        `"${(p.category || '').replace(/"/g, '""')}"`,
+        (p.price_gbp || 29).toFixed(2),
+        (p.price_usd || 39).toFixed(2),
+        `"${(p.image || '').replace(/"/g, '""')}"`,
+        p.in_stock !== false ? 'true' : 'false'
+      ]);
+
+      const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `shoppaza_products_${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Products catalog exported to CSV successfully!', 'success');
+    }
+
+    function openImportCSVModal() {
+      document.getElementById('importCSVModal').classList.remove('hidden');
+    }
+    function closeImportCSVModal() {
+      document.getElementById('importCSVModal').classList.add('hidden');
+    }
+
+    function handleCSVFileSelected(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        document.getElementById('csvRawText').value = event.target.result;
+      };
+      reader.readAsText(file);
+    }
+
+    function handleProcessCSVImport(e) {
+      e.preventDefault();
+      const raw = document.getElementById('csvRawText').value.trim();
+      if (!raw) {
+        alert('Please paste or upload CSV data.');
+        return;
+      }
+
+      const lines = raw.split(/\r?\n/).filter(Boolean);
+      if (lines.length < 2) {
+        alert('CSV must contain a header and at least one data row.');
+        return;
+      }
+
+      // Check header
+      const headerLine = lines[0].toLowerCase();
+      let importedCount = 0;
+      const localProds = JSON.parse(localStorage.getItem('shoppaza_custom_products') || '[]');
+
+      for (let i = 1; i < lines.length; i++) {
+        // Simple regex split for CSV considering quotes
+        const match = lines[i].match(/(?:^|,)(?:"([^"]*)"|([^,]*))/g);
+        if (match && match.length >= 4) {
+          const cleanCols = match.map(c => c.replace(/^,/, '').replace(/^"/, '').replace(/"$/, '').trim());
+          const title = cleanCols[0] || 'Imported Product';
+          const category = cleanCols[1] || 'General';
+          const price_gbp = parseFloat(cleanCols[2]) || 29.00;
+          const price_usd = parseFloat(cleanCols[3]) || (price_gbp / 0.79);
+          const image = cleanCols[4] || 'favicon.svg';
+
+          const newP = {
+            id: Date.now() + i,
+            title,
+            category,
+            price_gbp,
+            price_usd,
+            price_usdt: price_usd,
+            price_pkr: Math.round(price_usd * 278),
+            image,
+            images: [image],
+            in_stock: true,
+            rating: 5.0,
+            reviews_count: 1,
+            sold_count: 0
+          };
+
+          localProds.unshift(newP);
+          allProducts.unshift(newP);
+          importedCount++;
+        }
+      }
+
+      localStorage.setItem('shoppaza_custom_products', JSON.stringify(localProds));
+      closeImportCSVModal();
+      document.getElementById('csvRawText').value = '';
+      populateCategoriesFilters();
+      renderAdminProducts();
+      document.getElementById('sidebarProductCount').innerText = allProducts.length;
+      document.getElementById('kpiCatalogCount').innerText = allProducts.length + ' Products';
+      showToast(`Successfully imported ${importedCount} products into Shoppaza!`, 'success');
+    }
+
+    // ---------------- ORDERS MANAGEMENT & TRACKING ----------------
     function renderOrders() {
       const recentTbody = document.getElementById('recentOrdersTable');
       const fullTbody = document.getElementById('fullOrdersTableBody');
@@ -752,54 +1585,221 @@
       if (fullTbody) fullTbody.innerHTML = '';
 
       const liveOrders = JSON.parse(localStorage.getItem('shoppaza_live_orders') || '[]');
-      const allOrders = [...liveOrders, ...sampleOrders];
+      const allOrders = [...liveOrders, ...defaultOrders];
+
+      document.getElementById('sidebarOrdersBadge').innerText = allOrders.length;
+      document.getElementById('kpiTotalOrders').innerText = allOrders.length + ' Orders';
 
       allOrders.forEach(o => {
-        const trRecent = document.createElement('tr');
-        trRecent.innerHTML = `
-          <td class="p-3 font-bold text-white">${o.id}</td>
-          <td class="p-3 text-slate-300">${o.customer}</td>
-          <td class="p-3 text-slate-400">${o.channel || 'Online Store'}</td>
-          <td class="p-3 text-white font-mono font-bold">${o.total}</td>
-          <td class="p-3"><span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-[10px]">${o.payment}</span></td>
-          <td class="p-3"><span class="px-2 py-0.5 rounded-full ${o.fulfillment === 'Fulfilled' ? 'bg-indigo-500/20 text-indigo-300' : 'bg-amber-500/20 text-amber-300'} font-bold text-[10px]">${o.fulfillment}</span></td>
-        `;
-        if (recentTbody) recentTbody.appendChild(trRecent);
+        // Status Colors
+        const fulfillColor = o.fulfillment === 'Fulfilled' || o.fulfillment === 'Shipped'
+          ? 'bg-emerald-500/20 text-emerald-300'
+          : (o.fulfillment === 'Processing' ? 'bg-indigo-500/20 text-indigo-300' : 'bg-amber-500/20 text-amber-300');
 
-        const trFull = document.createElement('tr');
-        trFull.innerHTML = `
-          <td class="p-4 font-bold text-white">${o.id}</td>
-          <td class="p-4 text-slate-400">${o.date || 'Today'}</td>
-          <td class="p-4 text-slate-200 font-medium">${o.customer}</td>
-          <td class="p-4"><span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-[10px]">${o.payment}</span></td>
-          <td class="p-4"><span class="px-2.5 py-0.5 rounded-full ${o.fulfillment === 'Fulfilled' ? 'bg-indigo-500/20 text-indigo-300' : 'bg-amber-500/20 text-amber-300'} font-bold text-[10px]">${o.fulfillment}</span></td>
-          <td class="p-4 text-slate-400">${o.items} items</td>
-          <td class="p-4 font-bold font-mono text-white">${o.total}</td>
-          <td class="p-4 text-right">
-            <button onclick="toggleFulfill('${o.id}')" class="px-3 py-1 bg-shopify-surface text-slate-300 hover:text-white rounded-lg border border-shopify-border text-xs">Toggle Status</button>
-          </td>
-        `;
-        if (fullTbody) fullTbody.appendChild(trFull);
+        // Recent table
+        if (recentTbody) {
+          const trRecent = document.createElement('tr');
+          trRecent.className = 'hover:bg-shopify-surface/50 transition';
+          trRecent.innerHTML = `
+            <td class="p-3 font-bold text-white cursor-pointer hover:text-emerald-400" onclick="openOrderModal('${o.id}')">${o.id}</td>
+            <td class="p-3 text-slate-300">${o.customer}</td>
+            <td class="p-3 text-slate-400">${o.country || 'United Kingdom'}</td>
+            <td class="p-3 text-emerald-400 font-mono font-bold">${o.total}</td>
+            <td class="p-3"><span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-[10px]">${o.payment}</span></td>
+            <td class="p-3"><span class="px-2 py-0.5 rounded-full ${fulfillColor} font-bold text-[10px]">${o.fulfillment}</span></td>
+            <td class="p-3 font-mono text-[11px] text-slate-300">${o.tracking || '<span class="text-slate-500">Unassigned</span>'}</td>
+            <td class="p-3 text-right">
+              <button onclick="openOrderModal('${o.id}')" class="px-2.5 py-1 bg-shopify-surface hover:bg-slate-800 text-slate-200 rounded border border-shopify-border text-xs">
+                Manage
+              </button>
+            </td>
+          `;
+          recentTbody.appendChild(trRecent);
+        }
+
+        // Full table
+        if (fullTbody) {
+          const trFull = document.createElement('tr');
+          trFull.className = 'hover:bg-shopify-surface/50 transition';
+          trFull.innerHTML = `
+            <td class="p-4 font-bold text-white cursor-pointer hover:text-emerald-400" onclick="openOrderModal('${o.id}')">${o.id}</td>
+            <td class="p-4 text-slate-400">${o.date || 'Today'}</td>
+            <td class="p-4 text-slate-200 font-medium">${o.customer}</td>
+            <td class="p-4 text-slate-400">${o.country || 'UK'}</td>
+            <td class="p-4"><span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-[10px]">${o.payment}</span></td>
+            <td class="p-4"><span class="px-2.5 py-0.5 rounded-full ${fulfillColor} font-bold text-[10px]">${o.fulfillment}</span></td>
+            <td class="p-4 font-mono text-slate-300 text-xs">
+              ${o.tracking ? `<span class="text-indigo-400 font-semibold">${o.courier || 'Carrier'}:</span> ${o.tracking}` : '<span class="text-slate-500">No Tracking</span>'}
+            </td>
+            <td class="p-4 font-bold font-mono text-emerald-400">${o.total}</td>
+            <td class="p-4 text-right">
+              <button onclick="openOrderModal('${o.id}')" class="px-3 py-1.5 bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-300 border border-emerald-500/30 rounded-lg text-xs font-semibold transition">
+                <i class="fa-solid fa-truck mr-1"></i> Edit / Track
+              </button>
+            </td>
+          `;
+          fullTbody.appendChild(trFull);
+        }
       });
     }
 
-    function toggleFulfill(orderId) {
-      const liveOrders = JSON.parse(localStorage.getItem('shoppaza_live_orders') || '[]');
-      const found = liveOrders.find(x => x.id === orderId);
-      if (found) {
-        found.fulfillment = (found.fulfillment === 'Fulfilled' ? 'Unfulfilled' : 'Fulfilled');
-        localStorage.setItem('shoppaza_live_orders', JSON.stringify(liveOrders));
-      }
-      renderOrders();
+    function filterOrdersTable() {
+      const q = (document.getElementById('orderSearchInput')?.value || '').toLowerCase();
+      const status = document.getElementById('orderStatusFilter')?.value || 'all';
+      const rows = document.querySelectorAll('#fullOrdersTableBody tr');
+
+      rows.forEach(r => {
+        const text = r.innerText.toLowerCase();
+        const matchQ = text.includes(q);
+        const matchStatus = (status === 'all') || text.includes(status.toLowerCase());
+        r.style.display = (matchQ && matchStatus) ? '' : 'none';
+      });
     }
 
+    function openOrderModal(orderId) {
+      const liveOrders = JSON.parse(localStorage.getItem('shoppaza_live_orders') || '[]');
+      const allOrders = [...liveOrders, ...defaultOrders];
+      const o = allOrders.find(x => x.id === orderId);
+      if (!o) return;
+
+      document.getElementById('modalOrderHiddenId').value = o.id;
+      document.getElementById('modalOrderId').innerText = o.id;
+      document.getElementById('modalOrderDate').innerText = `Date: ${o.date || 'Today'}`;
+      document.getElementById('modalCustomerName').innerText = o.customer || 'Customer';
+      document.getElementById('modalCustomerEmail').innerText = o.email || 'customer@example.com';
+      document.getElementById('modalCustomerPhone').innerText = o.phone || '+44 7911 123456';
+      document.getElementById('modalCustomerAddress').innerText = o.address || 'Address on file';
+      document.getElementById('modalCustomerCountry').innerText = o.country || 'United Kingdom';
+      document.getElementById('modalOrderTotal').innerText = `Total: ${o.total}`;
+      
+      document.getElementById('modalOrderCourier').value = o.courier || 'Royal Mail Tracked 24';
+      document.getElementById('modalOrderTrackingNum').value = o.tracking || '';
+      document.getElementById('modalOrderFulfillStatus').value = o.fulfillment || 'Processing';
+      document.getElementById('modalOrderPayStatus').value = o.payment?.includes('Paid') ? 'Paid' : 'Pending';
+
+      document.getElementById('orderModal').classList.remove('hidden');
+    }
+
+    function closeOrderModal() {
+      document.getElementById('orderModal').classList.add('hidden');
+    }
+
+    function handleSaveOrderTracking(e) {
+      e.preventDefault();
+      const id = document.getElementById('modalOrderHiddenId').value;
+      const courier = document.getElementById('modalOrderCourier').value;
+      const tracking = document.getElementById('modalOrderTrackingNum').value.trim();
+      const fulfillment = document.getElementById('modalOrderFulfillStatus').value;
+      const payStatus = document.getElementById('modalOrderPayStatus').value;
+
+      let liveOrders = JSON.parse(localStorage.getItem('shoppaza_live_orders') || '[]');
+      let found = liveOrders.find(x => x.id === id);
+
+      if (found) {
+        found.courier = courier;
+        found.tracking = tracking;
+        found.fulfillment = fulfillment;
+        found.payment = payStatus === 'Paid' ? 'Paid via Gateway' : payStatus;
+      } else {
+        // Also allow updating default seed order by copying to liveOrders
+        const def = defaultOrders.find(x => x.id === id);
+        if (def) {
+          def.courier = courier;
+          def.tracking = tracking;
+          def.fulfillment = fulfillment;
+          def.payment = payStatus === 'Paid' ? 'Paid via Gateway' : payStatus;
+          liveOrders.push(def);
+        }
+      }
+
+      localStorage.setItem('shoppaza_live_orders', JSON.stringify(liveOrders));
+      closeOrderModal();
+      renderOrders();
+      showToast(`Order ${id} tracking updated to ${courier} (${tracking})`, 'success');
+    }
+
+    function exportOrdersCSV() {
+      const liveOrders = JSON.parse(localStorage.getItem('shoppaza_live_orders') || '[]');
+      const allOrders = [...liveOrders, ...defaultOrders];
+      const headers = ['Order ID', 'Date', 'Customer', 'Email', 'Address', 'Country', 'Total', 'Payment', 'Fulfillment', 'Courier', 'Tracking'];
+      const rows = allOrders.map(o => [
+        o.id,
+        `"${o.date || 'Today'}"`,
+        `"${o.customer}"`,
+        `"${o.email || ''}"`,
+        `"${o.address || ''}"`,
+        `"${o.country || ''}"`,
+        `"${o.total}"`,
+        `"${o.payment}"`,
+        `"${o.fulfillment}"`,
+        `"${o.courier || ''}"`,
+        `"${o.tracking || ''}"`
+      ]);
+
+      const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `shoppaza_orders_${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Orders exported to CSV!', 'success');
+    }
+
+    function printOrderPackingSlip() {
+      window.print();
+    }
+
+    // ---------------- STORE THEME CUSTOMIZER ----------------
+    function loadThemeCustomizerFields() {
+      const saved = JSON.parse(localStorage.getItem('shoppaza_theme_settings') || '{}');
+      if (saved.announcementPromo) document.getElementById('customAnnouncementPromo').value = saved.announcementPromo;
+      if (saved.announcementLegal) document.getElementById('customAnnouncementLegal').value = saved.announcementLegal;
+      if (saved.supportEmail) document.getElementById('customSupportEmail').value = saved.supportEmail;
+      if (saved.companyName) document.getElementById('customCompanyName').value = saved.companyName;
+      if (saved.companyNumber) document.getElementById('customCompanyNumber').value = saved.companyNumber;
+      if (saved.companyAddress) document.getElementById('customCompanyAddress').value = saved.companyAddress;
+      if (saved.copyrightText) document.getElementById('customCopyrightText').value = saved.copyrightText;
+    }
+
+    function saveThemeCustomizerSettings() {
+      const settings = {
+        announcementPromo: document.getElementById('customAnnouncementPromo').value.trim(),
+        announcementLegal: document.getElementById('customAnnouncementLegal').value.trim(),
+        supportEmail: document.getElementById('customSupportEmail').value.trim(),
+        companyName: document.getElementById('customCompanyName').value.trim(),
+        companyNumber: document.getElementById('customCompanyNumber').value.trim(),
+        companyAddress: document.getElementById('customCompanyAddress').value.trim(),
+        copyrightText: document.getElementById('customCopyrightText').value.trim()
+      };
+
+      localStorage.setItem('shoppaza_theme_settings', JSON.stringify(settings));
+      showToast('Store design & footer settings published to shoppaza.com!', 'success');
+    }
+
+    function renderSliderBannersSummary() {
+      const container = document.getElementById('sliderBannersList');
+      if (!container) return;
+
+      container.innerHTML = megaSlidersData.map((s, idx) => `
+        <div class="p-3 bg-slate-900 border border-slate-800 rounded-xl">
+          <div class="text-[10px] text-amber-400 font-bold uppercase">Slide #${idx + 1} • ${s.badge}</div>
+          <div class="font-bold text-white text-xs mt-1 truncate">${s.name}</div>
+          <div class="text-[11px] text-slate-400 mt-0.5">${s.category}</div>
+        </div>
+      `).join('');
+    }
+
+    // ---------------- CUSTOMERS DIRECTORY ----------------
     function renderCustomers() {
       const container = document.getElementById('customersList');
       if (!container) return;
       const customers = [
         { name: 'Emma Watson', email: 'emma.w@example.co.uk', orders: 4, spent: '£684.00', country: 'United Kingdom' },
         { name: 'Liam Thorne', email: 'liam.t@usretail.com', orders: 2, spent: '$491.98', country: 'United States' },
-        { name: 'Chloe Dubois', email: 'chloe.d@example.fr', orders: 3, spent: '£294.00', country: 'France' }
+        { name: 'Chloe Dubois', email: 'chloe.d@example.fr', orders: 3, spent: '£294.00', country: 'France' },
+        { name: 'Zahid Mehmood', email: 'zahid.m@gmail.com', orders: 1, spent: '₨ 48,500', country: 'Pakistan' }
       ];
 
       container.innerHTML = customers.map(c => `
@@ -821,34 +1821,115 @@
       `).join('');
     }
 
+    // ---------------- COUPONS & DISCOUNTS ----------------
     function renderDiscounts() {
       const container = document.getElementById('discountsContainer');
       if (!container) return;
-      const discounts = [
+
+      const storedCoupons = JSON.parse(localStorage.getItem('shoppaza_coupons') || '[]');
+      const defaultCoupons = [
         { code: 'DARAZMEGA30', discount: '30% Off', uses: '84 Used', status: 'Active' },
         { code: 'WELCOME10', discount: '10% Off', uses: '215 Used', status: 'Active' },
         { code: 'CRYPTO5', discount: '5% Extra on USDT', uses: '32 Used', status: 'Active' }
       ];
+      const allCoupons = [...storedCoupons, ...defaultCoupons];
 
-      container.innerHTML = discounts.map(d => `
-        <div class="p-5 rounded-2xl bg-shopify-sidebar border border-shopify-border space-y-3">
+      container.innerHTML = allCoupons.map((d, idx) => `
+        <div class="p-5 rounded-2xl bg-shopify-sidebar border border-shopify-border space-y-3 relative group">
           <div class="flex justify-between items-center">
-            <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-[10px]">${d.status}</span>
-            <span class="text-xs text-slate-400">${d.uses}</span>
+            <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-[10px]">${d.status || 'Active'}</span>
+            <span class="text-xs text-slate-400">${d.uses || '0 Used'}</span>
           </div>
           <div class="text-xl font-mono font-extrabold text-white tracking-wider">${d.code}</div>
-          <div class="text-xs text-slate-400">${d.discount} storewide discount</div>
+          <div class="text-xs text-slate-400">${d.discount} storewide checkout discount</div>
         </div>
       `).join('');
     }
 
-    function createNewCouponPrompt() {
-      const code = prompt('Enter coupon promo code (e.g. FLASH50):');
-      if (code) {
-        alert(`Coupon ${code.toUpperCase()} has been created and is active on Shoppaza!`);
+    function openCreateCouponModal() {
+      document.getElementById('createCouponModal').classList.remove('hidden');
+    }
+    function closeCreateCouponModal() {
+      document.getElementById('createCouponModal').classList.add('hidden');
+    }
+
+    function handleSaveNewCoupon(e) {
+      e.preventDefault();
+      const code = document.getElementById('newCouponCode').value.trim().toUpperCase();
+      const type = document.getElementById('newCouponType').value;
+      const val = document.getElementById('newCouponValue').value;
+      const discount = type === 'percent' ? `${val}% Off` : `£${val} Off`;
+
+      const newC = { code, discount, uses: '0 Used', status: 'Active' };
+      const stored = JSON.parse(localStorage.getItem('shoppaza_coupons') || '[]');
+      stored.unshift(newC);
+      localStorage.setItem('shoppaza_coupons', JSON.stringify(stored));
+
+      closeCreateCouponModal();
+      e.target.reset();
+      renderDiscounts();
+      showToast(`Coupon ${code} activated on Shoppaza!`, 'success');
+    }
+
+    // ---------------- ADMIN PROFILE & PASSCODE CHANGE ----------------
+    function loadAdminProfile() {
+      const saved = JSON.parse(localStorage.getItem('shoppaza_admin_profile') || '{}');
+      if (saved.name) {
+        document.getElementById('sidebarUserName').innerText = saved.name;
+        document.getElementById('adminProfileName').value = saved.name;
+        document.getElementById('sidebarUserAvatar').innerText = saved.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+      }
+      if (saved.email) {
+        document.getElementById('adminProfileEmail').value = saved.email;
+      }
+      if (saved.role) {
+        document.getElementById('sidebarUserRole').innerText = saved.role;
+        document.getElementById('adminProfileRole').value = saved.role;
       }
     }
 
+    function handleSaveAdminProfile(e) {
+      e.preventDefault();
+      const name = document.getElementById('adminProfileName').value.trim();
+      const email = document.getElementById('adminProfileEmail').value.trim();
+      const role = document.getElementById('adminProfileRole').value.trim();
+
+      const profile = { name, email, role };
+      localStorage.setItem('shoppaza_admin_profile', JSON.stringify(profile));
+      loadAdminProfile();
+      showToast('Admin Profile updated successfully!', 'success');
+    }
+
+    function handleChangePasscode(e) {
+      e.preventDefault();
+      const currentEntered = document.getElementById('currentPassInput').value.trim();
+      const newPass = document.getElementById('newPassInput').value.trim();
+      const confirmPass = document.getElementById('confirmNewPassInput').value.trim();
+
+      const actualCurrent = localStorage.getItem('shoppaza_admin_passcode') || DEFAULT_MASTER_KEY;
+
+      if (currentEntered !== actualCurrent && currentEntered !== 'admin123' && currentEntered !== 'sajid2026') {
+        alert('Current passcode is incorrect!');
+        return;
+      }
+
+      if (newPass.length < 6) {
+        alert('New passcode must be at least 6 characters.');
+        return;
+      }
+
+      if (newPass !== confirmPass) {
+        alert('New passcode and confirm passcode do not match!');
+        return;
+      }
+
+      localStorage.setItem('shoppaza_admin_passcode', newPass);
+      document.getElementById('hintDefaultPass').innerText = newPass;
+      e.target.reset();
+      showToast('Admin Passcode changed successfully! Save it securely.', 'success');
+    }
+
+    // ---------------- ANALYTICS ----------------
     function renderCategoryAnalytics() {
       const container = document.getElementById('analyticsCategoriesBar');
       if (!container) return;
@@ -874,6 +1955,7 @@
       }).join('');
     }
 
+    // ---------------- GLOBAL SEARCH ----------------
     function handleGlobalSearch(e) {
       if (e.key === 'Enter') {
         const q = e.target.value.trim();

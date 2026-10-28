@@ -1,0 +1,43 @@
+{
+  "name": "Shoppaza Worldwide Commerce",
+  "short_name": "Shoppaza",
+  "description": "Luxury fashion, jewelry, and worldwide commerce curated by SAJID SERVICES LTD.",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#18181B",
+  "theme_color": "#F85606",
+  "categories": ["shopping", "lifestyle", "business"],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Flash Sale",
+      "url": "/#flashSaleSection",
+      "description": "View limited-time flash deals"
+    },
+    {
+      "name": "My Bag",
+      "url": "/#cart",
+      "description": "View cart and checkout"
+    }
+  ]
+}

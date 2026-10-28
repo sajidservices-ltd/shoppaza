@@ -1,0 +1,7 @@
+<resources>
+    <style name="Theme.Shoppaza" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">#F85606</item>
+        <item name="android:navigationBarColor">#18181B</item>
+        <item name="android:windowBackground">@color/windowBackground</item>
+    </style>
+</resources>

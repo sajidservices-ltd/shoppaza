@@ -1048,17 +1048,36 @@
       }
     }
 
+    let loginFailedAttempts = 0;
+    let loginLockoutTime = 0;
+
     function handleAdminLogin(e) {
       e.preventDefault();
+      const now = Date.now();
+      if (now < loginLockoutTime) {
+        const remaining = Math.ceil((loginLockoutTime - now) / 1000);
+        alert(`Too many failed attempts. Security cooldown active. Please wait ${remaining} seconds.`);
+        return;
+      }
+
       const entered = document.getElementById('adminSecretInput').value.trim();
       const currentSecret = localStorage.getItem('shoppaza_admin_passcode') || DEFAULT_MASTER_KEY;
       
-      if (entered === currentSecret || entered === "admin123" || entered === "sajid2026") {
+      // Strict authentication (Zero backdoor keys)
+      if (entered === currentSecret) {
+        loginFailedAttempts = 0;
         sessionStorage.setItem('shoppaza_admin_auth', 'true');
         unlockDashboard();
         showToast('Authentication successful. Welcome to Shoppaza Admin!', 'success');
       } else {
-        document.getElementById('loginError').classList.remove('hidden');
+        loginFailedAttempts++;
+        const errorEl = document.getElementById('loginError');
+        errorEl.classList.remove('hidden');
+
+        if (loginFailedAttempts >= 5) {
+          loginLockoutTime = Date.now() + 60000; // 60s cooldown
+          alert('Security Alert: 5 failed attempts detected. Terminal locked for 60 seconds.');
+        }
       }
     }
 
@@ -1908,7 +1927,7 @@
 
       const actualCurrent = localStorage.getItem('shoppaza_admin_passcode') || DEFAULT_MASTER_KEY;
 
-      if (currentEntered !== actualCurrent && currentEntered !== 'admin123' && currentEntered !== 'sajid2026') {
+      if (currentEntered !== actualCurrent) {
         alert('Current passcode is incorrect!');
         return;
       }
@@ -1965,6 +1984,11 @@
           filterAdminProducts();
         }
       }
+    }
+    // ---------------- SECURITY SANITIZER ----------------
+    function escapeHtml(str) {
+      if (typeof str !== 'string') return str;
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
     }
   </script>
 </body>

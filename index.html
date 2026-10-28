@@ -6,6 +6,12 @@
   <title>Shoppaza.com: Online Shopping in UK & Worldwide - Mega Deals on Jewelry, Fashion, Bags & Wigs</title>
   <meta name="description" content="Shop 800+ authentic dresses, fine jewelry, luxury handbags, sunglasses, watches, and wigs on Shoppaza. Operated by SAJID SERVICES LTD (SC874640). Multi-currency checkout in GBP, USD, USDT, and PKR.">
   <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#F85606">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Shoppaza">
+  <link rel="apple-touch-icon" href="icon-192.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2161,6 +2167,67 @@
         document.getElementById('timerSecs').innerText = String(s).padStart(2, '0');
       }, 1000);
     }
+
+    // ---------------- SECURITY SANITIZER & PWA REGISTRATION ----------------
+    function escapeHtml(str) {
+      if (typeof str !== 'string') return str;
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+
+    let deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      const banner = document.getElementById('pwaInstallBanner');
+      if (banner && !sessionStorage.getItem('pwa_dismissed')) {
+        banner.classList.remove('hidden');
+        banner.classList.add('flex');
+      }
+    });
+
+    function triggerPwaInstall() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choice) => {
+          deferredPrompt = null;
+          dismissInstallPrompt();
+        });
+      }
+    }
+
+    function dismissInstallPrompt() {
+      const banner = document.getElementById('pwaInstallBanner');
+      if (banner) {
+        banner.classList.add('hidden');
+        banner.classList.remove('flex');
+      }
+      sessionStorage.setItem('pwa_dismissed', 'true');
+    }
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(() => {});
+      });
+    }
   </script>
+
+  <!-- ================= PWA MOBILE INSTALL FLOATING BANNER ================= -->
+  <div id="pwaInstallBanner" class="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-4 sm:max-w-xs z-50 bg-slate-900 text-white p-3.5 rounded-2xl shadow-2xl border border-slate-700 hidden items-center justify-between gap-3">
+    <div class="flex items-center gap-2.5">
+      <img src="favicon.svg" class="w-8 h-8 rounded-lg" alt="Shoppaza">
+      <div>
+        <div class="text-xs font-bold leading-tight">Shoppaza App</div>
+        <div class="text-[10px] text-slate-400">Install for Android & Mobile</div>
+      </div>
+    </div>
+    <div class="flex items-center gap-1.5">
+      <button onclick="dismissInstallPrompt()" class="text-slate-400 hover:text-white p-1 text-xs">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <button onclick="triggerPwaInstall()" class="px-3 py-1.5 bg-daraz-orange hover:bg-daraz-orangeDark text-white font-bold text-xs rounded-xl shadow">
+        Install
+      </button>
+    </div>
+  </div>
 </body>
 </html>

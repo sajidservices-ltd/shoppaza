@@ -1527,9 +1527,18 @@
 
     async function loadProducts() {
       try {
-        // Cache-busting timestamp guarantees fresh response on every load
-        const res = await fetch('products.json?v=' + Date.now());
-        allRawProducts = await res.json();
+        let data = [];
+        try {
+          const res = await fetch('products.json?v=' + Date.now());
+          if (res.ok) data = await res.json();
+        } catch(e) {}
+
+        if (!data || data.length === 0) {
+          const fallbackRes = await fetch('products.json');
+          data = await fallbackRes.json();
+        }
+
+        allRawProducts = data;
         
         const localProds = JSON.parse(localStorage.getItem('shoppaza_custom_products') || '[]');
         if (localProds.length > 0) {
@@ -1553,9 +1562,10 @@
       const savedAffinity = sessionStorage.getItem('shoppaza_affinity_cat');
       if (savedAffinity && savedAffinity !== 'all') {
         applyAffinityBoost(savedAffinity, false);
-      } else {
-        filterAndRenderProducts();
       }
+
+      page = 1;
+      filterAndRenderProducts();
     }
 
     // Dynamic Flash Sale: Always 6 DIFFERENT categories on every refresh/click
@@ -1634,7 +1644,9 @@
         }
       }
 
-      shuffledCatalog = personalized;
+      if (personalized.length > 0) {
+        shuffledCatalog = personalized;
+      }
 
       if (triggerRerender) {
         page = 1;
@@ -1744,11 +1756,20 @@
     }
 
     function filterAndRenderProducts() {
-      displayedProducts = shuffledCatalog.filter(p => {
+      if (!shuffledCatalog || shuffledCatalog.length === 0) {
+        shuffledCatalog = (allRawProducts && allRawProducts.length > 0) ? generateBalancedShuffle(allRawProducts) : products;
+      }
+
+      displayedProducts = (shuffledCatalog || []).filter(p => {
         const matchesCategory = (currentCategory === 'all' || p.category === currentCategory);
         const matchesQuery = (!searchQuery || (p.title || '').toLowerCase().includes(searchQuery) || (p.category || '').toLowerCase().includes(searchQuery));
         return matchesCategory && matchesQuery;
       });
+
+      if (displayedProducts.length === 0 && !searchQuery) {
+        currentCategory = 'all';
+        displayedProducts = (shuffledCatalog && shuffledCatalog.length > 0) ? shuffledCatalog : allRawProducts;
+      }
 
       renderProductsGrid();
     }

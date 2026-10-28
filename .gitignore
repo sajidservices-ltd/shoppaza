@@ -1,0 +1,10 @@
+# Dependencies & Cache
+node_modules/
+.wrangler/
+dist/
+.env
+vault.json
+*.key
+*.pem
+.DS_Store
+Thumbs.db

@@ -3,30 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Online Shopping in UK & Worldwide: Fashion, Wigs, Jewelry & Electronics - Shoppaza.com</title>
-  <meta name="description" content="Shop 800+ authentic dresses, wigs, fine jewelry, handbags, and lifestyle products on Shoppaza. Operated by SAJID SERVICES LTD (SC874640). Multi-currency checkout in GBP, USD, USDT, and PKR.">
+  <title>Shoppaza.com: Online Shopping in UK & Worldwide - Mega Deals on Jewelry, Fashion, Bags & Wigs</title>
+  <meta name="description" content="Shop 800+ authentic dresses, fine jewelry, luxury handbags, sunglasses, watches, and wigs on Shoppaza. Operated by SAJID SERVICES LTD (SC874640). Multi-currency checkout in GBP, USD, USDT, and PKR.">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Plus+Jakarta+Sans:wght@700;800;900&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { sans: ['"Roboto"', 'sans-serif'] },
+          fontFamily: {
+            sans: ['"Roboto"', 'sans-serif'],
+            brand: ['"Plus Jakarta Sans"', 'sans-serif']
+          },
           colors: {
             daraz: {
               orange: '#F85606',
               orangeDark: '#D94700',
+              orangeLight: '#FFF1EB',
+              headerStart: '#F85606',
+              headerMid: '#FF6F00',
+              headerEnd: '#E64A19',
               bg: '#F5F5F5',
               card: '#FFFFFF',
               textDark: '#212121',
               textMuted: '#757575',
-              border: '#E2E8F0',
-              flashBg: '#FFF4EE',
-              footerBg: '#2E2E2E'
+              border: '#E2E8F0'
             }
           }
         }
@@ -41,70 +46,75 @@
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
+    .daraz-gradient-header {
+      background: linear-gradient(135deg, #F85606 0%, #FF6F00 50%, #E64A19 100%);
+    }
     .scrollbar-hide::-webkit-scrollbar { display: none; }
     .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
 <body class="antialiased selection:bg-daraz-orange selection:text-white">
 
-  <!-- ================= 1. DARAZ TOP UTILITY BAR ================= -->
-  <div class="bg-[#F5F5F5] border-b border-slate-200 text-xs py-1.5 px-4 text-slate-600">
+  <!-- ================= 1. DARAZ TOP UTILITY BAR (MULTI-COLOR / ORANGE ACCENT) ================= -->
+  <div class="bg-[#18181B] text-slate-300 text-xs py-1.5 px-4 border-b border-orange-500/20">
     <div class="max-w-[1240px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-      <div class="flex items-center gap-5 text-[11px] font-normal">
-        <a href="#productsCatalog" class="hover:text-daraz-orange transition flex items-center gap-1 font-medium text-daraz-orange">
-          <i class="fa-solid fa-mobile-screen-button"></i> SAVE MORE ON APP
-        </a>
-        <span class="text-slate-300">|</span>
-        <span class="hidden sm:inline">Official Corporate Entity: <strong>SAJID SERVICES LTD</strong> (UK Registered SC874640)</span>
+      <div class="flex items-center gap-4 text-[11px]">
+        <span class="flex items-center gap-1.5 text-amber-400 font-bold">
+          <i class="fa-solid fa-bolt"></i> SAVE MORE ON APP & WEB
+        </span>
+        <span class="text-slate-600">|</span>
+        <span class="hidden md:inline text-slate-300">
+          UK Registered Entity: <strong>SAJID SERVICES LTD</strong> (Companies House SC874640)
+        </span>
       </div>
 
       <div class="flex items-center gap-5 text-[11px]">
         <!-- Multi-Currency Selector -->
-        <div class="flex items-center gap-1.5 bg-white px-2.5 py-0.5 rounded border border-slate-300">
-          <span class="text-slate-400">CURRENCY:</span>
-          <select id="currencySelector" onchange="changeCurrency(this.value)" class="bg-transparent text-daraz-orange font-bold focus:outline-none cursor-pointer">
-            <option value="GBP">GBP (£) - Stripe UK</option>
-            <option value="USD">USD ($) - Global</option>
-            <option value="USDT">USDT (₮) - Crypto</option>
-            <option value="PKR">PKR (₨) - Pakistan</option>
+        <div class="flex items-center gap-1.5 bg-slate-900/90 px-2.5 py-0.5 rounded border border-slate-700">
+          <span class="text-slate-400 font-medium">CURRENCY:</span>
+          <select id="currencySelector" onchange="changeCurrency(this.value)" class="bg-transparent text-amber-400 font-bold focus:outline-none cursor-pointer">
+            <option value="GBP" class="bg-slate-900 text-white">GBP (£) - Stripe UK</option>
+            <option value="USD" class="bg-slate-900 text-white">USD ($) - Global</option>
+            <option value="USDT" class="bg-slate-900 text-white">USDT (₮) - Crypto</option>
+            <option value="PKR" class="bg-slate-900 text-white">PKR (₨) - Pakistan</option>
           </select>
         </div>
 
-        <a href="contact.html" class="hover:text-daraz-orange transition uppercase">Help & Support</a>
-        <a href="about.html" class="hover:text-daraz-orange transition uppercase">About Us</a>
-        <a href="logos-preview.html" class="hover:text-daraz-orange transition uppercase text-indigo-600 font-bold">Logo Concepts</a>
-        <a href="admin.html" class="text-daraz-orange hover:text-daraz-orangeDark font-bold transition flex items-center gap-1 uppercase">
+        <a href="contact.html" class="hover:text-amber-400 transition uppercase">Help & Support</a>
+        <a href="about.html" class="hover:text-amber-400 transition uppercase">About Us</a>
+        <a href="logos-preview.html" class="hover:text-amber-400 text-amber-300 font-bold transition uppercase">Logo Concepts</a>
+        <a href="admin.html" class="text-amber-400 hover:text-white font-bold transition flex items-center gap-1 uppercase">
           <i class="fa-solid fa-lock text-[10px]"></i> Merchant Login
         </a>
       </div>
     </div>
   </div>
 
-  <!-- ================= 2. DARAZ MAIN HEADER (WHITE & ORANGE SIGNATURE) ================= -->
-  <header class="bg-white sticky top-0 z-50 shadow-sm border-b border-slate-200">
-    <div class="max-w-[1240px] mx-auto px-4 py-3 flex items-center justify-between gap-6">
+  <!-- ================= 2. DARAZ ICONIC MULTI-COLOR GRADIENT HEADER ================= -->
+  <header class="daraz-gradient-header sticky top-0 z-50 shadow-md">
+    <div class="max-w-[1240px] mx-auto px-4 py-3 sm:py-3.5 flex items-center justify-between gap-4 sm:gap-8">
       
-      <!-- Brand Logo -->
-      <a href="index.html" class="flex-shrink-0 flex items-center">
-        <img src="logo.svg" alt="Shoppaza Mall" class="h-10 sm:h-12 w-auto object-contain">
+      <!-- Brand Logo (White / Gold On Vibrant Gradient) -->
+      <a href="index.html" class="flex-shrink-0 flex items-center group">
+        <img src="logo-white.svg" alt="Shoppaza Mall" class="h-10 sm:h-12 w-auto object-contain drop-shadow">
       </a>
 
-      <!-- Daraz Signature Big Search Box with Orange Button -->
+      <!-- Daraz Signature Big White Search Box with Orange Button -->
       <div class="flex-1 max-w-2xl relative">
-        <form onsubmit="handleSearch(event)" class="flex items-center bg-[#F5F5F5] rounded-lg overflow-hidden border border-slate-200 focus-within:border-daraz-orange focus-within:bg-white transition">
-          <input type="text" id="searchInput" placeholder="Search in Shoppaza (800+ authentic fashion, wigs, jewelry)..." class="w-full bg-transparent px-4 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none">
-          <button type="submit" class="bg-daraz-orange hover:bg-daraz-orangeDark text-white px-6 py-2.5 text-sm font-bold transition flex items-center justify-center flex-shrink-0">
-            <i class="fa-solid fa-magnifying-glass"></i>
+        <form onsubmit="handleSearch(event)" class="flex items-center bg-white rounded-lg overflow-hidden shadow-sm border-2 border-amber-300/60 focus-within:ring-2 focus-within:ring-white transition">
+          <input type="text" id="searchInput" placeholder="Search across 800+ authentic jewelry, dresses, bags, watches & wigs..." class="w-full bg-transparent px-4 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none">
+          <button type="submit" class="bg-slate-900 hover:bg-black text-white px-6 py-2.5 text-sm font-bold transition flex items-center justify-center flex-shrink-0">
+            <i class="fa-solid fa-magnifying-glass text-amber-400"></i>
           </button>
         </form>
       </div>
 
-      <!-- Daraz Cart Action -->
-      <div class="flex items-center gap-4 flex-shrink-0">
-        <button onclick="toggleCartDrawer()" class="flex items-center gap-2 p-2 hover:bg-slate-50 rounded-lg transition relative text-slate-700 hover:text-daraz-orange">
+      <!-- Daraz Header Actions: Wishlist & Cart -->
+      <div class="flex items-center gap-4 sm:gap-6 flex-shrink-0 text-white">
+        <button onclick="toggleCartDrawer()" class="flex items-center gap-2 p-1.5 hover:bg-white/10 rounded-lg transition relative text-white">
           <div class="relative">
-            <i class="fa-solid fa-cart-shopping text-2xl"></i>
-            <span id="cartCountBadge" class="absolute -top-2 -right-2 bg-daraz-orange text-white font-black text-[10px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow">0</span>
+            <i class="fa-solid fa-cart-shopping text-2xl text-white"></i>
+            <span id="cartCountBadge" class="absolute -top-2 -right-2 bg-slate-950 text-amber-400 font-black text-[10px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow">0</span>
           </div>
           <span class="hidden md:inline font-bold text-xs uppercase tracking-wider">Cart</span>
         </button>
@@ -113,54 +123,118 @@
     </div>
   </header>
 
-  <!-- ================= 3. HERO SECTION (DARAZ VERTICAL MENU + BANNER) ================= -->
-  <section class="max-w-[1240px] mx-auto px-4 pt-3 pb-6">
+  <!-- ================= 3. HERO SECTION (DARAZ VERTICAL MENU + MULTI-PRODUCT SLIDER) ================= -->
+  <section class="max-w-[1240px] mx-auto px-4 pt-4 pb-6">
     <div class="grid grid-cols-12 gap-3 items-stretch">
       
       <!-- Left Category Sidebar (Daraz Standard) -->
       <aside class="hidden lg:block lg:col-span-3 bg-white rounded-lg p-2.5 shadow-sm border border-slate-200 text-xs">
-        <div class="font-bold text-slate-700 px-3 py-2 text-[11px] uppercase tracking-wider border-b border-slate-100 flex items-center gap-2">
+        <div class="font-bold text-slate-800 px-3 py-2 text-[11px] uppercase tracking-wider border-b border-slate-100 flex items-center gap-2">
           <i class="fa-solid fa-bars text-daraz-orange"></i> All Categories
         </div>
         <ul class="py-1 space-y-0.5 text-slate-600 font-normal" id="heroCategoryMenu">
-          <!-- Dynamically populated categories -->
+          <!-- Dynamically populated categories with icons -->
         </ul>
       </aside>
 
-      <!-- Right Main Promotional Slider Banner -->
-      <div class="col-span-12 lg:col-span-9 bg-slate-900 rounded-lg overflow-hidden relative shadow-sm min-h-[340px] sm:min-h-[380px] flex items-center">
-        <div class="absolute inset-0 z-0">
-          <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1600&auto=format&fit=crop&q=80" alt="Daraz Mega Fest" class="w-full h-full object-cover opacity-50">
-          <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/70 to-transparent"></div>
+      <!-- Right Interactive Multi-Product Banner Carousel -->
+      <div class="col-span-12 lg:col-span-9 bg-slate-900 rounded-lg overflow-hidden relative shadow-sm min-h-[350px] sm:min-h-[400px] flex items-center group">
+        
+        <!-- Slide 1: Jewelry & Fine Accessories -->
+        <div class="carousel-slide absolute inset-0 transition-opacity duration-700 opacity-100 flex items-center" id="slide-0">
+          <div class="absolute inset-0 z-0">
+            <img src="https://cdn.shopify.com/s/files/1/1107/7573/0514/files/944203732049_f6e1f021-d10a-4299-8d76-e6c1e3092b78.jpg?v=1792323862" alt="Fine Jewelry" class="w-full h-full object-cover opacity-45">
+            <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent"></div>
+          </div>
+          <div class="relative z-10 p-6 sm:p-12 max-w-lg text-white space-y-3">
+            <span class="inline-block bg-daraz-orange text-white px-2.5 py-0.5 rounded text-[11px] font-black uppercase tracking-wider">
+              Mega Jewelry Gala
+            </span>
+            <h1 class="text-3xl sm:text-5xl font-black leading-tight tracking-tight">
+              Fine Necklaces & <span class="text-amber-400">Crystal Rings</span>
+            </h1>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-light">
+              Over 180+ natural stone pendants, zircon rings, and bridal jewelry sets with express insured delivery.
+            </p>
+            <div class="pt-2 flex gap-3">
+              <button onclick="filterCategory('Necklaces & Pendants')" class="bg-daraz-orange hover:bg-daraz-orangeDark text-white px-6 py-2.5 rounded font-bold text-xs uppercase tracking-wider transition shadow-md">
+                Explore Jewelry
+              </button>
+            </div>
+          </div>
         </div>
 
-        <div class="relative z-10 p-6 sm:p-10 max-w-lg text-white space-y-3">
-          <div class="inline-block bg-daraz-orange px-2.5 py-0.5 rounded text-[11px] font-black uppercase tracking-wider">
-            Mega Shopping Fest 2026
+        <!-- Slide 2: Designer Bags & Luxury Watches -->
+        <div class="carousel-slide absolute inset-0 transition-opacity duration-700 opacity-0 flex items-center" id="slide-1">
+          <div class="absolute inset-0 z-0">
+            <img src="https://cdn.shopify.com/s/files/1/1107/7573/0514/files/24976775618400.jpg?v=1792322301" alt="Designer Bags" class="w-full h-full object-cover opacity-45">
+            <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent"></div>
           </div>
-          <h1 class="text-3xl sm:text-5xl font-black leading-tight tracking-tight">
-            Up to <span class="text-amber-400">60% OFF</span> Storewide
-          </h1>
-          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-light">
-            800+ authentic human hair wigs, luxury party dresses, fine necklaces & designer bags. Worldwide express delivery!
-          </p>
-          <div class="pt-3 flex gap-3">
-            <a href="#productsCatalog" class="bg-daraz-orange hover:bg-daraz-orangeDark text-white px-6 py-2.5 rounded font-bold text-xs uppercase tracking-wider transition shadow-md">
-              Shop Now
-            </a>
-            <button onclick="filterCategory('Wigs & Hair')" class="bg-white/10 hover:bg-white/20 text-white px-5 py-2.5 rounded font-semibold text-xs border border-white/20 transition">
-              Trending Wigs
-            </button>
+          <div class="relative z-10 p-6 sm:p-12 max-w-lg text-white space-y-3">
+            <span class="inline-block bg-indigo-600 text-white px-2.5 py-0.5 rounded text-[11px] font-black uppercase tracking-wider">
+              Designer Leather & Timepieces
+            </span>
+            <h1 class="text-3xl sm:text-5xl font-black leading-tight tracking-tight">
+              Luxury Handbags & <span class="text-amber-400">Chronograph Watches</span>
+            </h1>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-light">
+              Premium Boston bags, shoulder totes, and precision watches crafted for modern lifestyle.
+            </p>
+            <div class="pt-2 flex gap-3">
+              <button onclick="filterCategory('Bags & Handbags')" class="bg-daraz-orange hover:bg-daraz-orangeDark text-white px-6 py-2.5 rounded font-bold text-xs uppercase tracking-wider transition shadow-md">
+                View Handbags
+              </button>
+            </div>
           </div>
         </div>
+
+        <!-- Slide 3: Dresses & Fashion Apparel -->
+        <div class="carousel-slide absolute inset-0 transition-opacity duration-700 opacity-0 flex items-center" id="slide-2">
+          <div class="absolute inset-0 z-0">
+            <img src="https://cdn.shopify.com/s/files/1/1107/7573/0514/files/1110091494943_d81643c1-65b1-4609-b6b8-a68132cb0dbd.jpg?v=1792325357" alt="Dresses & Gowns" class="w-full h-full object-cover opacity-45">
+            <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent"></div>
+          </div>
+          <div class="relative z-10 p-6 sm:p-12 max-w-lg text-white space-y-3">
+            <span class="inline-block bg-rose-600 text-white px-2.5 py-0.5 rounded text-[11px] font-black uppercase tracking-wider">
+              Runway Collections
+            </span>
+            <h1 class="text-3xl sm:text-5xl font-black leading-tight tracking-tight">
+              Party Dresses & <span class="text-amber-400">Casual Shirts</span>
+            </h1>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-light">
+              Elevate your wardrobe with evening gowns, lace work shirts, and chic jackets up to 60% off.
+            </p>
+            <div class="pt-2 flex gap-3">
+              <button onclick="filterCategory('Dresses & Gowns')" class="bg-daraz-orange hover:bg-daraz-orangeDark text-white px-6 py-2.5 rounded font-bold text-xs uppercase tracking-wider transition shadow-md">
+                Shop Dresses
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Carousel Controls -->
+        <button onclick="prevSlide()" class="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center z-20 opacity-0 group-hover:opacity-100 transition">
+          <i class="fa-solid fa-chevron-left text-sm"></i>
+        </button>
+        <button onclick="nextSlide()" class="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center z-20 opacity-0 group-hover:opacity-100 transition">
+          <i class="fa-solid fa-chevron-right text-sm"></i>
+        </button>
+
+        <!-- Slide Dots -->
+        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+          <button onclick="goToSlide(0)" class="slide-dot w-2.5 h-2.5 rounded-full bg-daraz-orange transition" id="dot-0"></button>
+          <button onclick="goToSlide(1)" class="slide-dot w-2.5 h-2.5 rounded-full bg-white/50 transition" id="dot-1"></button>
+          <button onclick="goToSlide(2)" class="slide-dot w-2.5 h-2.5 rounded-full bg-white/50 transition" id="dot-2"></button>
+        </div>
+
       </div>
 
     </div>
   </section>
 
-  <!-- ================= 4. DARAZ 4 PILLARS / BRAND PROMISES ================= -->
+  <!-- ================= 4. DARAZ 4 PILLARS GUARANTEE ================= -->
   <section class="max-w-[1240px] mx-auto px-4 pb-6">
-    <div class="bg-white rounded-lg p-4 shadow-sm border border-slate-200 grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="bg-white rounded-lg p-3.5 shadow-sm border border-slate-200 grid grid-cols-2 md:grid-cols-4 gap-4">
       
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-full bg-orange-50 text-daraz-orange flex items-center justify-center text-lg flex-shrink-0">
@@ -168,7 +242,7 @@
         </div>
         <div>
           <div class="font-bold text-xs text-slate-800">100% Authentic Products</div>
-          <div class="text-[10px] text-slate-400">Direct from Verified Vendors</div>
+          <div class="text-[10px] text-slate-400">Verified Vendors & Direct Dispatch</div>
         </div>
       </div>
 
@@ -178,7 +252,7 @@
         </div>
         <div>
           <div class="font-bold text-xs text-slate-800">14-Day Free Returns</div>
-          <div class="text-[10px] text-slate-400">UK Consumer Rights Compliant</div>
+          <div class="text-[10px] text-slate-400">UK Consumer Rights Act 2015</div>
         </div>
       </div>
 
@@ -198,14 +272,14 @@
         </div>
         <div>
           <div class="font-bold text-xs text-slate-800">Global Air Shipping</div>
-          <div class="text-[10px] text-slate-400">Tracked Express Delivery</div>
+          <div class="text-[10px] text-slate-400">Tracked Express Courier Delivery</div>
         </div>
       </div>
 
     </div>
   </section>
 
-  <!-- ================= 5. FLASH SALE (DARAZ SIGNATURE - EXACT 6 PRODUCTS ROW) ================= -->
+  <!-- ================= 5. FLASH SALE (DARAZ SIGNATURE - 6 DIVERSE PRODUCTS) ================= -->
   <section class="max-w-[1240px] mx-auto px-4 pb-6">
     <div class="bg-white rounded-lg p-4 sm:p-5 shadow-sm border border-slate-200">
       
@@ -228,20 +302,22 @@
         </a>
       </div>
 
-      <!-- EXACT 6 PRODUCTS PER ROW (Daraz Desktop Standard) -->
+      <!-- EXACT 6 DIVERSE PRODUCTS PER ROW -->
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 pt-4" id="flashSaleProductsRow">
-        <!-- Injected via JS -->
+        <!-- Injected via JS with diverse categories: Necklace, Bag, Dress, Watch, Sunglasses, Wig -->
       </div>
 
     </div>
   </section>
 
-  <!-- ================= 6. CATEGORIES SECTION (DARAZ CIRCLES) ================= -->
+  <!-- ================= 6. CATEGORIES WITH REAL PRODUCT PHOTOS (DARAZ STANDARD) ================= -->
   <section class="max-w-[1240px] mx-auto px-4 pb-6">
     <div class="bg-white rounded-lg p-4 sm:p-5 shadow-sm border border-slate-200">
       <h2 class="font-bold text-slate-800 text-base mb-4">Categories</h2>
-      <div class="grid grid-cols-4 sm:grid-cols-7 gap-3 text-center" id="categoryCirclesGrid">
-        <!-- Populated via JS -->
+      
+      <!-- 6 Columns of Real Category Cards with Photos -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 text-center" id="photoCategoriesGrid">
+        <!-- Injected via JS with real photos from categories-data.json -->
       </div>
     </div>
   </section>
@@ -249,21 +325,21 @@
   <!-- ================= 7. JUST FOR YOU (DARAZ CORE - EXACT 6 PRODUCTS PER ROW) ================= -->
   <section id="productsCatalog" class="max-w-[1240px] mx-auto px-4 pb-16">
     
-    <div class="flex items-center justify-between pb-4">
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4">
       <h2 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
         <span>Just For You</span>
         <span class="text-xs font-medium text-slate-400" id="activeFilterBadge">(805 Products Available)</span>
       </h2>
 
       <!-- Category Filter Pills -->
-      <div class="hidden sm:flex items-center gap-1.5 overflow-x-auto max-w-xl pb-1 scrollbar-hide" id="categoryFilterPills">
+      <div class="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1 scrollbar-hide" id="categoryFilterPills">
         <!-- Pills injected by JS -->
       </div>
     </div>
 
-    <!-- EXACT 6 COLUMNS GRID (Daraz Standard) -->
+    <!-- EXACT 6 COLUMNS GRID WITH INTERLEAVED DIVERSE PRODUCTS -->
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3" id="mainProductsGrid">
-      <!-- 805 Products Injected dynamically -->
+      <!-- 805 Products Injected dynamically with rich category mix -->
     </div>
 
     <!-- Centered LOAD MORE Button (Daraz Style) -->
@@ -290,9 +366,7 @@
         </button>
       </div>
 
-      <div class="p-4 overflow-y-auto flex-1 space-y-3 divide-y divide-slate-100 text-xs" id="cartDrawerItems">
-        <!-- Items Injected via JS -->
-      </div>
+      <div class="p-4 overflow-y-auto flex-1 space-y-3 divide-y divide-slate-100 text-xs" id="cartDrawerItems"></div>
 
       <div class="p-4 border-t border-slate-200 bg-slate-50 space-y-3">
         <div class="flex justify-between text-xs text-slate-600">
@@ -514,6 +588,8 @@
     let cart = [];
     let currentQvProduct = null;
     let currentQvQty = 1;
+    let currentSlide = 0;
+    const TOTAL_SLIDES = 3;
 
     const currencyConfig = {
       GBP: { symbol: '£', rateKey: 'price_gbp', compareKey: 'compare_gbp', decimals: 2 },
@@ -535,8 +611,71 @@
       }
       updateCartUI();
       startFlashCountdown();
+      startCarouselAutoRotate();
+      await loadCategoriesData();
       await loadProducts();
     });
+
+    // Slider functions
+    function goToSlide(idx) {
+      currentSlide = idx;
+      for (let i = 0; i < TOTAL_SLIDES; i++) {
+        const slide = document.getElementById('slide-' + i);
+        const dot = document.getElementById('dot-' + i);
+        if (slide) {
+          if (i === currentSlide) {
+            slide.classList.remove('opacity-0');
+            slide.classList.add('opacity-100');
+          } else {
+            slide.classList.remove('opacity-100');
+            slide.classList.add('opacity-0');
+          }
+        }
+        if (dot) {
+          if (i === currentSlide) {
+            dot.className = 'slide-dot w-2.5 h-2.5 rounded-full bg-daraz-orange transition';
+          } else {
+            dot.className = 'slide-dot w-2.5 h-2.5 rounded-full bg-white/50 transition';
+          }
+        }
+      }
+    }
+
+    function nextSlide() {
+      goToSlide((currentSlide + 1) % TOTAL_SLIDES);
+    }
+
+    function prevSlide() {
+      goToSlide((currentSlide - 1 + TOTAL_SLIDES) % TOTAL_SLIDES);
+    }
+
+    function startCarouselAutoRotate() {
+      setInterval(() => {
+        nextSlide();
+      }, 4500);
+    }
+
+    // Categories with photos loader
+    async function loadCategoriesData() {
+      try {
+        const res = await fetch('categories-data.json');
+        const catData = await res.json();
+        const grid = document.getElementById('photoCategoriesGrid');
+        if (grid && catData.length > 0) {
+          grid.innerHTML = catData.map(c => `
+            <div onclick="filterCategory('${c.name}')" class="bg-white rounded-lg border border-slate-200 hover:border-daraz-orange p-3 flex flex-col items-center justify-between hover:shadow-md transition cursor-pointer group">
+              <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden bg-slate-50 mb-2 border border-slate-100">
+                <img src="${c.image}" alt="${c.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.src='favicon.svg'">
+              </div>
+              <div class="text-[11px] font-bold text-slate-800 group-hover:text-daraz-orange transition truncate max-w-full">${c.name}</div>
+              <div class="text-[10px] text-slate-400 font-medium">${c.count}</div>
+            </div>
+          `).join('');
+        }
+      } catch (err) {
+        console.error('Failed to load categories-data:', err);
+      }
+    }
 
     async function loadProducts() {
       try {
@@ -607,34 +746,14 @@
         btn.innerText = c;
         pillsContainer.appendChild(btn);
       });
-
-      // Circles
-      const circlesContainer = document.getElementById('categoryCirclesGrid');
-      const icons = [
-        { cat: 'Wigs & Hair', icon: 'fa-scissors', bg: 'bg-rose-50 text-rose-600' },
-        { cat: 'Dresses & Gowns', icon: 'fa-person-dress', bg: 'bg-purple-50 text-purple-600' },
-        { cat: 'Necklaces & Pendants', icon: 'fa-gem', bg: 'bg-amber-50 text-amber-600' },
-        { cat: 'Bags & Handbags', icon: 'fa-bag-shopping', bg: 'bg-blue-50 text-blue-600' },
-        { cat: 'Sunglasses & Eyewear', icon: 'fa-glasses', bg: 'bg-emerald-50 text-emerald-600' },
-        { cat: 'Luxury Watches', icon: 'fa-clock', bg: 'bg-indigo-50 text-indigo-600' },
-        { cat: 'Beauty & Cosmetics', icon: 'fa-wand-magic-sparkles', bg: 'bg-pink-50 text-pink-600' }
-      ];
-
-      circlesContainer.innerHTML = icons.map(i => `
-        <button onclick="filterCategory('${i.cat}')" class="flex flex-col items-center group">
-          <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-full ${i.bg} flex items-center justify-center text-xl sm:text-2xl group-hover:scale-105 transition shadow-sm border border-slate-100">
-            <i class="fa-solid ${i.icon}"></i>
-          </div>
-          <span class="text-[11px] font-medium text-slate-700 mt-2 group-hover:text-daraz-orange transition truncate max-w-full">${i.cat.split(' ')[0]}</span>
-        </button>
-      `).join('');
     }
 
-    // FLASH SALE (STRICT 6 ITEMS)
+    // FLASH SALE (STRICT 6 ITEMS WITH BALANCED MIX)
     function renderFlashSale() {
       const container = document.getElementById('flashSaleProductsRow');
       if (!container || products.length === 0) return;
       
+      // Pick 6 items from different categories
       const flashItems = products.slice(0, 6);
       container.innerHTML = flashItems.map(p => `
         <div onclick="openQuickView(${p.id})" class="bg-white rounded border border-slate-200 overflow-hidden hover:shadow-md transition cursor-pointer group flex flex-col justify-between">
@@ -707,7 +826,8 @@
           <!-- Product Details -->
           <div class="p-2.5 flex-1 flex flex-col justify-between space-y-2">
             <div>
-              <h4 class="text-xs font-normal text-slate-800 line-clamp-2 leading-snug group-hover:text-daraz-orange transition" title="${p.title}">
+              <div class="text-[9px] uppercase font-bold text-slate-400 truncate">${p.category}</div>
+              <h4 class="text-xs font-normal text-slate-800 line-clamp-2 leading-snug group-hover:text-daraz-orange transition mt-0.5" title="${p.title}">
                 ${p.title}
               </h4>
             </div>

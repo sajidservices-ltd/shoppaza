@@ -1878,36 +1878,13 @@
       renderProductsGrid();
     }
 
-    // Quick View with AI Personalization trigger
+    // Full Dedicated Product Page Navigation with AI Personalization
     function openQuickView(id) {
       const prod = allRawProducts.find(p => p.id === id);
-      if (!prod) return;
-      currentQvProduct = prod;
-      currentQvQty = 1;
-
-      // AI Recommendation Algorithm: Immediately boost this category in Just For You feed!
-      applyAffinityBoost(prod.category, true);
-
-      document.getElementById('qvMainImage').src = prod.image;
-      document.getElementById('qvCategory').innerText = prod.category;
-      document.getElementById('qvTitle').innerText = prod.title;
-      document.getElementById('qvRating').innerText = '★ ' + (prod.rating || 4.9);
-      document.getElementById('qvReviews').innerText = prod.reviews_count || 120;
-      document.getElementById('qvSold').innerText = prod.sold_count || 450;
-      document.getElementById('qvDescription').innerText = prod.description || 'Authentic quality product backed by UK warranty.';
-      document.getElementById('qvQtyDisplay').innerText = '1';
-
-      renderQuickViewPrice();
-
-      const thumbContainer = document.getElementById('qvThumbnails');
-      thumbContainer.innerHTML = (prod.images || [prod.image]).map(img => `
-        <img src="${img}" onclick="document.getElementById('qvMainImage').src='${img}'" class="w-12 h-12 object-cover rounded border border-slate-200 cursor-pointer hover:border-daraz-orange">
-      `).join('');
-
-      // Populate Similar Products in Same Category inside Modal
-      renderQvSimilarProducts(prod);
-
-      document.getElementById('quickViewModal').classList.remove('hidden');
+      if (prod) {
+        applyAffinityBoost(prod.category, true);
+      }
+      window.location.href = `product.html?id=${id}`;
     }
 
     function renderQvSimilarProducts(currentProd) {

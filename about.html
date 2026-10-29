@@ -3,124 +3,141 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About Us | Shoppaza & SAJID SERVICES LTD</title>
-  <meta name="description" content="Learn about Shoppaza, a trading brand of SAJID SERVICES LTD (Company No. SC874640), an Edinburgh-based software publishing company.">
-  <link rel="icon" type="image/svg+xml" href="favicon.svg"><polygon points='12 2 2 7 12 12 22 7 12 2'/><polyline points='2 17 12 22 22 17'/><polyline points='2 12 12 17 22 12'/></svg>">
+  <title>About Us | Shoppaza Worldwide Commerce</title>
+  <meta name="description" content="Learn about Shoppaza, an elite UK retail e-commerce destination owned and operated by SAJID SERVICES LTD (Companies House SC874640, Edinburgh, Scotland).">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+          fontFamily: { sans: ['"Roboto"', 'sans-serif'] },
+          colors: {
+            daraz: {
+              orange: '#F85606',
+              orangeDark: '#D44600',
+              bg: '#F5F5F5'
+            }
+          }
         }
       }
     }
   </script>
+  <style>
+    body { background-color: #F5F5F5; color: #212121; }
+    .daraz-gradient-header {
+      background: linear-gradient(135deg, #F85606 0%, #FF6F00 50%, #E64A19 100%);
+    }
+  </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-indigo-500 selection:text-white">
+<body class="antialiased selection:bg-daraz-orange selection:text-white flex flex-col min-h-screen">
+
+  <!-- TOP UTILITY BAR -->
+  <div class="bg-[#18181B] text-slate-300 text-xs py-1.5 px-4 border-b border-orange-500/20">
+    <div class="max-w-[1240px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div class="flex items-center gap-4 text-[11px]">
+        <span class="flex items-center gap-1.5 text-amber-400 font-bold">
+          <i class="fa-solid fa-gem"></i> CURATED LUXURY & LIFESTYLE COMMERCE
+        </span>
+        <span class="text-slate-600">|</span>
+        <span class="text-slate-300">
+          UK Registered Entity: <strong>SAJID SERVICES LTD</strong> (Companies House SC874640)
+        </span>
+      </div>
+      <div class="flex items-center gap-4 text-[11px]">
+        <a href="contact.html" class="hover:text-amber-400 transition">Contact Us</a>
+        <a href="shipping-policy.html" class="hover:text-amber-400 transition">Shipping Policy</a>
+      </div>
+    </div>
+  </div>
 
   <!-- HEADER -->
-  <header class="sticky top-0 z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/80">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-      <a href="index.html" class="flex items-center"><img src="logo-white.svg?v=2" alt="Shoppaza" class="h-10 w-auto object-contain"></a>
-      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
-        <a href="index.html" class="hover:text-white transition">Home</a>
-        <a href="index.html#solutions" class="hover:text-white transition">Solutions</a>
-        <a href="index.html#software-catalog" class="hover:text-white transition">Software Catalog</a>
-        <a href="about.html" class="text-indigo-400 font-semibold hover:text-white transition">About Us</a>
-        <a href="contact.html" class="hover:text-white transition">Contact</a>
-      </nav>
-      <a href="index.html#software-catalog" class="hidden md:inline-flex text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-500 px-5 py-2.5 rounded-xl shadow-lg transition">View Catalog</a>
+  <header class="daraz-gradient-header sticky top-0 z-50 shadow-md">
+    <div class="max-w-[1240px] mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="index.html" class="flex items-center">
+        <img src="logo-white.svg?v=2" alt="Shoppaza" class="h-10 w-auto">
+      </a>
+      <a href="index.html" class="text-xs font-bold text-white bg-slate-900 hover:bg-black px-4 py-2 rounded transition flex items-center gap-1.5">
+        <i class="fa-solid fa-arrow-left"></i> Back to Store
+      </a>
     </div>
   </header>
 
-  <!-- MAIN ABOUT HERO -->
-  <section class="py-20 bg-gradient-to-b from-slate-900/60 to-slate-950 border-b border-slate-800/80">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold mb-6">
-        <i class="fa-solid fa-building-columns"></i> Corporate Governance & Transparency
+  <!-- MAIN CONTENT -->
+  <main class="max-w-4xl mx-auto px-4 py-12 flex-1 w-full space-y-8">
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-10 shadow-sm space-y-6">
+      
+      <div class="border-b border-slate-200 pb-6">
+        <span class="text-xs font-bold text-daraz-orange uppercase tracking-wider">About SAJID SERVICES LTD</span>
+        <h1 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">Welcome to Shoppaza Worldwide Commerce</h1>
+        <p class="text-xs text-slate-500 mt-1">Incorporated in Edinburgh, Scotland • Companies House CRN: SC874640</p>
       </div>
-      <h1 class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">About Shoppaza & SAJID SERVICES LTD</h1>
-      <p class="mt-6 text-lg text-slate-400 leading-relaxed">
-        Pioneering scalable commerce toolkits, inventory synchronization microservices, and digital software infrastructure registered in Scotland, United Kingdom.
-      </p>
+
+      <div class="space-y-6 text-xs sm:text-sm text-slate-700 leading-relaxed divide-y divide-slate-100">
+        
+        <div class="space-y-3">
+          <h2 class="text-base font-bold text-slate-900">Our Story & Mission</h2>
+          <p>
+            <strong>Shoppaza (shoppaza.com)</strong> is an international e-commerce marketplace dedicated to bringing premium lifestyle goods, catwalk dresses, fine jewelry, luxury handbags, chronograph watches, wigs, and cosmetics directly to customers worldwide with exceptional reliability and value.
+          </p>
+          <p>
+            Owned and operated by <strong>SAJID SERVICES LTD</strong>, Shoppaza bridges high-standard craftsmanship with seamless cross-border logistics. We pride ourselves on fast worldwide delivery, transparent pricing, and rigorous quality inspection on every single item before dispatch.
+          </p>
+        </div>
+
+        <div class="pt-4 space-y-3">
+          <h2 class="text-base font-bold text-slate-900">Why Customers Trust Shoppaza</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
+            <div class="p-4 bg-orange-50 border border-orange-200 rounded-xl space-y-1">
+              <div class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                <i class="fa-solid fa-medal text-daraz-orange"></i> 100% Authentic Quality
+              </div>
+              <p class="text-[11px] text-slate-600">Every piece in our catalog is hand-selected and verified against strict design standards.</p>
+            </div>
+
+            <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
+              <div class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                <i class="fa-solid fa-truck-fast text-indigo-600"></i> Express Royal Mail & DHL
+              </div>
+              <p class="text-[11px] text-slate-600">Tracked domestic UK dispatch in 1-2 days, with insured global priority options.</p>
+            </div>
+
+            <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
+              <div class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                <i class="fa-solid fa-shield-halved text-emerald-600"></i> 14-Day UK Guarantee
+              </div>
+              <p class="text-[11px] text-slate-600">Complete peace of mind with our 14-day statutory money-back and exchange policy.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-4 space-y-3">
+          <h2 class="text-base font-bold text-slate-900">Corporate Governance & Registered Credentials</h2>
+          <p>
+            SAJID SERVICES LTD conducts its business with full transparency and regulatory adherence under Scots commercial law.
+          </p>
+          <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-xs space-y-1">
+            <div class="font-bold text-slate-900">SAJID SERVICES LTD</div>
+            <div>Companies House Registration: <strong>SC874640</strong> (Scotland, UK)</div>
+            <div>Registered Office: <strong>Office 146 18 Young St, Unit Lge, Edinburgh, Scotland, United Kingdom, EH2 4JB</strong></div>
+            <div>SIC: <strong>58290 - Other software publishing & E-Commerce Operations</strong></div>
+            <div>Executive Customer Support: <a href="mailto:support@shoppaza.com" class="text-daraz-orange font-bold">support@shoppaza.com</a></div>
+          </div>
+        </div>
+
+      </div>
+
     </div>
-  </section>
-
-  <!-- CONTENT -->
-  <section class="py-16 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-    
-    <!-- Legal Registration Card -->
-    <div class="p-8 rounded-3xl bg-slate-900/70 border border-slate-800 shadow-xl">
-      <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-3">
-        <i class="fa-solid fa-stamp text-indigo-400"></i> Official UK Corporate Registration
-      </h2>
-      <p class="text-slate-300 text-sm leading-relaxed mb-6">
-        Shoppaza is the official technology and digital software publishing brand owned and operated by <strong>SAJID SERVICES LTD</strong>, an active Private Limited Company incorporated under the laws of Scotland, United Kingdom.
-      </p>
-
-      <div class="grid sm:grid-cols-2 gap-4 text-xs">
-        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800/80">
-          <span class="text-slate-500 block mb-1 uppercase font-semibold">Company Name</span>
-          <span class="text-sm font-bold text-white">SAJID SERVICES LTD</span>
-        </div>
-        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800/80">
-          <span class="text-slate-500 block mb-1 uppercase font-semibold">Company Number (CRN)</span>
-          <span class="text-sm font-bold text-indigo-400">SC874640</span>
-        </div>
-        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800/80">
-          <span class="text-slate-500 block mb-1 uppercase font-semibold">Registered Jurisdiction</span>
-          <span class="text-sm font-bold text-white">Scotland, United Kingdom</span>
-        </div>
-        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800/80">
-          <span class="text-slate-500 block mb-1 uppercase font-semibold">Nature of Business (SIC)</span>
-          <span class="text-sm font-bold text-emerald-400">58290 - Other software publishing</span>
-        </div>
-        <div class="sm:col-span-2 p-4 rounded-xl bg-slate-950 border border-slate-800/80">
-          <span class="text-slate-500 block mb-1 uppercase font-semibold">Registered Office Address</span>
-          <span class="text-sm font-medium text-slate-200">Office 146 18 Young St, Unit Lge, Edinburgh, Scotland, United Kingdom, EH2 4JB</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Mission & Quality -->
-    <div class="grid md:grid-cols-2 gap-8">
-      <div class="p-8 rounded-3xl bg-slate-900/40 border border-slate-800">
-        <div class="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-xl mb-4">
-          <i class="fa-solid fa-code"></i>
-        </div>
-        <h3 class="text-xl font-bold text-white mb-2">Our Engineering Philosophy</h3>
-        <p class="text-slate-400 text-sm leading-relaxed">
-          We build software tools that eliminate manual friction for online businesses. From headless checkout extensions to high-throughput inventory listeners, our code is optimized for reliability, sub-second execution, and full PCI-DSS compliance.
-        </p>
-      </div>
-
-      <div class="p-8 rounded-3xl bg-slate-900/40 border border-slate-800">
-        <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl mb-4">
-          <i class="fa-solid fa-shield-halved"></i>
-        </div>
-        <h3 class="text-xl font-bold text-white mb-2">Consumer Protection & Compliance</h3>
-        <p class="text-slate-400 text-sm leading-relaxed">
-          Operating under strict UK consumer law, we guarantee upfront transparent pricing in British Pounds (GBP), instant software delivery, and a hassle-free 14-day refund policy honoring UK Consumer Rights Acts.
-        </p>
-      </div>
-    </div>
-
-  </section>
+  </main>
 
   <!-- FOOTER -->
-  <footer class="bg-slate-950 border-t border-slate-800/80 py-12 text-slate-400 text-xs">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
-      <p>Shoppaza is wholly owned and operated by <strong>SAJID SERVICES LTD</strong> (Company No. SC874640). Registered Office: Office 146 18 Young St, Unit Lge, Edinburgh, Scotland, United Kingdom, EH2 4JB.</p>
-      <div class="flex flex-wrap justify-center gap-6 text-slate-300">
-        <a href="terms.html" class="hover:text-white">Terms & Conditions</a>
-        <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
-        <a href="refund-policy.html" class="hover:text-white">Refund Policy</a>
-        <a href="contact.html" class="hover:text-white">Contact Us</a>
-      </div>
-      <p class="text-slate-600">© 2026 SAJID SERVICES LTD. All rights reserved.</p>
+  <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
+    <div class="max-w-[1240px] mx-auto px-4">
+      © 2026 SAJID SERVICES LTD (Company No. SC874640). All Rights Reserved. • <a href="index.html" class="text-daraz-orange font-semibold">Return to Shoppaza Store</a>
     </div>
   </footer>
 

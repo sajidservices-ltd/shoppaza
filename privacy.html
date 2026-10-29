@@ -3,121 +3,142 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Privacy Policy | Shoppaza & UK GDPR Compliance</title>
-  <meta name="description" content="UK GDPR and Data Protection Act 2018 compliant Privacy Policy for Shoppaza, operated by SAJID SERVICES LTD.">
-  <link rel="icon" type="image/svg+xml" href="favicon.svg"><polygon points='12 2 2 7 12 12 22 7 12 2'/><polyline points='2 17 12 22 22 17'/><polyline points='2 12 12 17 22 12'/></svg>">
+  <title>Privacy Policy | Shoppaza UK GDPR Compliance</title>
+  <meta name="description" content="Official UK GDPR and Data Protection Act 2018 Privacy Policy for Shoppaza and SAJID SERVICES LTD (SC874640). Learn how your data is protected.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
-      theme: { extend: { fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] } } }
+      theme: {
+        extend: {
+          fontFamily: { sans: ['"Roboto"', 'sans-serif'] },
+          colors: {
+            daraz: {
+              orange: '#F85606',
+              orangeDark: '#D44600',
+              bg: '#F5F5F5'
+            }
+          }
+        }
+      }
     }
   </script>
+  <style>
+    body { background-color: #F5F5F5; color: #212121; }
+    .daraz-gradient-header {
+      background: linear-gradient(135deg, #F85606 0%, #FF6F00 50%, #E64A19 100%);
+    }
+  </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-indigo-500 selection:text-white">
+<body class="antialiased selection:bg-daraz-orange selection:text-white flex flex-col min-h-screen">
+
+  <!-- TOP UTILITY BAR -->
+  <div class="bg-[#18181B] text-slate-300 text-xs py-1.5 px-4 border-b border-orange-500/20">
+    <div class="max-w-[1240px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div class="flex items-center gap-4 text-[11px]">
+        <span class="flex items-center gap-1.5 text-emerald-400 font-bold">
+          <i class="fa-solid fa-user-shield"></i> UK GDPR & DATA PRIVACY COMPLIANT
+        </span>
+        <span class="text-slate-600">|</span>
+        <span class="text-slate-300">
+          UK Registered Entity: <strong>SAJID SERVICES LTD</strong> (Companies House SC874640)
+        </span>
+      </div>
+      <div class="flex items-center gap-4 text-[11px]">
+        <a href="contact.html" class="hover:text-amber-400 transition">Contact Data Officer</a>
+        <a href="terms.html" class="hover:text-amber-400 transition">Terms of Service</a>
+      </div>
+    </div>
+  </div>
 
   <!-- HEADER -->
-  <header class="sticky top-0 z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/80">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-      <a href="index.html" class="flex items-center"><img src="logo-white.svg?v=2" alt="Shoppaza" class="h-10 w-auto object-contain"></a>
-      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
-        <a href="index.html" class="hover:text-white transition">Home</a>
-        <a href="index.html#solutions" class="hover:text-white transition">Solutions</a>
-        <a href="index.html#software-catalog" class="hover:text-white transition">Software Catalog</a>
-        <a href="about.html" class="hover:text-white transition">About Us</a>
-        <a href="contact.html" class="hover:text-white transition">Contact</a>
-      </nav>
-      <a href="index.html#software-catalog" class="hidden md:inline-flex text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-500 px-5 py-2.5 rounded-xl shadow-lg transition">View Catalog</a>
+  <header class="daraz-gradient-header sticky top-0 z-50 shadow-md">
+    <div class="max-w-[1240px] mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="index.html" class="flex items-center">
+        <img src="logo-white.svg?v=2" alt="Shoppaza" class="h-10 w-auto">
+      </a>
+      <a href="index.html" class="text-xs font-bold text-white bg-slate-900 hover:bg-black px-4 py-2 rounded transition flex items-center gap-1.5">
+        <i class="fa-solid fa-arrow-left"></i> Back to Store
+      </a>
     </div>
   </header>
 
-  <!-- PRIVACY MAIN -->
-  <main class="py-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="border-b border-slate-800 pb-8 mb-10">
-      <div class="text-xs uppercase font-bold text-indigo-400 mb-2">Data Protection Standard</div>
-      <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Privacy & Data Governance Policy</h1>
-      <p class="text-xs text-slate-400 mt-2">UK GDPR & Data Protection Act 2018 Compliant | Last Updated: October 2026</p>
-    </div>
-
-    <div class="prose prose-invert max-w-none text-slate-300 text-sm leading-relaxed space-y-8">
+  <!-- MAIN CONTENT -->
+  <main class="max-w-4xl mx-auto px-4 py-12 flex-1 w-full space-y-8">
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-10 shadow-sm space-y-6">
       
-      <section>
-        <h2 class="text-lg font-bold text-white mb-3">1. Data Controller Specification</h2>
-        <p>
-          The Data Controller responsible for your personal information under the UK General Data Protection Regulation (UK GDPR) and Data Protection Act 2018 is:
-        </p>
-        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-300 mt-2">
-          <strong>SAJID SERVICES LTD</strong> (Trading commercially as Shoppaza)<br>
-          Company Registration No: <strong>SC874640</strong> (Scotland, UK)<br>
-          Registered Office: Office 146 18 Young St, Unit Lge, Edinburgh, Scotland, United Kingdom, EH2 4JB<br>
-          Data Privacy Inquiries: <a href="mailto:support@shoppaza.com" class="text-indigo-400 underline">support@shoppaza.com</a>
+      <div class="border-b border-slate-200 pb-6">
+        <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">UK Data Protection Act 2018 Compliant</span>
+        <h1 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">Privacy Policy & Cookie Notice</h1>
+        <p class="text-xs text-slate-500 mt-1">Data Controller: SAJID SERVICES LTD (SC874640) • Edinburgh, Scotland</p>
+      </div>
+
+      <div class="space-y-6 text-xs sm:text-sm text-slate-700 leading-relaxed divide-y divide-slate-100">
+        
+        <div class="pt-4 space-y-2">
+          <h2 class="text-base font-bold text-slate-900">1. Data Controller Identification</h2>
+          <p>
+            This Privacy Notice explains how <strong>SAJID SERVICES LTD</strong> ("Shoppaza", "we", "us", or "our") collects, protects, and uses customer personal information when you browse or order physical goods on <strong>shoppaza.com</strong>. SAJID SERVICES LTD operates as the registered Data Controller under UK General Data Protection Regulation (UK GDPR).
+          </p>
         </div>
-      </section>
 
-      <section>
-        <h2 class="text-lg font-bold text-white mb-3">2. Categories of Information We Collect</h2>
-        <p>We only collect data necessary to fulfill software orders and comply with statutory UK fiscal reporting:</p>
-        <ul class="list-disc pl-5 mt-2 space-y-1 text-slate-400">
-          <li><strong>Identity & Contact Details:</strong> Full name, company affiliation, billing address, and email address used for digital license key transmission.</li>
-          <li><strong>Transaction Records:</strong> Software license tier purchased, timestamp, transaction ID, and VAT receipt data.</li>
-          <li><strong>Payment Card Data:</strong> We do NOT collect or store full credit/debit card numbers. All card transactions are tokenized and processed securely by <strong>Stripe Inc.</strong> in compliance with PCI-DSS Level 1 standards.</li>
-          <li><strong>Technical Metadata:</strong> IP address, browser type, and anonymous telemetry strictly utilized for fraud mitigation and server load optimization.</li>
-        </ul>
-      </section>
+        <div class="pt-4 space-y-2">
+          <h2 class="text-base font-bold text-slate-900">2. Information We Collect</h2>
+          <ul class="list-disc pl-5 space-y-1 text-slate-600">
+            <li><strong>Identity & Contact Details</strong>: Name, shipping address, billing address, email address, and telephone number (used strictly for order fulfillment and delivery tracking).</li>
+            <li><strong>Payment Transaction Data</strong>: Payment method choice, transaction IDs, and currency preference. <em>(Note: Complete credit card numbers are tokenized directly by Stripe and never touch Shoppaza web servers)</em>.</li>
+            <li><strong>Technical Telemetry</strong>: IP address, browser type, and cookie identifiers for session management and anti-fraud velocity checks.</li>
+          </ul>
+        </div>
 
-      <section>
-        <h2 class="text-lg font-bold text-white mb-3">3. Lawful Basis for Processing</h2>
-        <p>We process your data under the following legal bases recognized under UK law:</p>
-        <ul class="list-disc pl-5 mt-2 space-y-1 text-slate-400">
-          <li><strong>Contractual Performance:</strong> Processing necessary to deliver your digital software download and license key.</li>
-          <li><strong>Legal Obligation:</strong> Maintaining accounting and tax records required by HM Revenue & Customs (HMRC).</li>
-          <li><strong>Legitimate Interests:</strong> Preventing unauthorized payment chargebacks, fraud, and system security.</li>
-        </ul>
-      </section>
+        <div class="pt-4 space-y-2">
+          <h2 class="text-base font-bold text-slate-900">3. Lawful Basis for Processing</h2>
+          <p>
+            We process personal data under Article 6 of the UK GDPR primarily based on <strong>Contractual Necessity</strong> (to deliver purchased products to your doorstep) and <strong>Legal Compliance</strong> (maintaining accounting records for UK HMRC).
+          </p>
+        </div>
 
-      <section>
-        <h2 class="text-lg font-bold text-white mb-3">4. Data Sharing & Third-Party Processors</h2>
-        <p>We do not sell, rent, or monetize your personal data. We only share information with vetted infrastructure processors essential for order completion:</p>
-        <ul class="list-disc pl-5 mt-2 space-y-1 text-slate-400">
-          <li><strong>Stripe Payments Europe, Ltd:</strong> For payment gateway processing, anti-fraud evaluation, and card tokenization.</li>
-          <li><strong>Cloudflare Inc:</strong> For edge network caching, DDOS mitigation, and secure content delivery.</li>
-        </ul>
-      </section>
+        <div class="pt-4 space-y-2">
+          <h2 class="text-base font-bold text-slate-900">4. Third-Party Disclosures (Stripe & Couriers)</h2>
+          <p>
+            We never sell or rent your personal data. Data is shared exclusively with necessary operational partners:
+          </p>
+          <ul class="list-disc pl-5 space-y-1 text-slate-600">
+            <li><strong>Payment Processor (Stripe Payments Europe Ltd)</strong>: For secure PCI-compliant card tokenization.</li>
+            <li><strong>Shipping Couriers (Royal Mail, DHL Express, FedEx)</strong>: Your name, delivery address, and phone number are transmitted solely for package transit and delivery notification.</li>
+          </ul>
+        </div>
 
-      <section>
-        <h2 class="text-lg font-bold text-white mb-3">5. Data Retention Guidelines</h2>
-        <p>
-          Personal information associated with software orders is retained for a period of six (6) years following the transaction to satisfy UK statutory accounting requirements (Companies Act 2006 / HMRC compliance).
-        </p>
-      </section>
+        <div class="pt-4 space-y-2">
+          <h2 class="text-base font-bold text-slate-900">5. Your Statutory Privacy Rights</h2>
+          <p>
+            Under UK GDPR, you have the right to access, rectify, or request erasure of your personal data ("Right to be Forgotten"). You may exercise these rights at any time by contacting <a href="mailto:support@shoppaza.com" class="text-daraz-orange font-bold">support@shoppaza.com</a>.
+          </p>
+        </div>
 
-      <section>
-        <h2 class="text-lg font-bold text-white mb-3">6. Your Rights Under UK GDPR</h2>
-        <p>As a data subject, you hold statutory rights including:</p>
-        <ul class="list-disc pl-5 mt-2 space-y-1 text-slate-400">
-          <li>The right to access the personal records we hold about you.</li>
-          <li>The right to request rectification of inaccurate data.</li>
-          <li>The right to request erasure ("Right to be Forgotten") where no overriding statutory obligation persists.</li>
-          <li>The right to lodge a formal complaint with the UK Information Commissioner's Office (ICO).</li>
-        </ul>
-        <p class="mt-2">To exercise any of these rights, contact our Data Privacy Officer via <a href="mailto:support@shoppaza.com" class="text-indigo-400">support@shoppaza.com</a>.</p>
-      </section>
+        <div class="pt-4 space-y-2">
+          <h2 class="text-base font-bold text-slate-900">6. Data Protection Officer & Contact</h2>
+          <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-xs space-y-1">
+            <div class="font-bold text-slate-900">SAJID SERVICES LTD - Data Privacy Office</div>
+            <div>Office 146 18 Young St, Unit Lge, Edinburgh, Scotland, EH2 4JB</div>
+            <div>Company Number: <strong>SC874640</strong></div>
+            <div>Privacy Desk: <a href="mailto:support@shoppaza.com" class="text-daraz-orange font-bold">support@shoppaza.com</a></div>
+          </div>
+        </div>
+
+      </div>
 
     </div>
   </main>
 
   <!-- FOOTER -->
-  <footer class="bg-slate-950 border-t border-slate-800/80 py-12 text-slate-400 text-xs">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
-      <p>Shoppaza is wholly owned and operated by <strong>SAJID SERVICES LTD</strong> (Company No. SC874640). Registered Office: Office 146 18 Young St, Unit Lge, Edinburgh, Scotland, United Kingdom, EH2 4JB.</p>
-      <div class="flex flex-wrap justify-center gap-6 text-slate-300">
-        <a href="terms.html" class="hover:text-white">Terms & Conditions</a>
-        <a href="privacy.html" class="hover:text-white text-indigo-400">Privacy Policy</a>
-        <a href="refund-policy.html" class="hover:text-white">Refund Policy</a>
-        <a href="contact.html" class="hover:text-white">Contact Us</a>
-      </div>
-      <p class="text-slate-600">© 2026 SAJID SERVICES LTD. All rights reserved.</p>
+  <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
+    <div class="max-w-[1240px] mx-auto px-4">
+      © 2026 SAJID SERVICES LTD (Company No. SC874640). All Rights Reserved. • <a href="index.html" class="text-daraz-orange font-semibold">Return to Shoppaza Store</a>
     </div>
   </footer>
 

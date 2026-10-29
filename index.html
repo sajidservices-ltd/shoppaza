@@ -1018,34 +1018,43 @@
   <!-- ================= 7. JUST FOR YOU (DARAZ CORE - EXACT 6 PRODUCTS PER ROW) ================= -->
   <section id="productsCatalog" class="max-w-[1240px] mx-auto px-4 pb-16">
     
-    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4">
-      <div class="flex flex-wrap items-center gap-2.5">
-        <h2 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
-          <span>Just For You</span>
-          <span class="text-xs font-medium text-slate-400" id="activeFilterBadge">(805 Products Available)</span>
-        </h2>
-        
-        <!-- Personalized Affinity Badge -->
-        <div id="personalizedBadgeContainer" class="hidden">
-          <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-orange-100 text-daraz-orange text-[11px] font-bold border border-orange-200 shadow-sm">
-            <i class="fa-solid fa-wand-magic-sparkles text-[10px]"></i>
-            <span>Recommended: <strong id="personalizedCategoryName" class="underline">Jewelry</strong></span>
-            <button onclick="resetPersonalization(event)" class="ml-1 text-slate-500 hover:text-slate-900 transition" title="Clear preference and show mixed catalog">
-              <i class="fa-solid fa-circle-xmark text-xs"></i>
-            </button>
-          </span>
+  <!-- ================= 7. JUST FOR YOU & COLLECTIONS FILTER ================= -->
+  <section id="productsCatalog" class="max-w-[1240px] mx-auto px-4 pb-16">
+    
+    <!-- Collections & Filter Header Card -->
+    <div class="bg-white rounded-xl border border-slate-200 p-4 mb-4 shadow-sm space-y-3">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-2 border-b border-slate-100">
+        <div class="flex flex-wrap items-center gap-2.5">
+          <h2 class="text-base sm:text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
+            <i class="fa-solid fa-layer-group text-daraz-orange"></i>
+            <span>Featured Collections</span>
+            <span class="text-xs font-semibold text-slate-400" id="activeFilterBadge">(805 Products Available)</span>
+          </h2>
+          
+          <!-- Personalized Affinity Badge -->
+          <div id="personalizedBadgeContainer" class="hidden">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-orange-100 text-daraz-orange text-[11px] font-bold border border-orange-200 shadow-sm">
+              <i class="fa-solid fa-wand-magic-sparkles text-[10px]"></i>
+              <span>Recommended: <strong id="personalizedCategoryName" class="underline">Jewelry</strong></span>
+              <button onclick="resetPersonalization(event)" class="ml-1 text-slate-500 hover:text-slate-900 transition" title="Clear preference and show mixed catalog">
+                <i class="fa-solid fa-circle-xmark text-xs"></i>
+              </button>
+            </span>
+          </div>
+
+          <!-- Refresh / Reshuffle Feed Button -->
+          <button onclick="reshuffleFeed()" class="text-xs font-semibold text-slate-600 hover:text-daraz-orange bg-slate-50 hover:bg-orange-50 px-3 py-1 rounded-full border border-slate-200 transition flex items-center gap-1.5 shadow-sm" title="Reshuffle Catalog Mix">
+            <i class="fa-solid fa-shuffle text-[10px] text-daraz-orange"></i>
+            <span>Shuffle Mix</span>
+          </button>
         </div>
 
-        <!-- Refresh / Reshuffle Feed Button -->
-        <button onclick="reshuffleFeed()" class="text-xs font-medium text-slate-500 hover:text-daraz-orange bg-slate-50 hover:bg-orange-50 px-2.5 py-0.5 rounded-full border border-slate-200 transition flex items-center gap-1" title="Reshuffle Catalog Mix">
-          <i class="fa-solid fa-shuffle text-[10px]"></i>
-          <span>Shuffle</span>
-        </button>
+        <span class="text-[11px] text-slate-400 font-medium hidden sm:inline">Click any collection to filter in real-time</span>
       </div>
 
-      <!-- Category Filter Pills -->
-      <div class="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1 scrollbar-hide" id="categoryFilterPills">
-        <!-- Pills injected by JS -->
+      <!-- Category & Collection Filter Pills Row -->
+      <div class="flex items-center gap-2 overflow-x-auto max-w-full pb-1 scrollbar-hide" id="categoryFilterPills">
+        <!-- Interactive collection pills injected by JS -->
       </div>
     </div>
 
@@ -1300,74 +1309,191 @@
     </div>
   </div>
 
-  <!-- ================= 11. WORLD-CLASS DARAZ MEGA CORPORATE FOOTER ================= -->
-  <footer class="bg-white border-t border-slate-300 pt-12 pb-8 text-xs text-slate-600">
-    <div class="max-w-[1240px] mx-auto px-4">
+  <!-- ================= 11. MEGA CORPORATE STRIPE-VERIFIED FOOTER ================= -->
+  <footer class="bg-white border-t border-slate-300 pt-10 pb-8 text-xs text-slate-600">
+    <div class="max-w-[1240px] mx-auto px-4 space-y-10">
       
-      <!-- 4 Columns Footer -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pb-10 border-b border-slate-200">
+      <!-- Top Trust Highlights & VIP Newsletter Bar -->
+      <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+        <!-- 4 Trust Badges -->
+        <div class="lg:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center sm:text-left">
+          <div class="flex items-center gap-2.5">
+            <i class="fa-solid fa-truck-fast text-daraz-orange text-xl"></i>
+            <div>
+              <div class="font-bold text-slate-900 text-xs">Express UK Delivery</div>
+              <div class="text-[10px] text-slate-500">Royal Mail Tracked 24</div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2.5">
+            <i class="fa-solid fa-rotate-left text-emerald-600 text-xl"></i>
+            <div>
+              <div class="font-bold text-slate-900 text-xs">14-Day Returns</div>
+              <div class="text-[10px] text-slate-500">Statutory UK Guarantee</div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2.5">
+            <i class="fa-solid fa-lock text-indigo-600 text-xl"></i>
+            <div>
+              <div class="font-bold text-slate-900 text-xs">100% Safe Checkout</div>
+              <div class="text-[10px] text-slate-500">Stripe PCI-DSS Level 1</div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2.5">
+            <i class="fa-solid fa-building-circle-check text-slate-800 text-xl"></i>
+            <div>
+              <div class="font-bold text-slate-900 text-xs">SAJID SERVICES LTD</div>
+              <div class="text-[10px] text-slate-500">CRN: SC874640 (UK)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIP Club Newsletter Subscription -->
+        <div class="lg:col-span-5 bg-white p-3.5 rounded-xl border border-slate-200">
+          <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+            <i class="fa-solid fa-envelope-open-text text-daraz-orange"></i>
+            <span>Join Shoppaza VIP Club • Get 10% Off First Order</span>
+          </div>
+          <form onsubmit="handleNewsletterSubmit(event)" class="flex gap-2 mt-2">
+            <input type="email" id="newsletterEmailInput" required placeholder="Enter your email address..." class="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-daraz-orange">
+            <button type="submit" class="bg-daraz-orange hover:bg-daraz-orangeDark text-white font-bold px-4 py-2 rounded-lg text-xs transition shadow-sm">
+              Subscribe
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- 5 Columns Mega Footer -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 pb-8 border-b border-slate-200">
         
-        <!-- Column 1: Customer Care -->
+        <!-- Column 1: Featured Collections (Explicit User Request) -->
         <div>
-          <h4 class="font-bold text-slate-800 text-sm mb-3 uppercase tracking-wide">Customer Care</h4>
+          <h4 class="font-bold text-slate-900 text-sm mb-3 uppercase tracking-wide flex items-center gap-1.5">
+            <i class="fa-solid fa-layer-group text-daraz-orange text-xs"></i>
+            <span>Featured Collections</span>
+          </h4>
           <ul class="space-y-2 text-slate-500">
-            <li><a href="contact.html" class="hover:text-daraz-orange transition">Help Center & FAQ</a></li>
-            <li><a href="contact.html" class="hover:text-daraz-orange transition">How to Buy</a></li>
-            <li><a href="refund-policy.html" class="hover:text-daraz-orange transition">Returns & Refunds Policy</a></li>
-            <li><a href="contact.html" class="hover:text-daraz-orange transition">Contact Support Team</a></li>
+            <li><a href="#productsCatalog" onclick="filterCategory('Dresses & Gowns')" class="hover:text-daraz-orange transition flex items-center gap-1.5"><i class="fa-solid fa-angle-right text-[10px] text-slate-300"></i> Dresses & Evening Gowns</a></li>
+            <li><a href="#productsCatalog" onclick="filterCategory('Jewelry & Accessories')" class="hover:text-daraz-orange transition flex items-center gap-1.5"><i class="fa-solid fa-angle-right text-[10px] text-slate-300"></i> Fine Jewelry & Necklaces</a></li>
+            <li><a href="#productsCatalog" onclick="filterCategory('Bags & Handbags')" class="hover:text-daraz-orange transition flex items-center gap-1.5"><i class="fa-solid fa-angle-right text-[10px] text-slate-300"></i> Designer Handbags & Totes</a></li>
+            <li><a href="#productsCatalog" onclick="filterCategory('Wigs & Hair')" class="hover:text-daraz-orange transition flex items-center gap-1.5"><i class="fa-solid fa-angle-right text-[10px] text-slate-300"></i> Wigs & Hair Extensions</a></li>
+            <li><a href="#productsCatalog" onclick="filterCategory('Tops & Shirts')" class="hover:text-daraz-orange transition flex items-center gap-1.5"><i class="fa-solid fa-angle-right text-[10px] text-slate-300"></i> Tops, Blouses & Shirts</a></li>
+            <li><a href="#productsCatalog" onclick="filterCategory('Sunglasses & Eyewear')" class="hover:text-daraz-orange transition flex items-center gap-1.5"><i class="fa-solid fa-angle-right text-[10px] text-slate-300"></i> Sunglasses & UV400 Shades</a></li>
+            <li><a href="#productsCatalog" onclick="filterCategory('Watches')" class="hover:text-daraz-orange transition flex items-center gap-1.5"><i class="fa-solid fa-angle-right text-[10px] text-slate-300"></i> Luxury Chronograph Watches</a></li>
+            <li><a href="#productsCatalog" onclick="filterCategory('Shoes & Footwear')" class="hover:text-daraz-orange transition flex items-center gap-1.5"><i class="fa-solid fa-angle-right text-[10px] text-slate-300"></i> Shoes & Designer Footwear</a></li>
+            <li><a href="#productsCatalog" onclick="filterCategory('Beauty & Cosmetics')" class="hover:text-daraz-orange transition flex items-center gap-1.5"><i class="fa-solid fa-angle-right text-[10px] text-slate-300"></i> Beauty, Skincare & Glamour</a></li>
+            <li><a href="#productsCatalog" onclick="filterCategory('Phone Accessories')" class="hover:text-daraz-orange transition flex items-center gap-1.5"><i class="fa-solid fa-angle-right text-[10px] text-slate-300"></i> Tech & Audio Accessories</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 2: Customer Care -->
+        <div>
+          <h4 class="font-bold text-slate-900 text-sm mb-3 uppercase tracking-wide flex items-center gap-1.5">
+            <i class="fa-solid fa-headset text-daraz-orange text-xs"></i>
+            <span>Customer Care</span>
+          </h4>
+          <ul class="space-y-2 text-slate-500">
+            <li><a href="contact.html" class="hover:text-daraz-orange transition">Help Center & FAQs</a></li>
+            <li><a href="contact.html" class="hover:text-daraz-orange transition">How to Order & Pay</a></li>
+            <li><a href="shipping-policy.html" class="hover:text-daraz-orange transition">Track Your Parcel</a></li>
+            <li><a href="shipping-policy.html" class="hover:text-daraz-orange transition">Shipping & Delivery Rates</a></li>
+            <li><a href="refund-policy.html" class="hover:text-daraz-orange transition font-semibold text-emerald-600">14-Day Returns & Refunds</a></li>
+            <li><a href="contact.html" class="hover:text-daraz-orange transition">Dispute Resolution Desk</a></li>
             <li><a href="terms.html" class="hover:text-daraz-orange transition">Purchase Protection Guarantee</a></li>
           </ul>
         </div>
 
-        <!-- Column 2: Shoppaza -->
+        <!-- Column 3: Legal & Stripe Underwriting Compliance -->
         <div>
-          <h4 class="font-bold text-slate-800 text-sm mb-3 uppercase tracking-wide">Shoppaza</h4>
+          <h4 class="font-bold text-slate-900 text-sm mb-3 uppercase tracking-wide flex items-center gap-1.5">
+            <i class="fa-solid fa-scale-balanced text-indigo-600 text-xs"></i>
+            <span>Legal & Compliance</span>
+          </h4>
           <ul class="space-y-2 text-slate-500">
-            <li><a href="about.html" class="hover:text-daraz-orange transition">About SAJID SERVICES LTD</a></li>
-            <li><a href="terms.html" class="hover:text-daraz-orange transition">Terms & Conditions</a></li>
+            <li><a href="terms.html" class="hover:text-daraz-orange transition">Terms of Service & Sale</a></li>
             <li><a href="privacy.html" class="hover:text-daraz-orange transition">Privacy Policy (UK GDPR)</a></li>
-            <li><a href="contact.html" class="hover:text-daraz-orange transition">Customer Help & FAQs</a></li>
-            <li><a href="refund-policy.html" class="hover:text-daraz-orange transition">14-Day UK Refund Policy</a></li>
+            <li><a href="refund-policy.html" class="hover:text-daraz-orange transition">Consumer Cancellation Rights</a></li>
+            <li><a href="shipping-policy.html" class="hover:text-daraz-orange transition">Dispatch & Delivery Policy</a></li>
+            <li><a href="terms.html" class="hover:text-daraz-orange transition">PCI-DSS Tokenization Notice</a></li>
+            <li><a href="privacy.html" class="hover:text-daraz-orange transition">Cookie Consent & Policies</a></li>
+            <li><a href="about.html" class="hover:text-daraz-orange transition">Scots Law Commercial Codes</a></li>
           </ul>
         </div>
 
-        <!-- Column 3: Payment Methods -->
+        <!-- Column 4: About Shoppaza -->
         <div>
-          <h4 class="font-bold text-slate-800 text-sm mb-3 uppercase tracking-wide">Payment Gateways</h4>
-          <p class="text-[11px] text-slate-500 mb-3">All payments are tokenized and protected under PCI-DSS Level 1 security.</p>
-          <div class="flex flex-wrap gap-2 text-xl text-slate-500 mb-4">
-            <span class="px-2 py-1 bg-slate-100 rounded border border-slate-200 flex items-center text-xs font-bold text-indigo-600"><i class="fa-brands fa-stripe text-lg mr-1"></i> Stripe</span>
-            <span class="px-2 py-1 bg-slate-100 rounded border border-slate-200 flex items-center text-xs font-bold text-blue-600"><i class="fa-brands fa-cc-visa text-base mr-1"></i> Visa</span>
-            <span class="px-2 py-1 bg-slate-100 rounded border border-slate-200 flex items-center text-xs font-bold text-rose-600"><i class="fa-brands fa-cc-mastercard text-base mr-1"></i> Mastercard</span>
-            <span class="px-2 py-1 bg-slate-100 rounded border border-slate-200 flex items-center text-xs font-bold text-slate-800"><i class="fa-brands fa-apple-pay text-lg mr-1"></i> Apple Pay</span>
-            <span class="px-2 py-1 bg-slate-100 rounded border border-slate-200 flex items-center text-xs font-bold text-emerald-600">USDT TRC20</span>
-          </div>
+          <h4 class="font-bold text-slate-900 text-sm mb-3 uppercase tracking-wide flex items-center gap-1.5">
+            <i class="fa-solid fa-shield-halved text-emerald-600 text-xs"></i>
+            <span>Shoppaza Worldwide</span>
+          </h4>
+          <ul class="space-y-2 text-slate-500">
+            <li><a href="about.html" class="hover:text-daraz-orange transition">About SAJID SERVICES LTD</a></li>
+            <li><a href="about.html" class="hover:text-daraz-orange transition">Our Quality Verification</a></li>
+            <li><a href="about.html" class="hover:text-daraz-orange transition">Sustainable Packaging</a></li>
+            <li><a href="contact.html" class="hover:text-daraz-orange transition">Merchant Partnership Desk</a></li>
+            <li><a href="index.html" class="hover:text-daraz-orange transition">Flash Sales & VIP Offers</a></li>
+            <li><a href="admin.html" target="_blank" class="hover:text-daraz-orange transition text-slate-400">Operations Console</a></li>
+          </ul>
         </div>
 
-        <!-- Column 4: Verified Corporate Entity (UK Registration) -->
+        <!-- Column 5: Verified Corporate Entity (UK Registration) -->
         <div>
-          <h4 class="font-bold text-slate-800 text-sm mb-3 uppercase tracking-wide">Corporate Entity</h4>
-          <div class="p-3 bg-slate-50 rounded border border-slate-200 space-y-1 text-[11px] text-slate-600">
-            <div class="font-bold text-slate-900" id="footerCompanyName">SAJID SERVICES LTD</div>
-            <div id="footerCompanyNumber">Company Number: <strong>SC874640</strong> (Scotland, UK)</div>
+          <h4 class="font-bold text-slate-900 text-sm mb-3 uppercase tracking-wide flex items-center gap-1.5">
+            <i class="fa-solid fa-building text-slate-800 text-xs"></i>
+            <span>Corporate Entity</span>
+          </h4>
+          <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5 text-[11px] text-slate-600">
+            <div class="font-black text-slate-900 text-xs" id="footerCompanyName">SAJID SERVICES LTD</div>
+            <div id="footerCompanyNumber">Company Number: <strong class="text-slate-800">SC874640</strong> (Scotland, UK)</div>
             <div id="footerCompanyAddress">Registered Office: <strong>Office 146 18 Young St, Unit Lge, Edinburgh, Scotland, United Kingdom, EH2 4JB</strong></div>
-            <div>SIC: <strong>58290 - Other software publishing</strong></div>
-            <div class="pt-1">Support: <a href="mailto:support@shoppaza.com" id="footerSupportEmail" class="text-daraz-orange font-bold">support@shoppaza.com</a></div>
+            <div>SIC Code: <strong>58290 - Other software publishing / E-commerce</strong></div>
+            <div class="pt-1">Support Email: <a href="mailto:support@shoppaza.com" id="footerSupportEmail" class="text-daraz-orange font-bold">support@shoppaza.com</a></div>
+            <div>Desk Hours: Mon – Fri: 9:00 AM – 6:00 PM GMT</div>
+            <div class="pt-1.5">
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px]">
+                <i class="fa-solid fa-circle-check"></i> Stripe Verified Merchant
+              </span>
+            </div>
           </div>
         </div>
 
       </div>
 
-      <!-- Bottom Bar -->
-      <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500">
+      <!-- Payment Gateways & Bottom Bar -->
+      <div class="pt-2 flex flex-col md:flex-row items-center justify-between gap-5 text-[11px] text-slate-500">
+        
         <div class="flex items-center gap-3">
           <img src="logo.svg?v=2" alt="Shoppaza" class="h-6 w-auto">
           <span id="footerCopyrightText">© 2026 SAJID SERVICES LTD (Company No. SC874640). All Rights Reserved.</span>
         </div>
-        <div class="flex items-center gap-4">
-          <span class="font-semibold text-slate-700">Available In:</span>
-          <span>United Kingdom</span> • <span>United States</span> • <span>Europe</span> • <span>Worldwide</span>
+
+        <!-- Payment Badges -->
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="px-2 py-0.5 bg-slate-100 rounded border border-slate-200 font-bold text-indigo-700 flex items-center gap-1">
+            <i class="fa-brands fa-stripe text-base"></i> Stripe
+          </span>
+          <span class="px-2 py-0.5 bg-slate-100 rounded border border-slate-200 font-bold text-blue-700 flex items-center gap-1">
+            <i class="fa-brands fa-cc-visa text-sm"></i> Visa
+          </span>
+          <span class="px-2 py-0.5 bg-slate-100 rounded border border-slate-200 font-bold text-rose-700 flex items-center gap-1">
+            <i class="fa-brands fa-cc-mastercard text-sm"></i> Mastercard
+          </span>
+          <span class="px-2 py-0.5 bg-slate-100 rounded border border-slate-200 font-bold text-slate-800 flex items-center gap-1">
+            <i class="fa-brands fa-apple-pay text-base"></i> Apple Pay
+          </span>
+          <span class="px-2 py-0.5 bg-slate-100 rounded border border-slate-200 font-bold text-slate-800 flex items-center gap-1">
+            <i class="fa-brands fa-google-pay text-base"></i> Google Pay
+          </span>
+          <span class="px-2 py-0.5 bg-slate-100 rounded border border-slate-200 font-bold text-emerald-700">
+            USDT TRC20
+          </span>
+          <span class="px-2 py-0.5 bg-emerald-50 text-emerald-800 rounded border border-emerald-200 font-bold text-[10px] flex items-center gap-1">
+            <i class="fa-solid fa-lock text-[9px]"></i> 256-Bit SSL
+          </span>
         </div>
+
       </div>
 
     </div>
@@ -1620,6 +1746,14 @@
     function initCatalogWithShuffling() {
       shuffledCatalog = generateBalancedShuffle(allRawProducts);
       
+      // Check if URL specifies a category (e.g. ?cat=Dresses%20%26%20Gowns)
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlCat = urlParams.get('cat');
+      if (urlCat) {
+        filterCategory(urlCat);
+        return;
+      }
+
       // Check if user previously inspected a category in session
       const savedAffinity = sessionStorage.getItem('shoppaza_affinity_cat');
       if (savedAffinity && savedAffinity !== 'all') {
@@ -1628,6 +1762,15 @@
 
       page = 1;
       filterAndRenderProducts();
+    }
+
+    function handleNewsletterSubmit(e) {
+      if (e) e.preventDefault();
+      const input = document.getElementById('newsletterEmailInput');
+      const email = (input ? input.value : '').trim();
+      if (!email) return;
+      alert(`Thank you for subscribing to Shoppaza VIP Club (${escapeHtml(email)})!\nYour exclusive 10% welcome discount voucher is WELCOME10.`);
+      if (input) input.value = '';
     }
 
     // Dynamic Flash Sale: Always 6 DIFFERENT categories on every refresh/click

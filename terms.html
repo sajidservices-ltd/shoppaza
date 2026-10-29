@@ -3,129 +3,148 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Terms & Conditions | Shoppaza by SAJID SERVICES LTD</title>
-  <meta name="description" content="Terms of Service and commercial software licensing agreement for Shoppaza, operated by SAJID SERVICES LTD.">
-  <link rel="icon" type="image/svg+xml" href="favicon.svg"><polygon points='12 2 2 7 12 12 22 7 12 2'/><polyline points='2 17 12 22 22 17'/><polyline points='2 12 12 17 22 12'/></svg>">
+  <title>Terms & Conditions | Shoppaza Legal Framework</title>
+  <meta name="description" content="Terms of Service and Conditions of Sale for Shoppaza, operated by SAJID SERVICES LTD (Company No. SC874640, Edinburgh, Scotland). Governed under Scots law.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
-      theme: { extend: { fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] } } }
+      theme: {
+        extend: {
+          fontFamily: { sans: ['"Roboto"', 'sans-serif'] },
+          colors: {
+            daraz: {
+              orange: '#F85606',
+              orangeDark: '#D44600',
+              bg: '#F5F5F5'
+            }
+          }
+        }
+      }
     }
   </script>
+  <style>
+    body { background-color: #F5F5F5; color: #212121; }
+    .daraz-gradient-header {
+      background: linear-gradient(135deg, #F85606 0%, #FF6F00 50%, #E64A19 100%);
+    }
+  </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-indigo-500 selection:text-white">
+<body class="antialiased selection:bg-daraz-orange selection:text-white flex flex-col min-h-screen">
+
+  <!-- TOP UTILITY BAR -->
+  <div class="bg-[#18181B] text-slate-300 text-xs py-1.5 px-4 border-b border-orange-500/20">
+    <div class="max-w-[1240px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div class="flex items-center gap-4 text-[11px]">
+        <span class="flex items-center gap-1.5 text-amber-400 font-bold">
+          <i class="fa-solid fa-scale-balanced"></i> LEGAL & CONSUMER PROTECTION TERMS
+        </span>
+        <span class="text-slate-600">|</span>
+        <span class="text-slate-300">
+          UK Registered Entity: <strong>SAJID SERVICES LTD</strong> (Companies House SC874640)
+        </span>
+      </div>
+      <div class="flex items-center gap-4 text-[11px]">
+        <a href="contact.html" class="hover:text-amber-400 transition">Contact Legal Team</a>
+        <a href="privacy.html" class="hover:text-amber-400 transition">Privacy Policy</a>
+      </div>
+    </div>
+  </div>
 
   <!-- HEADER -->
-  <header class="sticky top-0 z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/80">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-      <a href="index.html" class="flex items-center"><img src="logo-white.svg?v=2" alt="Shoppaza" class="h-10 w-auto object-contain"></a>
-      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
-        <a href="index.html" class="hover:text-white transition">Home</a>
-        <a href="index.html#solutions" class="hover:text-white transition">Solutions</a>
-        <a href="index.html#software-catalog" class="hover:text-white transition">Software Catalog</a>
-        <a href="about.html" class="hover:text-white transition">About Us</a>
-        <a href="contact.html" class="hover:text-white transition">Contact</a>
-      </nav>
-      <a href="index.html#software-catalog" class="hidden md:inline-flex text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-500 px-5 py-2.5 rounded-xl shadow-lg transition">View Catalog</a>
+  <header class="daraz-gradient-header sticky top-0 z-50 shadow-md">
+    <div class="max-w-[1240px] mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="index.html" class="flex items-center">
+        <img src="logo-white.svg?v=2" alt="Shoppaza" class="h-10 w-auto">
+      </a>
+      <a href="index.html" class="text-xs font-bold text-white bg-slate-900 hover:bg-black px-4 py-2 rounded transition flex items-center gap-1.5">
+        <i class="fa-solid fa-arrow-left"></i> Back to Store
+      </a>
     </div>
   </header>
 
-  <!-- TERMS CONTENT -->
-  <main class="py-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="border-b border-slate-800 pb-8 mb-10">
-      <div class="text-xs uppercase font-bold text-indigo-400 mb-2">Legal Documentation</div>
-      <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Terms and Conditions of Service</h1>
-      <p class="text-xs text-slate-400 mt-2">Effective Date: 10 January 2026 | Last Updated: October 2026</p>
-    </div>
-
-    <div class="prose prose-invert max-w-none text-slate-300 text-sm leading-relaxed space-y-8">
+  <!-- MAIN CONTENT -->
+  <main class="max-w-4xl mx-auto px-4 py-12 flex-1 w-full space-y-8">
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-10 shadow-sm space-y-6">
       
-      <section>
-        <h2 class="text-lg font-bold text-white mb-3">1. Identification of the Contracting Entity</h2>
-        <p>
-          These Terms and Conditions ("Terms") constitute a legally binding agreement between you (the "Customer", "Licensee", or "User") and <strong>SAJID SERVICES LTD</strong>, a company duly incorporated under the laws of Scotland, United Kingdom, with Company Registration Number <strong>SC874640</strong>, whose registered office is at <strong>Office 146 18 Young St, Unit Lge, Edinburgh, Scotland, United Kingdom, EH2 4JB</strong> (operating commercially under the trade name <strong>"Shoppaza"</strong>).
-        </p>
-      </section>
+      <div class="border-b border-slate-200 pb-6">
+        <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Governed under Scots Law</span>
+        <h1 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">Terms of Service & Conditions of Sale</h1>
+        <p class="text-xs text-slate-500 mt-1">Last Updated: October 2026 • SAJID SERVICES LTD (SC874640)</p>
+      </div>
 
-      <section>
-        <h2 class="text-lg font-bold text-white mb-3">2. Nature of Software & Digital Products</h2>
-        <p>
-          Shoppaza provides downloadable digital software licenses, commerce automation scripts, inventory bridge tools, and technical documentation classified under UK Standard Industrial Classification (SIC) <strong>58290 - Other software publishing</strong>. All purchases are delivered digitally via electronic download link and license activation keys sent to the purchaser’s verified email address within minutes of confirmed payment.
-        </p>
-      </section>
+      <div class="space-y-6 text-xs sm:text-sm text-slate-700 leading-relaxed divide-y divide-slate-100">
+        
+        <div class="pt-4 space-y-2">
+          <h2 class="text-base font-bold text-slate-900">1. Company & Merchant Identity</h2>
+          <p>
+            These Terms & Conditions govern the purchase of goods and use of the website <strong>shoppaza.com</strong>, owned and operated by <strong>SAJID SERVICES LTD</strong>, a limited company incorporated under the laws of Scotland with Companies House Registration Number <strong>SC874640</strong>, having its registered office at <strong>Office 146 18 Young St, Unit Lge, Edinburgh, Scotland, United Kingdom, EH2 4JB</strong>.
+          </p>
+        </div>
 
-      <section>
-        <h2 class="text-lg font-bold text-white mb-3">3. Software Licensing Grant & Restrictions</h2>
-        <p>Upon receipt of full payment, SAJID SERVICES LTD grants the Customer a non-exclusive, non-transferable, revocable license to utilize the purchased software in accordance with the specific license tier acquired:</p>
-        <ul class="list-disc pl-5 mt-2 space-y-1 text-slate-400">
-          <li><strong>Single License:</strong> Permitted for deployment on exactly one (1) live production domain.</li>
-          <li><strong>Pro License:</strong> Permitted for deployment on up to five (5) production domains owned by the licensee.</li>
-          <li><strong>Enterprise License:</strong> Permitted for unlimited internal production domains and client deployments as designated in the enterprise order agreement.</li>
-        </ul>
-        <p class="mt-2">Customers may not reverse engineer, decompile, redistribute, or resell the proprietary software binaries without express written authorization.</p>
-      </section>
+        <div class="pt-4 space-y-2">
+          <h2 class="text-base font-bold text-slate-900">2. Commercial Retail Products & Pricing</h2>
+          <p>
+            Shoppaza provides a premier curated catalog of physical lifestyle merchandise including fashion dresses, fine jewelry, luxury handbags, watches, sunglasses, wigs, cosmetics, and accessories.
+          </p>
+          <ul class="list-disc pl-5 space-y-1 text-slate-600">
+            <li>All prices are stated in British Pounds (£ GBP) as our base accounting currency, with dynamic currency conversions available in USD ($), USDT (₮), and PKR (₨).</li>
+            <li>UK Value Added Tax (VAT) is included where applicable.</li>
+            <li>We reserve the right to correct typographical pricing errors before order fulfillment.</li>
+          </ul>
+        </div>
 
-      <section>
-        <h2 class="text-lg font-bold text-white mb-3">4. Pricing, Taxes, and Payment Processing</h2>
-        <p>
-          All prices displayed across our platform are denominated in British Pounds Sterling (GBP - £). We utilize PCI-DSS Level 1 certified payment processors including <strong>Stripe</strong> to facilitate secure card payments (Visa, Mastercard, American Express), Apple Pay, and Google Pay. Card details are encrypted end-to-end and are never stored on our local servers.
-        </p>
-      </section>
+        <div class="pt-4 space-y-2">
+          <h2 class="text-base font-bold text-slate-900">3. Secure Payment Processing via Stripe</h2>
+          <p>
+            Payment authorization and credit card processing is handled securely through our verified merchant acquiring partner, <strong>Stripe Payments Europe, Ltd.</strong> Shoppaza utilizes end-to-end client-side encryption and does not store raw payment card credentials on its servers. All transactions adhere to PCI-DSS Level 1 compliance.
+          </p>
+        </div>
 
-      <section>
-        <h2 class="text-lg font-bold text-white mb-3">5. Delivery & Fulfillment SLA</h2>
-        <p>
-          Because our software products are digital, fulfillment is instantaneous. Immediately following successful card authorization via our payment gateway, an automated dispatch email containing the unique license key, checksum, and installation documentation is transmitted to your registered email address.
-        </p>
-      </section>
+        <div class="pt-4 space-y-2">
+          <h2 class="text-base font-bold text-slate-900">4. Shipping, Dispatch & Risk of Loss</h2>
+          <p>
+            Orders are dispatched via trusted couriers (Royal Mail Tracked 24, DHL Express, FedEx). Title and risk of loss pass to the customer upon verified delivery by the carrier to the delivery address supplied during checkout.
+          </p>
+        </div>
 
-      <section>
-        <h2 class="text-lg font-bold text-white mb-3">6. Refunds and Right of Cancellation</h2>
-        <p>
-          We adhere fully to UK Consumer Protection regulations and offer a transparent 14-day refund policy. Full terms governing returns, statutory rights, and refund execution timelines are detailed in our <a href="refund-policy.html" class="text-indigo-400 underline">Refund & Cancellation Policy</a>.
-        </p>
-      </section>
+        <div class="pt-4 space-y-2">
+          <h2 class="text-base font-bold text-slate-900">5. 14-Day Statutory Right of Cancellation</h2>
+          <p>
+            In full compliance with the Consumer Contracts Regulations 2013 and Consumer Rights Act 2015, consumers retain the right to cancel their purchase and receive a full refund within 14 calendar days of receiving the goods. Please review our <a href="refund-policy.html" class="text-daraz-orange font-bold">Refund Policy</a> for return instructions.
+          </p>
+        </div>
 
-      <section>
-        <h2 class="text-lg font-bold text-white mb-3">7. Intellectual Property Rights</h2>
-        <p>
-          All trademarks, software source code, graphics, brand identifiers, and technical specifications are the exclusive intellectual property of SAJID SERVICES LTD. Unsanctioned use is strictly prohibited.
-        </p>
-      </section>
+        <div class="pt-4 space-y-2">
+          <h2 class="text-base font-bold text-slate-900">6. Governing Law & Jurisdiction</h2>
+          <p>
+            These Terms of Service and any commercial dispute arising out of or related to contracts formed on shoppaza.com shall be governed by and construed in accordance with the laws of <strong>Scotland, United Kingdom</strong>, and the courts of Scotland shall have exclusive jurisdiction.
+          </p>
+        </div>
 
-      <section>
-        <h2 class="text-lg font-bold text-white mb-3">8. Governing Law and Legal Jurisdiction</h2>
-        <p>
-          These Terms shall be governed by and construed in accordance with the laws of <strong>Scotland and the United Kingdom</strong>. Any legal dispute, controversy, or claim arising out of or relating to these Terms shall be subject to the exclusive jurisdiction of the competent courts of Scotland.
-        </p>
-      </section>
+        <div class="pt-4 space-y-2">
+          <h2 class="text-base font-bold text-slate-900">7. Corporate Contact Details</h2>
+          <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-xs space-y-1">
+            <div class="font-bold text-slate-900">SAJID SERVICES LTD - Legal Affairs</div>
+            <div>Office 146 18 Young St, Unit Lge, Edinburgh, Scotland, EH2 4JB</div>
+            <div>CRN: <strong>SC874640</strong> • SIC: 58290</div>
+            <div>Email: <a href="mailto:support@shoppaza.com" class="text-daraz-orange font-bold">support@shoppaza.com</a></div>
+          </div>
+        </div>
 
-      <section>
-        <h2 class="text-lg font-bold text-white mb-3">9. Contact and Formal Notices</h2>
-        <p>
-          Formal notices regarding these Terms should be directed to:<br>
-          <strong>Legal Department, SAJID SERVICES LTD</strong><br>
-          Office 146 18 Young St, Unit Lge, Edinburgh, Scotland, United Kingdom, EH2 4JB<br>
-          Email: <a href="mailto:support@shoppaza.com" class="text-indigo-400">support@shoppaza.com</a>
-        </p>
-      </section>
+      </div>
 
     </div>
   </main>
 
   <!-- FOOTER -->
-  <footer class="bg-slate-950 border-t border-slate-800/80 py-12 text-slate-400 text-xs">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
-      <p>Shoppaza is wholly owned and operated by <strong>SAJID SERVICES LTD</strong> (Company No. SC874640). Registered Office: Office 146 18 Young St, Unit Lge, Edinburgh, Scotland, United Kingdom, EH2 4JB.</p>
-      <div class="flex flex-wrap justify-center gap-6 text-slate-300">
-        <a href="terms.html" class="hover:text-white text-indigo-400">Terms & Conditions</a>
-        <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
-        <a href="refund-policy.html" class="hover:text-white">Refund Policy</a>
-        <a href="contact.html" class="hover:text-white">Contact Us</a>
-      </div>
-      <p class="text-slate-600">© 2026 SAJID SERVICES LTD. All rights reserved.</p>
+  <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
+    <div class="max-w-[1240px] mx-auto px-4">
+      © 2026 SAJID SERVICES LTD (Company No. SC874640). All Rights Reserved. • <a href="index.html" class="text-daraz-orange font-semibold">Return to Shoppaza Store</a>
     </div>
   </footer>
 

@@ -3,134 +3,162 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Refund & Cancellation Policy | Shoppaza Guarantee</title>
-  <meta name="description" content="Transparent 14-day refund and cancellation policy compliant with the UK Consumer Rights Act 2015 for Shoppaza and SAJID SERVICES LTD.">
-  <link rel="icon" type="image/svg+xml" href="favicon.svg"><polygon points='12 2 2 7 12 12 22 7 12 2'/><polyline points='2 17 12 22 22 17'/><polyline points='2 12 12 17 22 12'/></svg>">
+  <title>Refund & Returns Policy | Shoppaza UK 14-Day Guarantee</title>
+  <meta name="description" content="14-day statutory return and refund policy compliant with the UK Consumer Rights Act 2015 for Shoppaza and SAJID SERVICES LTD (SC874640).">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
-      theme: { extend: { fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] } } }
+      theme: {
+        extend: {
+          fontFamily: { sans: ['"Roboto"', 'sans-serif'] },
+          colors: {
+            daraz: {
+              orange: '#F85606',
+              orangeDark: '#D44600',
+              bg: '#F5F5F5'
+            }
+          }
+        }
+      }
     }
   </script>
+  <style>
+    body { background-color: #F5F5F5; color: #212121; }
+    .daraz-gradient-header {
+      background: linear-gradient(135deg, #F85606 0%, #FF6F00 50%, #E64A19 100%);
+    }
+  </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-indigo-500 selection:text-white">
+<body class="antialiased selection:bg-daraz-orange selection:text-white flex flex-col min-h-screen">
+
+  <!-- TOP UTILITY BAR -->
+  <div class="bg-[#18181B] text-slate-300 text-xs py-1.5 px-4 border-b border-orange-500/20">
+    <div class="max-w-[1240px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div class="flex items-center gap-4 text-[11px]">
+        <span class="flex items-center gap-1.5 text-amber-400 font-bold">
+          <i class="fa-solid fa-shield-heart"></i> 14-DAY UK MONEY-BACK GUARANTEE
+        </span>
+        <span class="text-slate-600">|</span>
+        <span class="text-slate-300">
+          UK Registered Entity: <strong>SAJID SERVICES LTD</strong> (Companies House SC874640)
+        </span>
+      </div>
+      <div class="flex items-center gap-4 text-[11px]">
+        <a href="contact.html" class="hover:text-amber-400 transition">Contact Support</a>
+        <a href="shipping-policy.html" class="hover:text-amber-400 transition">Shipping Policy</a>
+      </div>
+    </div>
+  </div>
 
   <!-- HEADER -->
-  <header class="sticky top-0 z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/80">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-      <a href="index.html" class="flex items-center"><img src="logo-white.svg?v=2" alt="Shoppaza" class="h-10 w-auto object-contain"></a>
-      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
-        <a href="index.html" class="hover:text-white transition">Home</a>
-        <a href="index.html#solutions" class="hover:text-white transition">Solutions</a>
-        <a href="index.html#software-catalog" class="hover:text-white transition">Software Catalog</a>
-        <a href="about.html" class="hover:text-white transition">About Us</a>
-        <a href="contact.html" class="hover:text-white transition">Contact</a>
-      </nav>
-      <a href="index.html#software-catalog" class="hidden md:inline-flex text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-500 px-5 py-2.5 rounded-xl shadow-lg transition">View Catalog</a>
+  <header class="daraz-gradient-header sticky top-0 z-50 shadow-md">
+    <div class="max-w-[1240px] mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="index.html" class="flex items-center">
+        <img src="logo-white.svg?v=2" alt="Shoppaza" class="h-10 w-auto">
+      </a>
+      <a href="index.html" class="text-xs font-bold text-white bg-slate-900 hover:bg-black px-4 py-2 rounded transition flex items-center gap-1.5">
+        <i class="fa-solid fa-arrow-left"></i> Back to Store
+      </a>
     </div>
   </header>
 
-  <!-- REFUND MAIN -->
-  <main class="py-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="border-b border-slate-800 pb-8 mb-10">
-      <div class="text-xs uppercase font-bold text-emerald-400 mb-2">Consumer Protection Commitment</div>
-      <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Refund & Cancellation Policy</h1>
-      <p class="text-xs text-slate-400 mt-2">UK Consumer Rights Act 2015 & Consumer Contracts Regulations 2013 Compliant</p>
-    </div>
-
-    <!-- Highlight Box -->
-    <div class="p-6 rounded-2xl bg-indigo-950/40 border border-indigo-500/30 mb-10 flex items-start gap-4">
-      <div class="w-12 h-12 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-xl flex-shrink-0">
-        <i class="fa-solid fa-shield-heart"></i>
-      </div>
-      <div class="text-sm">
-        <h3 class="font-bold text-white text-base">14-Day Statutory Money-Back Guarantee</h3>
-        <p class="text-slate-300 mt-1 leading-relaxed">
-          At Shoppaza (SAJID SERVICES LTD), we are committed to complete customer satisfaction. If you experience technical incompatibility or are unsatisfied with your digital software product, you are entitled to a full refund within 14 calendar days of purchase.
-        </p>
-      </div>
-    </div>
-
-    <div class="prose prose-invert max-w-none text-slate-300 text-sm leading-relaxed space-y-8">
+  <!-- MAIN CONTENT -->
+  <main class="max-w-4xl mx-auto px-4 py-12 flex-1 w-full space-y-8">
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-10 shadow-sm space-y-6">
       
-      <section>
-        <h2 class="text-lg font-bold text-white mb-3">1. Scope of the Policy</h2>
-        <p>
-          This Refund Policy applies to all direct digital software licenses, downloadable tools, and cloud automation scripts purchased through <strong>shoppaza.com</strong>, operated by <strong>SAJID SERVICES LTD</strong> (Company Registration No. <strong>SC874640</strong>, Edinburgh, Scotland).
-        </p>
-      </section>
+      <div class="border-b border-slate-200 pb-6">
+        <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">UK Consumer Rights Act 2015 Compliant</span>
+        <h1 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">Refund & Returns Policy</h1>
+        <p class="text-xs text-slate-500 mt-1">SAJID SERVICES LTD (Company No. SC874640) • Edinburgh, Scotland</p>
+      </div>
 
-      <section>
-        <h2 class="text-lg font-bold text-white mb-3">2. 14-Day Cooling-Off Period & Eligibility</h2>
-        <p>
-          Under the Consumer Contracts (Information, Cancellation and Additional Charges) Regulations 2013, consumers purchasing digital goods retain the statutory right to cancel their purchase within 14 calendar days of transaction completion.
-        </p>
-        <p class="mt-2">To qualify for a prompt refund:</p>
-        <ul class="list-disc pl-5 mt-2 space-y-1 text-slate-400">
-          <li>The refund request must be lodged within fourteen (14) days from the initial payment timestamp.</li>
-          <li>You must provide your order reference number, invoice number, or purchase email address.</li>
-          <li>For defect or technical malfunction claims, our engineering team will offer immediate bug rectification or license credit if preferred by the customer.</li>
-        </ul>
-      </section>
+      <!-- Statutory Guarantee Box -->
+      <div class="p-5 rounded-xl bg-orange-50 border border-orange-200 flex items-start gap-4">
+        <div class="w-10 h-10 rounded-lg bg-daraz-orange text-white flex items-center justify-center text-lg flex-shrink-0">
+          <i class="fa-solid fa-rotate-left"></i>
+        </div>
+        <div class="text-xs">
+          <h3 class="font-bold text-slate-900 text-sm">14-Day Hassle-Free Returns & Full Refund Guarantee</h3>
+          <p class="text-slate-600 mt-1 leading-relaxed">
+            Under the UK Consumer Contracts (Information, Cancellation and Additional Charges) Regulations 2013 and Consumer Rights Act 2015, all customers are entitled to cancel and return their order within 14 calendar days of receiving the merchandise for a 100% full refund through our payment gateway (Stripe).
+          </p>
+        </div>
+      </div>
 
-      <section>
-        <h2 class="text-lg font-bold text-white mb-3">3. Step-by-Step Refund Application Process</h2>
-        <p>Requesting a refund is frictionless. Please follow these straightforward steps:</p>
-        <ol class="list-decimal pl-5 mt-2 space-y-2 text-slate-400">
-          <li>Transmit an email to our official billing desk at <a href="mailto:support@shoppaza.com" class="text-indigo-400 underline font-semibold">support@shoppaza.com</a> (or via our <a href="contact.html" class="text-indigo-400 underline">Contact Form</a>).</li>
-          <li>Set the subject line to: <em>"Refund Request - [Your Order / Transaction ID]"</em>.</li>
-          <li>Briefly state the reason for cancellation (e.g., technical incompatibility, accidental purchase, or requirement change).</li>
-          <li>Our Edinburgh billing department will review and confirm receipt of your request within twenty-four (24) business hours.</li>
-        </ol>
-      </section>
+      <!-- Policy Sections -->
+      <div class="space-y-6 text-xs sm:text-sm text-slate-700 leading-relaxed pt-4 divide-y divide-slate-100">
+        
+        <div class="pt-4 space-y-2">
+          <h2 class="text-base font-bold text-slate-900">1. Scope of Returns</h2>
+          <p>
+            This policy applies to all physical consumer goods—including fashion apparel, evening gowns, fine jewelry, handbags, sunglasses, watches, and beauty items—ordered through <strong>shoppaza.com</strong>, operated by <strong>SAJID SERVICES LTD</strong>.
+          </p>
+        </div>
 
-      <section>
-        <h2 class="text-lg font-bold text-white mb-3">4. Method of Refund & Payout Timeframes</h2>
-        <p>
-          Once your refund request is authorized by our team:
-        </p>
-        <ul class="list-disc pl-5 mt-2 space-y-1 text-slate-400">
-          <li>The refund is executed immediately through our merchant payment gateway (<strong>Stripe</strong>).</li>
-          <li>100% of the purchase amount is credited directly back to the original funding payment method (credit card, debit card, Apple Pay, or Google Pay).</li>
-          <li>Depending on your card issuer or banking institution, funds typically reflect in your account within <strong>5 to 10 business days</strong>.</li>
-          <li>No administrative restocking fees or penalty charges are deducted from eligible refunds.</li>
-        </ul>
-      </section>
+        <div class="pt-4 space-y-2">
+          <h2 class="text-base font-bold text-slate-900">2. Eligibility for Return</h2>
+          <p>To qualify for a prompt refund or exchange:</p>
+          <ul class="list-disc pl-5 space-y-1 text-slate-600">
+            <li>The return notification must be sent within 14 calendar days from the date of package delivery.</li>
+            <li>Items must be unworn, undamaged, and returned in their original packaging with tags attached.</li>
+            <li>Hygiene-sensitive items (such as customized wigs or pierced earrings) must remain unsealed for hygiene compliance.</li>
+            <li>Proof of purchase (order reference number or order confirmation email) must be provided.</li>
+          </ul>
+        </div>
 
-      <section>
-        <h2 class="text-lg font-bold text-white mb-3">5. License Key Deactivation</h2>
-        <p>
-          Upon issuance of a full refund, the cryptographic software license key associated with your order will be deactivated in our central licensing server, and technical support access for that specific order will cease.
-        </p>
-      </section>
+        <div class="pt-4 space-y-2">
+          <h2 class="text-base font-bold text-slate-900">3. Simple Step-by-Step Return Process</h2>
+          <ol class="list-decimal pl-5 space-y-2 text-slate-600">
+            <li>Send an email to our official returns desk at <a href="mailto:support@shoppaza.com" class="text-daraz-orange font-bold">support@shoppaza.com</a> with the subject line <em>"Return Request - [Your Order ID]"</em>.</li>
+            <li>Our Edinburgh fulfillment team will provide your Return Merchandise Authorization (RMA) number and designated return shipping address.</li>
+            <li>Securely pack the items in their original box and dispatch the parcel using a tracked postal service (e.g. Royal Mail).</li>
+            <li>Upon inspection of the returned merchandise at our depot, your refund is approved within 24 hours.</li>
+          </ol>
+        </div>
 
-      <section>
-        <h2 class="text-lg font-bold text-white mb-3">6. Dedicated Billing Inquiries</h2>
-        <p>
-          If you have questions concerning a pending refund or order discrepancy, our support team is available:<br>
-          <strong>SAJID SERVICES LTD — Billing Administration</strong><br>
-          Office 146 18 Young St, Unit Lge, Edinburgh, Scotland, United Kingdom, EH2 4JB<br>
-          Email: <a href="mailto:support@shoppaza.com" class="text-indigo-400">support@shoppaza.com</a><br>
-          Secondary Email: <a href="mailto:sajidservicesltd@gmail.com" class="text-slate-400">sajidservicesltd@gmail.com</a>
-        </p>
-      </section>
+        <div class="pt-4 space-y-2">
+          <h2 class="text-base font-bold text-slate-900">4. Refund Execution via Stripe</h2>
+          <p>
+            Approved refunds are credited directly back to the original payment method used at checkout (credit card, debit card, Apple Pay, Google Pay) via our payment processor (<strong>Stripe</strong>). 
+          </p>
+          <ul class="list-disc pl-5 space-y-1 text-slate-600">
+            <li><strong>Processing Timeline</strong>: Funds typically appear on your banking statement within <strong>3 to 5 business days</strong> (depending on your card issuer).</li>
+            <li><strong>Zero Restocking Fees</strong>: SAJID SERVICES LTD does not charge restocking, processing, or cancellation penalties.</li>
+          </ul>
+        </div>
+
+        <div class="pt-4 space-y-2">
+          <h2 class="text-base font-bold text-slate-900">5. Defective or Damaged Merchandise</h2>
+          <p>
+            If your item arrives defective, faulty, or not as described, SAJID SERVICES LTD will cover 100% of the return shipping costs and provide your choice of an immediate replacement or full refund.
+          </p>
+        </div>
+
+        <div class="pt-4 space-y-2">
+          <h2 class="text-base font-bold text-slate-900">6. Merchant Dispute & Customer Service Contact</h2>
+          <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-xs space-y-1">
+            <div class="font-bold text-slate-900">SAJID SERVICES LTD - Customer Returns & Dispute Desk</div>
+            <div>Office 146 18 Young St, Unit Lge, Edinburgh, Scotland, United Kingdom, EH2 4JB</div>
+            <div>Companies House Registration: <strong>SC874640</strong></div>
+            <div>Email: <a href="mailto:support@shoppaza.com" class="text-daraz-orange font-bold">support@shoppaza.com</a></div>
+            <div>Response Time: Within 24 business hours (Monday – Friday)</div>
+          </div>
+        </div>
+
+      </div>
 
     </div>
   </main>
 
   <!-- FOOTER -->
-  <footer class="bg-slate-950 border-t border-slate-800/80 py-12 text-slate-400 text-xs">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
-      <p>Shoppaza is wholly owned and operated by <strong>SAJID SERVICES LTD</strong> (Company No. SC874640). Registered Office: Office 146 18 Young St, Unit Lge, Edinburgh, Scotland, United Kingdom, EH2 4JB.</p>
-      <div class="flex flex-wrap justify-center gap-6 text-slate-300">
-        <a href="terms.html" class="hover:text-white">Terms & Conditions</a>
-        <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
-        <a href="refund-policy.html" class="hover:text-white text-emerald-400">Refund Policy</a>
-        <a href="contact.html" class="hover:text-white">Contact Us</a>
-      </div>
-      <p class="text-slate-600">© 2026 SAJID SERVICES LTD. All rights reserved.</p>
+  <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
+    <div class="max-w-[1240px] mx-auto px-4">
+      © 2026 SAJID SERVICES LTD (Company No. SC874640). All Rights Reserved. • <a href="index.html" class="text-daraz-orange font-semibold">Return to Shoppaza Store</a>
     </div>
   </footer>
 

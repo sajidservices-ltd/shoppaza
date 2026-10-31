@@ -70,7 +70,7 @@
               <i class="fa-solid fa-eye" id="eyeIcon"></i>
             </button>
           </div>
-          <p class="text-[11px] text-slate-500 mt-2">Default Passcode: <code class="text-emerald-400 bg-slate-950 px-1.5 py-0.5 rounded border border-slate-800" id="hintDefaultPass">Sajid2026!#</code> (Changeable inside Settings)</p>
+          <p class="text-[11px] text-slate-500 mt-2 flex items-center gap-1.5"><i class="fa-solid fa-shield-halved text-emerald-400"></i> Encrypted Merchant Portal • Authorized Personnel Only</p>
         </div>
 
         <div id="loginError" class="hidden p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs flex items-center gap-2">
@@ -1232,7 +1232,6 @@
     window.addEventListener('DOMContentLoaded', () => {
       // Check stored custom passcode
       const activePass = localStorage.getItem('shoppaza_admin_passcode') || DEFAULT_MASTER_KEY;
-      document.getElementById('hintDefaultPass').innerText = activePass;
 
       // Check session
       if (sessionStorage.getItem('shoppaza_admin_auth') === 'true') {
@@ -2157,7 +2156,6 @@
       }
 
       localStorage.setItem('shoppaza_admin_passcode', newPass);
-      document.getElementById('hintDefaultPass').innerText = newPass;
       e.target.reset();
       showToast('Admin Passcode changed successfully! Save it securely.', 'success');
     }

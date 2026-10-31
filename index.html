@@ -1179,6 +1179,7 @@
 
     <!-- ================= SHOPIFY-GRADE LUXURY CHECKOUT EXPERIENCE ================= -->
   <div id="checkoutModal" class="fixed inset-0 z-[80] bg-black/80 hidden backdrop-blur-md flex items-center justify-center p-2 sm:p-4 md:p-6 overflow-y-auto">
+    <span id="checkoutPayableAmount" class="hidden">£0.00</span>
     <div class="bg-white rounded-3xl max-w-5xl w-full relative shadow-2xl overflow-hidden my-auto border border-slate-200">
       
       <!-- Top Bar -->
@@ -1755,23 +1756,30 @@
     };
 
     window.addEventListener('DOMContentLoaded', async () => {
-      const savedCurr = localStorage.getItem('shoppaza_currency');
-      if (savedCurr && currencyConfig[savedCurr]) {
-        currentCurrency = savedCurr;
-        document.getElementById('currencySelector').value = currentCurrency;
-      }
+      try {
+        const savedCurr = localStorage.getItem('shoppaza_currency');
+        if (savedCurr && currencyConfig[savedCurr]) {
+          currentCurrency = savedCurr;
+          const currSel = document.getElementById('currencySelector');
+          if (currSel) currSel.value = currentCurrency;
+        }
+      } catch(e) { console.warn('Currency init error:', e); }
 
-      const savedCart = localStorage.getItem('shoppaza_cart');
-      if (savedCart) {
-        try { cart = JSON.parse(savedCart); } catch(e) {}
-      }
-      updateCartUI();
-      updateCustomerHeader();
-      applyCustomThemeSettings();
-      startFlashCountdown();
-      startCarouselAutoRotate();
-      await loadCategoriesData();
-      await loadProducts();
+      try {
+        const savedCart = localStorage.getItem('shoppaza_cart');
+        if (savedCart) {
+          try { cart = JSON.parse(savedCart); } catch(e) {}
+        }
+        updateCartUI();
+      } catch(e) { console.warn('Cart init error:', e); }
+
+      try { updateCustomerHeader(); } catch(e) { console.warn('Customer header error:', e); }
+      try { applyCustomThemeSettings(); } catch(e) { console.warn('Theme settings error:', e); }
+      try { startFlashCountdown(); } catch(e) { console.warn('Countdown error:', e); }
+      try { startCarouselAutoRotate(); } catch(e) { console.warn('Carousel error:', e); }
+      
+      try { await loadCategoriesData(); } catch(e) { console.error('Categories load error:', e); }
+      try { await loadProducts(); } catch(e) { console.error('Products load error:', e); }
     });
 
     function applyCustomThemeSettings() {
@@ -2344,9 +2352,9 @@
       document.getElementById('cartCountBadge').innerText = totalCount;
       document.getElementById('drawerCartCount').innerText = totalCount;
 
-      const cfg = currencyConfig[currentCurrency];
+      const cfg = currencyConfig[currentCurrency] || currencyConfig['GBP'];
       const subtotal = cart.reduce((sum, item) => {
-        const p = item[cfg.rateKey] || item.price_usd;
+        const p = item[cfg.rateKey] || item.price_usd || 0;
         return sum + (p * item.qty);
       }, 0);
 
@@ -2355,8 +2363,10 @@
         maximumFractionDigits: cfg.decimals
       });
 
-      document.getElementById('cartDrawerSubtotal').innerText = formattedSubtotal;
-      document.getElementById('checkoutPayableAmount').innerText = formattedSubtotal;
+      const drawerSub = document.getElementById('cartDrawerSubtotal');
+      if (drawerSub) drawerSub.innerText = formattedSubtotal;
+      const chkPayable = document.getElementById('checkoutPayableAmount');
+      if (chkPayable) chkPayable.innerText = formattedSubtotal;
 
       const itemsContainer = document.getElementById('cartDrawerItems');
       if (cart.length === 0) {
@@ -2432,8 +2442,10 @@
 
     function handleFinalCheckout(e) {
       e.preventDefault();
-      const method = document.querySelector('input[name="paymentMethod"]:checked').value;
-      const payable = document.getElementById('checkoutPayableAmount').innerText;
+      const checkedMethod = document.querySelector('input[name="paymentMethod"]:checked');
+      const method = checkedMethod ? checkedMethod.value : 'card';
+      const payableEl = document.getElementById('checkoutPayableAmount') || document.getElementById('summaryTotalAmount');
+      const payable = payableEl ? payableEl.innerText : '£0.00';
 
       // Save order to live database for Admin Panel
       const existingOrders = JSON.parse(localStorage.getItem('shoppaza_live_orders') || '[]');

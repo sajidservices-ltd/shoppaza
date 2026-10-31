@@ -499,6 +499,7 @@
 
     <!-- ================= SHOPIFY-GRADE LUXURY CHECKOUT EXPERIENCE ================= -->
   <div id="checkoutModal" class="fixed inset-0 z-[80] bg-black/80 hidden backdrop-blur-md flex items-center justify-center p-2 sm:p-4 md:p-6 overflow-y-auto">
+    <span id="checkoutPayableAmount" class="hidden">£0.00</span>
     <div class="bg-white rounded-3xl max-w-5xl w-full relative shadow-2xl overflow-hidden my-auto border border-slate-200">
       
       <!-- Top Bar -->
@@ -1014,24 +1015,31 @@
     let cart = [];
 
     window.addEventListener('DOMContentLoaded', async () => {
-      // 1. Currency setup
-      const savedCurr = localStorage.getItem('shoppaza_currency');
-      if (savedCurr) {
-        currentCurrency = savedCurr;
-        document.getElementById('currencySelector').value = currentCurrency;
-      }
+      try {
+        const savedCurr = localStorage.getItem('shoppaza_currency');
+        if (savedCurr) {
+          currentCurrency = savedCurr;
+          const currSel = document.getElementById('currencySelector');
+          if (currSel) currSel.value = currentCurrency;
+        }
+      } catch(e) {}
 
-      // 2. Cart setup
-      const savedCart = localStorage.getItem('shoppaza_cart');
-      if (savedCart) {
-        try { cart = JSON.parse(savedCart); } catch(e) {}
-      }
-      updateCartUI();
-      updateCustomerHeader();
-      applyCustomThemeSettings();
+      try {
+        const savedCart = localStorage.getItem('shoppaza_cart');
+        if (savedCart) {
+          try { cart = JSON.parse(savedCart); } catch(e) {}
+        }
+        updateCartUI();
+      } catch(e) {}
 
-      // 3. Load catalog & render product
-      await loadProductsAndInit();
+      try { updateCustomerHeader(); } catch(e) {}
+      try { applyCustomThemeSettings(); } catch(e) {}
+
+      try {
+        await loadProductsAndInit();
+      } catch(e) {
+        console.error('Error loading products in product.html:', e);
+      }
     });
 
     async function loadProductsAndInit() {
@@ -1382,11 +1390,14 @@
 
     function handleCheckoutSubmit(e) {
       e.preventDefault();
-      const name = document.getElementById('custName').value.trim();
-      const email = document.getElementById('custEmail').value.trim();
-      const phone = document.getElementById('custPhone').value.trim();
-      const address = document.getElementById('custAddress').value.trim();
-      const payment = document.querySelector('input[name="paymentMethod"]:checked').value;
+      const name = document.getElementById('custName')?.value?.trim() || document.getElementById('checkoutFirstName')?.value?.trim() || 'Shoppaza Customer';
+      const email = document.getElementById('custEmail')?.value?.trim() || document.getElementById('checkoutEmail')?.value?.trim() || 'buyer@example.com';
+      const phone = document.getElementById('custPhone')?.value?.trim() || document.getElementById('checkoutPhone')?.value?.trim() || '';
+      const address = document.getElementById('custAddress')?.value?.trim() || document.getElementById('checkoutAddress')?.value?.trim() || 'United Kingdom';
+      const paymentEl = document.querySelector('input[name="paymentMethod"]:checked') || document.querySelector('input[name="paymentOption"]:checked');
+      const payment = paymentEl ? paymentEl.value : 'Stripe';
+      const totalEl = document.getElementById('checkoutPayableAmount') || document.getElementById('summaryTotalAmount');
+      const total = totalEl ? totalEl.innerText : '£0.00';
 
       const newOrder = {
         id: '#SHP-' + Math.floor(1000 + Math.random() * 9000),
@@ -1395,7 +1406,7 @@
         phone,
         address,
         country: 'United Kingdom',
-        total: document.getElementById('checkoutPayableAmount').innerText,
+        total: total,
         payment: `Paid via ${payment}`,
         fulfillment: 'Processing',
         date: 'Just now',

@@ -1,5 +1,5 @@
-// Shoppaza Progressive Web App Service Worker (PWA v2.0 - High Reliability)
-const CACHE_NAME = 'shoppaza-core-v2';
+// Shoppaza Progressive Web App Service Worker (PWA v2.1 - High Reliability)
+const CACHE_NAME = 'shoppaza-core-v2.1';
 const STATIC_ASSETS = [
   '/',
   '/product',

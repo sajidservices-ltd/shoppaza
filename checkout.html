@@ -619,6 +619,22 @@
   <script>
     // Checkout State
     let cart = [];
+    function syncCartFromStorage() {
+      try {
+        const saved = localStorage.getItem('shoppaza_cart');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            cart = parsed;
+            return cart;
+          }
+        }
+      } catch(e) {}
+      cart = [];
+      return cart;
+    }
+    // Synchronously sync cart before anything else runs
+    syncCartFromStorage();
     let checkoutCurrency = 'GBP';
     let checkoutCurrencySymbol = '£';
     let checkoutRate = 1.0;
@@ -983,20 +999,19 @@
       }
     }
 
-    // Initialize Page
+// Initialize Page
     window.addEventListener('DOMContentLoaded', () => {
-      // 1. Load cart
-      try {
-        const savedCart = localStorage.getItem('shoppaza_cart');
-        if (savedCart) cart = JSON.parse(savedCart);
-      } catch(e) {}
+      // 1. Sync cart from storage immediately
+      syncCartFromStorage();
 
-      // If cart empty, show alert and offer return
+      // 2. Render summary if cart has items, otherwise show empty notice
       if (!cart || cart.length === 0) {
         showEmptyCartNotice();
+      } else {
+        renderOrderSummary();
       }
 
-      // 2. Autofill customer if signed in
+      // 3. Autofill customer if signed in
       try {
         const savedCust = JSON.parse(localStorage.getItem('shoppaza_customer') || '{}');
         if (savedCust.email) document.getElementById('custEmailOrPhone').value = savedCust.email;
@@ -1007,19 +1022,19 @@
         }
       } catch(e) {}
 
-      // 3. Trigger immediate Geo-IP visitor localization (Shopify Standard Country & State detection)
+      // 4. Trigger visitor Geo-IP localization & autocomplete
       detectVisitorGeoLocation();
       initAddressAutocomplete();
     });
 
-    // Execute immediately on script load as well for 0-latency auto-fill
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
-      detectVisitorGeoLocation();
-    } else {
-      document.addEventListener('DOMContentLoaded', detectVisitorGeoLocation);
-    }
-
     function showEmptyCartNotice() {
+      // Re-verify from localStorage before showing empty notice
+      syncCartFromStorage();
+      if (cart && cart.length > 0) {
+        renderOrderSummary();
+        return;
+      }
+
       const form = document.getElementById('shopifyCheckoutForm');
       if (form) {
         form.innerHTML = `
@@ -1037,6 +1052,14 @@
           </div>
         `;
       }
+
+      const zeroPrice = `${checkoutCurrencySymbol}0.00`;
+      ['desktopSummarySubtotal', 'desktopSummaryFinalTotal', 'mobileSummarySubtotal', 'mobileSummaryFinalTotal', 'mobileInlineSubtotal', 'mobileInlineTotal'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = zeroPrice;
+      });
+      const badgeEl = document.getElementById('mobileCartCountBadge');
+      if (badgeEl) badgeEl.innerText = '0';
     }
 
     // Country Switcher
@@ -1271,6 +1294,10 @@
       const mobileList = document.getElementById('mobileCartItemsList');
       const mobileInlineList = document.getElementById('mobileInlineCartItemsList');
       const badgeEl = document.getElementById('mobileCartCountBadge');
+
+      if (!cart || cart.length === 0) {
+        syncCartFromStorage();
+      }
 
       if (!cart || cart.length === 0) {
         if (badgeEl) badgeEl.innerText = '0';

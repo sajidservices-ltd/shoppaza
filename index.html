@@ -2327,10 +2327,18 @@
     }
 
     // Cart
-    function addToCart(prod, qty = 1) {
-      const existing = cart.find(i => i.id === prod.id);
+        function addToCart(prod, qty = 1) {
+      try {
+        const savedCart = localStorage.getItem('shoppaza_cart');
+        if (savedCart) {
+          const parsed = JSON.parse(savedCart);
+          if (Array.isArray(parsed)) cart = parsed;
+        }
+      } catch(e) {}
+
+      const existing = cart.find(i => String(i.id) === String(prod.id));
       if (existing) {
-        existing.qty += qty;
+        existing.qty = (parseInt(existing.qty, 10) || 1) + qty;
       } else {
         cart.push({ ...prod, qty });
       }

@@ -5,10 +5,30 @@
     "tierA_usd": 35.99,
     "tierB_usd": 41.99,
     "worker": "Official VIP Campaign",
-    "commission_usd": 0.00,
-    "desc": "Universal VIP Headband Wigs promo ($35.99 for shorter / $41.99 for 32 Inch 250% density)",
+    "commission_usd": 5.00,
+    "desc": "Wigs Only: $35.99 short / $41.99 long (32 Inch 250% density)",
     "status": "Active",
     "uses": "128 Used"
+  },
+  {
+    "code": "JEWELRY15",
+    "type": "jewelry_fixed",
+    "target_usd": 15.80,
+    "worker": "Official Jewelry Promo",
+    "commission_usd": 3.00,
+    "desc": "Jewelry Only: $15.80 flat on Necklaces, Pendants, Bracelets & Bangles",
+    "status": "Active",
+    "uses": "36 Used"
+  },
+  {
+    "code": "WATCH22",
+    "type": "watch_fixed",
+    "target_usd": 22.00,
+    "worker": "Official Watch Promo",
+    "commission_usd": 4.00,
+    "desc": "Luxury Watches Only (15 products): $22.00 flat rate",
+    "status": "Active",
+    "uses": "29 Used"
   },
   {
     "code": "AFFILIATE1",
@@ -17,20 +37,9 @@
     "tierB_usd": 41.99,
     "worker": "Partner Team 1",
     "commission_usd": 5.00,
-    "desc": "Social Media Affiliate Partner 1 ($5.00 commission per wig)",
+    "desc": "Wigs Affiliate Team 1 ($5.00 commission per wig)",
     "status": "Active",
     "uses": "42 Used"
-  },
-  {
-    "code": "TIKTOK35",
-    "type": "wig_tiered",
-    "tierA_usd": 35.99,
-    "tierB_usd": 41.99,
-    "worker": "TikTok Creator Team",
-    "commission_usd": 5.00,
-    "desc": "TikTok Influencer Outreach ($5.00 commission per wig)",
-    "status": "Active",
-    "uses": "67 Used"
   },
   {
     "code": "AMANDA",
@@ -39,7 +48,7 @@
     "tierB_usd": 41.99,
     "worker": "Amanda S.",
     "commission_usd": 4.50,
-    "desc": "Social Media Closer Amanda ($4.50 commission per order)",
+    "desc": "Wigs Closer Amanda ($4.50 commission per wig)",
     "status": "Active",
     "uses": "19 Used"
   },

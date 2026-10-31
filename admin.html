@@ -555,14 +555,27 @@
 
         <!-- ================= 6. COUPONS & DISCOUNTS TAB ================= -->
         <section id="panel-discounts" class="hidden space-y-6">
-          <div class="flex justify-between items-center">
+          <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 bg-shopify-surface p-5 rounded-2xl border border-shopify-border">
             <div>
-              <h2 class="text-2xl font-bold text-white tracking-tight">Coupons & Promotional Codes</h2>
-              <p class="text-xs text-slate-400 mt-1">Create and manage dynamic discount codes for Shoppaza checkout.</p>
+              <h2 class="text-2xl font-bold text-white tracking-tight flex items-center gap-2">
+                <i class="fa-solid fa-ticket text-emerald-400"></i> Affiliate Voucher Generator
+              </h2>
+              <p class="text-xs text-slate-400 mt-1">Generate dedicated affiliate discount codes for specific categories with custom promoter commissions.</p>
             </div>
-            <button onclick="openCreateCouponModal()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold shadow flex items-center gap-1.5">
-              <i class="fa-solid fa-plus"></i> Create New Coupon
-            </button>
+            <div class="flex flex-wrap items-center gap-2">
+              <button onclick="openCreateCouponModal('wig_tiered')" class="px-3.5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold shadow transition flex items-center gap-1.5">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> + Wigs Code ($35.99 / $41.99)
+              </button>
+              <button onclick="openCreateCouponModal('jewelry_fixed')" class="px-3.5 py-2.5 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-bold shadow transition flex items-center gap-1.5">
+                <i class="fa-solid fa-gem"></i> + Jewelry Code ($15.80)
+              </button>
+              <button onclick="openCreateCouponModal('watch_fixed')" class="px-3.5 py-2.5 bg-amber-600 hover:bg-amber-500 text-white rounded-xl text-xs font-bold shadow transition flex items-center gap-1.5">
+                <i class="fa-solid fa-clock"></i> + Watch Code ($22.00)
+              </button>
+              <button onclick="openCreateCouponModal('percent')" class="px-3 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-xl text-xs font-semibold shadow transition flex items-center gap-1.5">
+                <i class="fa-solid fa-percent"></i> + Custom %
+              </button>
+            </div>
           </div>
 
           <div class="grid sm:grid-cols-3 gap-6" id="discountsContainer">
@@ -1376,32 +1389,34 @@
 
       <form onsubmit="handleSaveNewCoupon(event)" class="space-y-4 text-xs">
         <div>
-          <label class="block text-slate-400 mb-1 font-semibold">Voucher / Promo Code</label>
-          <input type="text" id="newCouponCode" required placeholder="e.g. AMANDA or VIPWIG" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white uppercase font-mono tracking-wider focus:border-emerald-500 focus:outline-none">
+          <label class="block text-slate-400 mb-1 font-semibold">Voucher / Promo Code (Jo customer lagaye ga)</label>
+          <input type="text" id="newCouponCode" required placeholder="e.g. VIPWIG, FATIMA_JEWEL, ALI_WATCH" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white uppercase font-mono tracking-wider focus:border-emerald-500 focus:outline-none">
         </div>
 
         <div>
-          <label class="block text-slate-400 mb-1 font-semibold">Discount Program Type</label>
+          <label class="block text-slate-400 mb-1 font-semibold">Select Category / Target Option</label>
           <select id="newCouponType" onchange="toggleCouponTypeFields(this.value)" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:border-emerald-500 focus:outline-none">
-            <option value="wig_tiered">🌟 1688 Wig Special Affiliate ($35.99 / $41.99 Tiers)</option>
+            <option value="wig_tiered">🌟 Wigs Only — Headband Wigs ($35.99 / $41.99 Tier)</option>
+            <option value="jewelry_fixed">💎 Jewelry Only — Necklaces & Bracelets ($15.80 Flat Rate)</option>
+            <option value="watch_fixed">⌚ Watches Only — Luxury Watches ($22.00 Flat Rate)</option>
             <option value="percent">Storewide Percentage (%)</option>
-            <option value="fixed">Fixed Amount (£ GBP)</option>
+            <option value="fixed">Storewide Fixed Amount (£ GBP)</option>
           </select>
         </div>
 
-        <div id="wigAffiliateFields" class="space-y-3 bg-slate-950/80 p-3.5 rounded-xl border border-indigo-500/30">
+        <!-- Dynamic Category Help Notice -->
+        <div id="categoryHelpNotice" class="p-3.5 rounded-xl border text-[11px] leading-relaxed space-y-1">
+          <!-- Injected via toggleCouponTypeFields -->
+        </div>
+
+        <div id="affiliateDetailsFields" class="space-y-3 bg-slate-950/80 p-3.5 rounded-xl border border-slate-800">
           <div>
-            <label class="block text-indigo-300 mb-1 font-semibold">Affiliate Promoter / Worker Name</label>
-            <input type="text" id="newCouponWorker" placeholder="e.g. Amanda Smith / Social Closer 1" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-white focus:border-indigo-500 focus:outline-none">
+            <label class="block text-slate-300 mb-1 font-semibold">Worker / Affiliate Promoter Name</label>
+            <input type="text" id="newCouponWorker" placeholder="e.g. Fatima Noor / Amanda S. / Social Closer 1" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-white focus:border-emerald-500 focus:outline-none">
           </div>
           <div>
-            <label class="block text-indigo-300 mb-1 font-semibold">Worker Commission per Wig Sold ($ USD)</label>
-            <input type="number" step="0.5" id="newCouponCommission" value="5.00" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-white font-mono focus:border-indigo-500 focus:outline-none">
-          </div>
-          <div class="text-[11px] text-slate-400 space-y-1">
-            <p>✅ Charges <strong>$35.99</strong> on shorter wigs ($2–$3 factory cost).</p>
-            <p>✅ Charges <strong>$41.99</strong> on 28-32\" wigs ($5 factory cost).</p>
-            <p>✅ Shows ~$154.01 discount on checkout and records commission for worker.</p>
+            <label class="block text-slate-300 mb-1 font-semibold">Worker Commission per Item Sold ($ USD)</label>
+            <input type="number" step="0.5" id="newCouponCommission" value="5.00" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-white font-mono focus:border-emerald-500 focus:outline-none">
           </div>
         </div>
 
@@ -1411,7 +1426,7 @@
         </div>
 
         <button type="submit" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold transition shadow flex items-center justify-center gap-2">
-          <i class="fa-solid fa-bolt"></i> Activate Affiliate Coupon
+          <i class="fa-solid fa-bolt"></i> Save & Activate Voucher Code
         </button>
       </form>
     </div>
@@ -2460,7 +2475,7 @@
     function exportOrdersCSV() {
       const liveOrders = JSON.parse(localStorage.getItem('shoppaza_live_orders') || '[]');
       const allOrders = [...liveOrders, ...defaultOrders];
-      const headers = ['Order ID', 'Date', 'Customer', 'Email', 'Address', 'Country', 'Total', 'Payment', 'Fulfillment', 'Courier', 'Tracking'];
+      const headers = ['Order ID', 'Date', 'Customer', 'Email', 'Address', 'Country', 'Total', 'Payment', 'Promo Code', 'Affiliate Worker', 'Commission ($)', 'Fulfillment', 'Courier', 'Tracking'];
       const rows = allOrders.map(o => [
         o.id,
         `"${o.date || 'Today'}"`,
@@ -2470,6 +2485,906 @@
         `"${o.country || ''}"`,
         `"${o.total}"`,
         `"${o.payment}"`,
+        `"${o.discount_code || ''}"`,
+        `"${o.affiliate_worker || ''}"`,
+        `"${o.affiliate_commission ? '$' + o.affiliate_commission : ''}"`,
+        `"${o.fulfillment || 'Unfulfilled'}"`,
+        `"${o.courier || ''}"`,
+        `"${o.tracking || ''}"`
+      ]);
+
+      const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `shoppaza_orders_${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Orders exported to CSV!', 'success');
+    }
+
+    function printOrderPackingSlip() {
+      window.print();
+    }
+
+    // ---------------- STORE THEME CUSTOMIZER ----------------
+    function loadThemeCustomizerFields() {
+      const saved = JSON.parse(localStorage.getItem('shoppaza_theme_settings') || '{}');
+      if (saved.announcementPromo) document.getElementById('customAnnouncementPromo').value = saved.announcementPromo;
+      if (saved.announcementLegal) document.getElementById('customAnnouncementLegal').value = saved.announcementLegal;
+      if (saved.supportEmail) document.getElementById('customSupportEmail').value = saved.supportEmail;
+      if (saved.companyName) document.getElementById('customCompanyName').value = saved.companyName;
+      if (saved.companyNumber) document.getElementById('customCompanyNumber').value = saved.companyNumber;
+      if (saved.companyAddress) document.getElementById('customCompanyAddress').value = saved.companyAddress;
+      if (saved.copyrightText) document.getElementById('customCopyrightText').value = saved.copyrightText;
+    }
+
+    function saveThemeCustomizerSettings() {
+      const settings = {
+        announcementPromo: document.getElementById('customAnnouncementPromo').value.trim(),
+        announcementLegal: document.getElementById('customAnnouncementLegal').value.trim(),
+        supportEmail: document.getElementById('customSupportEmail').value.trim(),
+        companyName: document.getElementById('customCompanyName').value.trim(),
+        companyNumber: document.getElementById('customCompanyNumber').value.trim(),
+        companyAddress: document.getElementById('customCompanyAddress').value.trim(),
+        copyrightText: document.getElementById('customCopyrightText').value.trim()
+      };
+
+      localStorage.setItem('shoppaza_theme_settings', JSON.stringify(settings));
+      showToast('Store design & footer settings published to shoppaza.com!', 'success');
+    }
+
+    function renderSliderBannersSummary() {
+      const container = document.getElementById('sliderBannersList');
+      if (!container) return;
+
+      container.innerHTML = megaSlidersData.map((s, idx) => `
+        <div class="p-3 bg-slate-900 border border-slate-800 rounded-xl">
+          <div class="text-[10px] text-amber-400 font-bold uppercase">Slide #${idx + 1} • ${s.badge}</div>
+          <div class="font-bold text-white text-xs mt-1 truncate">${s.name}</div>
+          <div class="text-[11px] text-slate-400 mt-0.5">${s.category}</div>
+        </div>
+      `).join('');
+    }
+
+    // ---------------- CUSTOMERS DIRECTORY ----------------
+    function renderCustomers() {
+      const container = document.getElementById('customersList');
+      if (!container) return;
+
+      const liveOrders = JSON.parse(localStorage.getItem('shoppaza_live_orders') || '[]');
+      const custMap = {};
+      liveOrders.forEach(o => {
+        const email = o.email || `${(o.customer || 'customer').toLowerCase().replace(/\s+/g, '')}@example.com`;
+        if (!custMap[email]) {
+          custMap[email] = {
+            name: o.customer || 'Customer',
+            email: o.email || 'Registered Customer',
+            orders: 0,
+            spent: 0,
+            country: o.country || 'United Kingdom'
+          };
+        }
+        custMap[email].orders++;
+        const raw = String(o.total || '0').replace(/[^0-9.]/g, '');
+        custMap[email].spent += (parseFloat(raw) || 0);
+      });
+
+      const customers = Object.values(custMap);
+
+      if (customers.length === 0) {
+        container.innerHTML = `
+          <div class="p-8 rounded-xl bg-shopify-surface border border-shopify-border text-center text-slate-500 text-xs">
+            <i class="fa-solid fa-users text-3xl mb-2 text-slate-600 block"></i>
+            No registered customer profiles yet. Customer accounts are created automatically when orders are placed.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = customers.map(c => `
+        <div class="p-4 rounded-xl bg-shopify-surface border border-shopify-border flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center font-bold text-white text-xs">
+              ${c.name.split(' ').map(n => n[0]).join('')}
+            </div>
+            <div>
+              <div class="font-bold text-white text-sm">${escapeHtml(c.name)}</div>
+              <div class="text-xs text-slate-400">${escapeHtml(c.email)} • ${escapeHtml(c.country)}</div>
+            </div>
+          </div>
+          <div class="text-right">
+            <div class="font-bold font-mono text-emerald-400 text-sm">£${c.spent.toFixed(2)}</div>
+            <div class="text-xs text-slate-400">${c.orders} order${c.orders === 1 ? '' : 's'} placed</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ---------------- COUPONS & AFFILIATE MANAGEMENT ----------------
+    function toggleCouponTypeFields(type) {
+      const notice = document.getElementById('categoryHelpNotice');
+      const stdBox = document.getElementById('standardDiscountFields');
+      const affBox = document.getElementById('affiliateDetailsFields');
+      const commInput = document.getElementById('newCouponCommission');
+
+      if (type === 'wig_tiered') {
+        if (stdBox) stdBox.classList.add('hidden');
+        if (affBox) affBox.classList.remove('hidden');
+        if (commInput) commInput.value = '5.00';
+        if (notice) {
+          notice.className = 'p-3.5 rounded-xl border border-indigo-500/30 bg-indigo-950/40 text-indigo-200 text-[11px] leading-relaxed space-y-1';
+          notice.innerHTML = '<div class="font-bold flex items-center gap-1.5 text-indigo-300"><i class="fa-solid fa-wand-magic-sparkles"></i> Wigs Collection Only (150 Items)</div>' +
+            '<div>• Customer pays <strong>$35.99</strong> on shorter wigs ($2–$3 factory cost).</div>' +
+            '<div>• Customer pays <strong>$41.99</strong> on 28"-32" wigs ($5 factory cost).</div>' +
+            '<div>• Retail price ($190–$230) is wiped out; customer only pays $35.99/$41.99.</div>';
+        }
+      } else if (type === 'jewelry_fixed') {
+        if (stdBox) stdBox.classList.add('hidden');
+        if (affBox) affBox.classList.remove('hidden');
+        if (commInput) commInput.value = '3.00';
+        if (notice) {
+          notice.className = 'p-3.5 rounded-xl border border-rose-500/30 bg-rose-950/40 text-rose-200 text-[11px] leading-relaxed space-y-1';
+          notice.innerHTML = '<div class="font-bold flex items-center gap-1.5 text-rose-300"><i class="fa-solid fa-gem"></i> Jewelry Collection Only (Necklaces & Bracelets)</div>' +
+            '<div>• Customer pays fixed <strong>$15.80</strong> per item (original price wiped).</div>' +
+            '<div>• Valid on Necklaces & Pendants (85 items) and Bracelets & Bangles (43 items).</div>';
+        }
+      } else if (type === 'watch_fixed') {
+        if (stdBox) stdBox.classList.add('hidden');
+        if (affBox) affBox.classList.remove('hidden');
+        if (commInput) commInput.value = '4.00';
+        if (notice) {
+          notice.className = 'p-3.5 rounded-xl border border-amber-500/30 bg-amber-950/40 text-amber-200 text-[11px] leading-relaxed space-y-1';
+          notice.innerHTML = '<div class="font-bold flex items-center gap-1.5 text-amber-300"><i class="fa-solid fa-clock"></i> Luxury Watches Only (15 Items)</div>' +
+            '<div>• Customer pays fixed <strong>$22.00</strong> per watch (original price wiped).</div>' +
+            '<div>• Valid on all 15 Luxury Chronograph & Watch products.</div>';
+        }
+      } else {
+        if (stdBox) stdBox.classList.remove('hidden');
+        if (affBox) affBox.classList.remove('hidden');
+        if (notice) {
+          notice.className = 'p-3.5 rounded-xl border border-emerald-500/30 bg-emerald-950/40 text-emerald-200 text-[11px] leading-relaxed';
+          notice.innerHTML = '<div>• Storewide discount applied to all products in cart.</div>';
+        }
+      }
+    }
+
+    function openCreateCouponModal(presetType) {
+      const modal = document.getElementById('createCouponModal');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      const typeSelect = document.getElementById('newCouponType');
+      if (typeSelect && presetType) {
+        typeSelect.value = presetType;
+        toggleCouponTypeFields(presetType);
+      } else {
+        toggleCouponTypeFields(typeSelect ? typeSelect.value : 'wig_tiered');
+      }
+    }
+
+    function closeCreateCouponModal() {
+      document.getElementById('createCouponModal').classList.add('hidden');
+    }
+
+    async function copyCouponCode(code) {
+      try {
+        await navigator.clipboard.writeText(code);
+        showToast('Copied code ' + code + ' to clipboard!', 'success');
+      } catch(e) {
+        showToast('Promo Code: ' + code, 'info');
+      }
+    }
+
+    async function deleteAdminCoupon(codeToDelete) {
+      if (!confirm('Are you sure you want to delete promo code ' + codeToDelete + '?')) return;
+      let stored = JSON.parse(localStorage.getItem('shoppaza_coupons') || '[]');
+      stored = stored.filter(c => c.code.toUpperCase() !== codeToDelete.toUpperCase());
+      localStorage.setItem('shoppaza_coupons', JSON.stringify(stored));
+      renderDiscounts();
+      showToast('Coupon ' + codeToDelete + ' removed from store.', 'info');
+    }
+
+    async function renderDiscounts() {
+      const container = document.getElementById('discountsContainer');
+      if (!container) return;
+
+      let registry = [];
+      try {
+        const res = await fetch('coupons.json?t=' + Date.now());
+        if (res.ok) registry = await res.json();
+      } catch(e) {}
+
+      const storedCoupons = JSON.parse(localStorage.getItem('shoppaza_coupons') || '[]');
+      
+      const map = new Map();
+      storedCoupons.forEach(c => map.set(c.code.toUpperCase(), c));
+      registry.forEach(c => {
+        if (!map.has(c.code.toUpperCase())) map.set(c.code.toUpperCase(), c);
+      });
+
+      const allCoupons = Array.from(map.values());
+
+      container.innerHTML = allCoupons.map((d) => {
+        let badgeColor = 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+        let badgeText = d.discount || (d.value ? d.value + '% Off' : 'Active Promo');
+        let icon = '<i class="fa-solid fa-ticket"></i>';
+
+        if (d.type === 'wig_tiered') {
+          badgeColor = 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30';
+          badgeText = '🌟 WIGS ($35.99 / $41.99)';
+          icon = '<i class="fa-solid fa-wand-magic-sparkles"></i>';
+        } else if (d.type === 'jewelry_fixed') {
+          badgeColor = 'bg-rose-500/20 text-rose-300 border border-rose-500/30';
+          badgeText = '💎 JEWELRY ($15.80 FLAT)';
+          icon = '<i class="fa-solid fa-gem"></i>';
+        } else if (d.type === 'watch_fixed') {
+          badgeColor = 'bg-amber-500/20 text-amber-300 border border-amber-500/30';
+          badgeText = '⌚ WATCHES ($22.00 FLAT)';
+          icon = '<i class="fa-solid fa-clock"></i>';
+        }
+
+        const workerInfo = d.worker ? '<div class="text-xs text-slate-300 font-semibold flex items-center gap-1.5"><i class="fa-solid fa-user-tag text-emerald-400"></i> Worker: ' + escapeHtml(d.worker) + (d.commission_usd ? ' • <span class="text-amber-400 font-bold">Commission: $' + parseFloat(d.commission_usd).toFixed(2) + '</span>' : '') + '</div>' : '';
+
+        return '<div class="p-5 rounded-2xl bg-shopify-sidebar border border-shopify-border space-y-3 relative group hover:border-slate-700 transition">' +
+          '<div class="flex justify-between items-center">' +
+            '<span class="px-2.5 py-0.5 rounded-full font-bold text-[10px] ' + badgeColor + ' font-mono flex items-center gap-1">' + icon + ' ' + badgeText + '</span>' +
+            '<span class="text-xs text-slate-400">' + (d.uses || '0 Used') + '</span>' +
+          '</div>' +
+          '<div class="flex items-center justify-between">' +
+            '<div class="text-2xl font-mono font-extrabold text-white tracking-wider">' + d.code + '</div>' +
+            '<div class="flex items-center gap-1">' +
+              '<button onclick="copyCouponCode(\'' + d.code + '\')" class="text-xs px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 transition flex items-center gap-1" title="Copy Code">' +
+                '<i class="fa-regular fa-copy"></i> Copy' +
+              '</button>' +
+              '<button onclick="deleteAdminCoupon(\'' + d.code + '\')" class="text-xs px-2 py-1 bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 rounded-lg border border-rose-800/40 transition" title="Delete Coupon">' +
+                '<i class="fa-regular fa-trash-can"></i>' +
+              '</button>' +
+            '</div>' +
+          '</div>' +
+          workerInfo +
+          '<div class="text-xs text-slate-400 leading-relaxed">' + (d.desc || 'Category-specific affiliate promo code') + '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function handleSaveNewCoupon(e) {
+      e.preventDefault();
+      const code = document.getElementById('newCouponCode').value.trim().toUpperCase();
+      const type = document.getElementById('newCouponType').value;
+      const worker = document.getElementById('newCouponWorker')?.value.trim() || 'Affiliate Partner';
+      const commission = parseFloat(document.getElementById('newCouponCommission')?.value) || 5.00;
+      
+      let newC = {};
+      if (type === 'wig_tiered') {
+        newC = {
+          code: code,
+          type: 'wig_tiered',
+          tierA_usd: 35.99,
+          tierB_usd: 41.99,
+          worker: worker,
+          commission_usd: commission,
+          desc: 'Wigs Only: $35.99 short / $41.99 long. Worker: ' + worker + ' (Commission: $' + commission.toFixed(2) + ')',
+          status: 'Active',
+          uses: '0 Used'
+        };
+      } else if (type === 'jewelry_fixed') {
+        newC = {
+          code: code,
+          type: 'jewelry_fixed',
+          target_usd: 15.80,
+          worker: worker,
+          commission_usd: commission,
+          desc: 'Jewelry Only (Necklaces & Bracelets): $15.80 flat. Worker: ' + worker + ' (Commission: $' + commission.toFixed(2) + ')',
+          status: 'Active',
+          uses: '0 Used'
+        };
+      } else if (type === 'watch_fixed') {
+        newC = {
+          code: code,
+          type: 'watch_fixed',
+          target_usd: 22.00,
+          worker: worker,
+          commission_usd: commission,
+          desc: 'Luxury Watches Only (15 products): $22.00 flat. Worker: ' + worker + ' (Commission: $' + commission.toFixed(2) + ')',
+          status: 'Active',
+          uses: '0 Used'
+        };
+      } else {
+        const val = document.getElementById('newCouponValue')?.value || 10;
+        const discount = type === 'percent' ? val + '% Off' : '£' + val + ' Off';
+        newC = {
+          code: code,
+          type: type,
+          value: parseFloat(val) || 10,
+          discount: discount,
+          worker: worker || 'Storewide',
+          commission_usd: commission,
+          desc: discount + ' storewide checkout discount',
+          status: 'Active',
+          uses: '0 Used'
+        };
+      }
+
+      const stored = JSON.parse(localStorage.getItem('shoppaza_coupons') || '[]');
+      const filtered = stored.filter(c => c.code.toUpperCase() !== code);
+      filtered.unshift(newC);
+      localStorage.setItem('shoppaza_coupons', JSON.stringify(filtered));
+
+      closeCreateCouponModal();
+      e.target.reset();
+      renderDiscounts();
+      showToast('Affiliate Voucher ' + code + ' activated on Shoppaza!', 'success');
+    }
+    // ---------------- ADMIN PROFILE & PASSCODE CHANGE ----------------
+    function loadAdminProfile() {
+      const saved = JSON.parse(localStorage.getItem('shoppaza_admin_profile') || '{}');
+      if (saved.name) {
+        document.getElementById('sidebarUserName').innerText = saved.name;
+        document.getElementById('adminProfileName').value = saved.name;
+        document.getElementById('sidebarUserAvatar').innerText = saved.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+      }
+      if (saved.email) {
+        document.getElementById('adminProfileEmail').value = saved.email;
+      }
+      if (saved.role) {
+        document.getElementById('sidebarUserRole').innerText = saved.role;
+        document.getElementById('adminProfileRole').value = saved.role;
+      }
+    }
+
+    function handleSaveAdminProfile(e) {
+      e.preventDefault();
+      const name = document.getElementById('adminProfileName').value.trim();
+      const email = document.getElementById('adminProfileEmail').value.trim();
+      const role = document.getElementById('adminProfileRole').value.trim();
+
+      const profile = { name, email, role };
+      localStorage.setItem('shoppaza_admin_profile', JSON.stringify(profile));
+      loadAdminProfile();
+      showToast('Admin Profile updated successfully!', 'success');
+    }
+
+    function handleChangePasscode(e) {
+      e.preventDefault();
+      const currentEntered = document.getElementById('currentPassInput').value.trim();
+      const newPass = document.getElementById('newPassInput').value.trim();
+      const confirmPass = document.getElementById('confirmNewPassInput').value.trim();
+
+      const actualCurrent = localStorage.getItem('shoppaza_admin_passcode') || DEFAULT_MASTER_KEY;
+
+      if (currentEntered !== actualCurrent) {
+        alert('Current passcode is incorrect!');
+        return;
+      }
+
+      if (newPass.length < 6) {
+        alert('New passcode must be at least 6 characters.');
+        return;
+      }
+
+      if (newPass !== confirmPass) {
+        alert('New passcode and confirm passcode do not match!');
+        return;
+      }
+
+      localStorage.setItem('shoppaza_admin_passcode', newPass);
+      e.target.reset();
+      showToast('Admin Passcode changed successfully! Save it securely.', 'success');
+    }
+
+    
+    // ---------------- PAYMENTS & STRIPE GATEWAY PLUGIN ----------------
+    function loadStripeSettings() {
+      const saved = JSON.parse(localStorage.getItem('shoppaza_stripe_config') || '{}');
+      if (saved.publishableKey) document.getElementById('stripePublishableKey').value = saved.publishableKey;
+      if (saved.secretKey) document.getElementById('stripeSecretKey').value = saved.secretKey;
+      if (saved.webhookSecret) document.getElementById('stripeWebhookSecret').value = saved.webhookSecret;
+      if (saved.envMode) document.getElementById('stripeEnvMode').value = saved.envMode;
+      if (saved.methodUsAfterpay !== undefined) document.getElementById('methodUsAfterpay').checked = saved.methodUsAfterpay;
+      if (saved.methodUsAmazonPay !== undefined) document.getElementById('methodUsAmazonPay').checked = saved.methodUsAmazonPay;
+      if (saved.methodAuAfterpay !== undefined) document.getElementById('methodAuAfterpay').checked = saved.methodAuAfterpay;
+      
+      updateStripeStatusUI(saved);
+    }
+
+    function updateStripeStatusUI(config) {
+      const pill = document.getElementById('stripeStatusPill');
+      const badge = document.getElementById('badgeStripeStatus');
+      if (config.publishableKey && config.publishableKey.startsWith('pk_')) {
+        if (pill) pill.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Stripe Live Active';
+        if (pill) pill.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5';
+        if (badge) {
+          badge.innerText = 'Live';
+          badge.className = 'px-1.5 py-0.5 rounded text-[10px] bg-emerald-500/20 text-emerald-400 font-mono font-bold';
+        }
+      } else {
+        if (pill) pill.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-400"></span> Keys Required';
+        if (pill) pill.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center gap-1.5';
+        if (badge) {
+          badge.innerText = 'Pending';
+          badge.className = 'px-1.5 py-0.5 rounded text-[10px] bg-amber-500/20 text-amber-400 font-mono';
+        }
+      }
+    }
+
+    function handleSaveStripeSettings(e) {
+      e.preventDefault();
+      const pub = document.getElementById('stripePublishableKey').value.trim();
+      const sec = document.getElementById('stripeSecretKey').value.trim();
+      const env = document.getElementById('stripeEnvMode').value;
+
+      if (!pub.startsWith('pk_')) {
+        alert('Invalid Publishable Key! Must begin with pk_live_ or pk_test_');
+        return;
+      }
+
+      const config = {
+        enabled: true,
+        envMode: env,
+        publishableKey: pub,
+        secretKey: sec,
+        webhookSecret: document.getElementById('stripeWebhookSecret').value.trim(),
+        methodUkCards: true,
+        methodUkWallets: document.getElementById('methodUkWallets').checked,
+        methodUkClearpay: document.getElementById('methodUkClearpay').checked,
+        methodUsAfterpay: document.getElementById('methodUsAfterpay').checked,
+        methodUsAmazonPay: document.getElementById('methodUsAmazonPay').checked,
+        methodUsCards: document.getElementById('methodUsCards').checked,
+        methodAuAfterpay: document.getElementById('methodAuAfterpay').checked,
+        methodAuCards: document.getElementById('methodAuCards').checked,
+        methodAuWallets: document.getElementById('methodAuWallets').checked,
+        updatedAt: new Date().toISOString()
+      };
+
+      localStorage.setItem('shoppaza_stripe_config', JSON.stringify(config));
+      updateStripeStatusUI(config);
+      showToast('Stripe Configuration & Regional Gateways Saved Successfully!', 'success');
+    }
+
+    function testStripeConnection() {
+      const pub = document.getElementById('stripePublishableKey').value.trim();
+      if (!pub) {
+        alert('Please enter your Stripe Publishable Key (pk_live_... or pk_test_...) first!');
+        return;
+      }
+      if (!pub.startsWith('pk_')) {
+        alert('Invalid Key Format! Stripe Publishable key must start with pk_live_ or pk_test_');
+        return;
+      }
+      showToast('Stripe Key validated: ' + pub.slice(0, 14) + '... (Ready for live cards)', 'success');
+    }
+
+    function toggleSecretVisibility(inputId, iconId) {
+      const inp = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+      if (inp.type === 'password') {
+        inp.type = 'text';
+        icon.className = 'fa-solid fa-eye-slash';
+      } else {
+        inp.type = 'password';
+        icon.className = 'fa-solid fa-eye';
+      }
+    }
+
+    async function pasteFromClipboard(inputId) {
+      try {
+        const text = await navigator.clipboard.readText();
+        if (text) {
+          document.getElementById(inputId).value = text.trim();
+          showToast('Pasted key from clipboard!', 'success');
+        }
+      } catch (err) {
+        alert('Please paste manually using Ctrl+V or right-click paste.');
+      }
+    }
+
+    // ---------------- TRAFFIC ANALYTICS ENGINE ----------------
+    const COUNTRY_METADATA = {
+      US: { name: 'United States', flag: '🇺🇸' },
+      GB: { name: 'United Kingdom', flag: '🇬🇧' },
+      PK: { name: 'Pakistan', flag: '🇵🇰' },
+      AU: { name: 'Australia', flag: '🇦🇺' },
+      CA: { name: 'Canada', flag: '🇨🇦' },
+      DE: { name: 'Germany', flag: '🇩🇪' },
+      SA: { name: 'Saudi Arabia', flag: '🇸🇦' },
+      AE: { name: 'UAE', flag: '🇦🇪' },
+      FR: { name: 'France', flag: '🇫🇷' },
+      NL: { name: 'Netherlands', flag: '🇳🇱' },
+      GLOBAL: { name: 'Worldwide / Other', flag: '🌐' }
+    };
+
+    const DEFAULT_TRAFFIC_BASELINE = {
+      totalVisits: 0,
+      uniqueVisitors: 0,
+      countryCounts: {},
+      sourceCounts: {},
+      deviceCounts: { Mobile: 0, Desktop: 0 },
+      visitorsList: []
+    };
+
+    function getStoreTrafficData() {
+      try {
+        // Auto-purge ALL legacy dummy baseline caches
+        try {
+          localStorage.removeItem('shoppaza_traffic_analytics');
+          localStorage.removeItem('shoppaza_traffic_analytics_v2');
+          localStorage.removeItem('shoppaza_traffic_analytics_v3');
+        } catch(e) {}
+        const raw = localStorage.getItem('shoppaza_traffic_analytics_real');
+        if (!raw) {
+          localStorage.setItem('shoppaza_traffic_analytics_real', JSON.stringify(DEFAULT_TRAFFIC_BASELINE));
+          return JSON.parse(JSON.stringify(DEFAULT_TRAFFIC_BASELINE));
+        }
+        return JSON.parse(raw);
+      } catch(e) {
+        return JSON.parse(JSON.stringify(DEFAULT_TRAFFIC_BASELINE));
+      }
+    }
+
+    function timeAgo(ts) {
+      const diff = Math.max(0, Date.now() - ts);
+      const secs = Math.floor(diff / 1000);
+      if (secs < 60) return 'Just now';
+      const mins = Math.floor(secs / 60);
+      if (mins < 60) return `${mins}m ago`;
+      const hrs = Math.floor(mins / 60);
+      if (hrs < 24) return `${hrs}h ago`;
+      const days = Math.floor(hrs / 24);
+      return `${days}d ago`;
+    }
+
+    function renderTrafficAnalytics() {
+      const data = getStoreTrafficData();
+      updateTrafficUIWithData(data);
+    }
+
+    function updateTrafficUIWithData(data) {
+      const total = data.totalVisits || 0;
+      const unique = data.uniqueVisitors || 0;
+
+      // Update Home Screen KPI Card
+      const kpiTraffic = document.getElementById('kpiTotalTraffic');
+      const kpiTrafficSub = document.getElementById('kpiTrafficSubtext');
+      if (kpiTraffic) kpiTraffic.innerText = total > 0 ? `${total.toLocaleString()} Visits` : '0 Visits';
+      if (kpiTrafficSub) {
+        kpiTrafficSub.innerHTML = total > 0 
+          ? `<i class="fa-solid fa-users text-emerald-400"></i> ${unique.toLocaleString()} unique shoppers`
+          : '<i class="fa-solid fa-signal text-slate-500"></i> Waiting for real visitors...';
+      }
+
+      // Update Analytics 4 KPI Cards
+      const cardTotal = document.getElementById('trafficCardTotalVisits');
+      const cardUnique = document.getElementById('trafficCardUniqueVisitors');
+      const cardLive = document.getElementById('trafficCardLiveNow');
+      const cardTopCountry = document.getElementById('trafficCardTopCountry');
+      const cardTopCountryMeta = document.getElementById('trafficCardTopCountryMeta');
+
+      if (cardTotal) cardTotal.innerText = total.toLocaleString();
+      if (cardUnique) cardUnique.innerText = unique.toLocaleString();
+
+      // Estimate live now (active in last 10 minutes)
+      const tenMinsAgo = Date.now() - (10 * 60 * 1000);
+      const recentActive = (data.visitorsList || []).filter(v => v.timestamp >= tenMinsAgo).length;
+      if (cardLive) cardLive.innerText = `${recentActive} Online`;
+
+      // Determine top country
+      const countryEntries = Object.entries(data.countryCounts || {}).sort((a,b) => b[1] - a[1]);
+      if (countryEntries.length > 0 && cardTopCountry) {
+        const [topCode, topCnt] = countryEntries[0];
+        const meta = COUNTRY_METADATA[topCode] || { name: topCode, flag: '🌐' };
+        const topPct = total > 0 ? Math.round((topCnt / total) * 100) : 0;
+        cardTopCountry.innerText = `${meta.flag} ${topCode} (${topPct}%)`;
+        if (cardTopCountryMeta) {
+          cardTopCountryMeta.innerHTML = `<i class="fa-solid fa-bullseye"></i> ${meta.name} leads traffic`;
+        }
+      } else if (cardTopCountry) {
+        cardTopCountry.innerText = 'No Data';
+        if (cardTopCountryMeta) cardTopCountryMeta.innerText = 'Awaiting real visitor traffic';
+      }
+
+      // Render Global Visitors by Country Table / Bars
+      const countryContainer = document.getElementById('trafficCountryList');
+      if (countryContainer) {
+        countryContainer.innerHTML = countryEntries.slice(0, 7).map(([code, count]) => {
+          const meta = COUNTRY_METADATA[code] || { name: code, flag: '🌐' };
+          const pct = total > 0 ? Math.max(2, Math.round((count / total) * 100)) : 0;
+          return `
+            <div>
+              <div class="flex items-center justify-between text-xs mb-1">
+                <span class="text-slate-200 font-medium flex items-center gap-1.5">
+                  <span class="text-base">${meta.flag}</span>
+                  <span>${meta.name}</span>
+                  <span class="text-[10px] text-slate-500 font-mono">(${code})</span>
+                </span>
+                <span class="text-slate-300 font-mono font-bold">${count.toLocaleString()} <span class="text-slate-500 font-normal">(${pct}%)</span></span>
+              </div>
+              <div class="w-full bg-slate-800/80 h-2 rounded-full overflow-hidden">
+                <div class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Render Traffic Sources / Acquisition Channels
+      const sourcesContainer = document.getElementById('trafficSourcesList');
+      if (sourcesContainer) {
+        const sourceIcons = {
+          'Facebook Ads / Social': 'fa-brands fa-facebook text-blue-500',
+          'Google Organic': 'fa-brands fa-google text-blue-400',
+          'Direct / Storefront': 'fa-solid fa-compass text-amber-400',
+          'WhatsApp Share': 'fa-brands fa-whatsapp text-emerald-400',
+          'TikTok Ads / Social': 'fa-brands fa-tiktok text-slate-200',
+          'Social Media': 'fa-brands fa-instagram text-pink-400',
+          'Referral / Search': 'fa-solid fa-arrow-up-right-from-square text-indigo-400'
+        };
+        const srcEntries = Object.entries(data.sourceCounts || {}).sort((a,b) => b[1] - a[1]);
+        sourcesContainer.innerHTML = srcEntries.map(([src, count]) => {
+          const iconClass = sourceIcons[src] || 'fa-solid fa-share-nodes text-slate-400';
+          const pct = total > 0 ? Math.max(1, Math.round((count / total) * 100)) : 0;
+          return `
+            <div>
+              <div class="flex items-center justify-between text-xs mb-1">
+                <span class="text-slate-200 font-medium flex items-center gap-2">
+                  <i class="${iconClass} w-4 text-center"></i>
+                  <span>${src}</span>
+                </span>
+                <span class="text-slate-300 font-mono font-bold">${count.toLocaleString()} <span class="text-slate-500 font-normal">(${pct}%)</span></span>
+              </div>
+              <div class="w-full bg-slate-800/80 h-2 rounded-full overflow-hidden">
+                <div class="bg-indigo-500 h-full rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Render Device Distribution
+      const devicesContainer = document.getElementById('trafficDevicesList');
+      if (devicesContainer) {
+        const mob = data.deviceCounts?.Mobile || 0;
+        const desk = data.deviceCounts?.Desktop || 0;
+        const devTotal = Math.max(1, mob + desk);
+        const mobPct = Math.round((mob / devTotal) * 100);
+        const deskPct = 100 - mobPct;
+
+        devicesContainer.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between text-xs mb-1">
+              <span class="text-slate-200 font-medium flex items-center gap-2">
+                <i class="fa-solid fa-mobile-screen-button text-amber-400 w-4 text-center"></i>
+                <span>Mobile Devices (Smartphones)</span>
+              </span>
+              <span class="text-slate-300 font-mono font-bold">${mob.toLocaleString()} <span class="text-slate-500 font-normal">(${mobPct}%)</span></span>
+            </div>
+            <div class="w-full bg-slate-800/80 h-2 rounded-full overflow-hidden">
+              <div class="bg-amber-400 h-full rounded-full transition-all duration-500" style="width: ${mobPct}%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex items-center justify-between text-xs mb-1">
+              <span class="text-slate-200 font-medium flex items-center gap-2">
+                <i class="fa-solid fa-laptop text-cyan-400 w-4 text-center"></i>
+                <span>Desktop & Laptops</span>
+              </span>
+              <span class="text-slate-300 font-mono font-bold">${desk.toLocaleString()} <span class="text-slate-500 font-normal">(${deskPct}%)</span></span>
+            </div>
+            <div class="w-full bg-slate-800/80 h-2 rounded-full overflow-hidden">
+              <div class="bg-cyan-400 h-full rounded-full transition-all duration-500" style="width: ${deskPct}%"></div>
+            </div>
+          </div>
+        `;
+      }
+
+      // Render Real-Time Live Stream Log (Last 50 Visits)
+      const logTbody = document.getElementById('trafficLiveLogTableBody');
+      const lastSync = document.getElementById('trafficLiveLastUpdated');
+      if (lastSync) lastSync.innerText = `Updated: ${new Date().toLocaleTimeString()}`;
+
+      if (logTbody) {
+        const stream = (data.visitorsList || []).slice(0, 50);
+        if (stream.length === 0) {
+          logTbody.innerHTML = `
+            <tr>
+              <td colspan="6" class="p-6 text-center text-slate-500 text-xs">
+                No real-time visitor activity recorded yet.
+              </td>
+            </tr>
+          `;
+        } else {
+          logTbody.innerHTML = stream.map(v => {
+            const meta = COUNTRY_METADATA[v.country] || { name: v.country || 'Global', flag: '🌐' };
+            const isRecent = (Date.now() - v.timestamp) < (5 * 60 * 1000);
+            const statusBadge = isRecent
+              ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Active</span>`
+              : `<span class="text-[11px] text-slate-400">${escapeHtml(v.status || 'Browsing')}</span>`;
+
+            const deviceIcon = v.device === 'Mobile'
+              ? '<i class="fa-solid fa-mobile-screen text-amber-400 mr-1"></i> Mobile'
+              : '<i class="fa-solid fa-laptop text-cyan-400 mr-1"></i> Desktop';
+
+            let srcBadgeClass = 'text-slate-300';
+            if (v.source.includes('Facebook')) srcBadgeClass = 'text-blue-500 font-semibold';
+            else if (v.source.includes('Google')) srcBadgeClass = 'text-blue-400 font-medium';
+            else if (v.source.includes('WhatsApp')) srcBadgeClass = 'text-emerald-400 font-medium';
+
+            return `
+              <tr class="hover:bg-slate-800/40 transition border-b border-shopify-border/40">
+                <td class="py-2.5 px-3 text-slate-400 font-mono text-[11px] whitespace-nowrap">${timeAgo(v.timestamp)}</td>
+                <td class="py-2.5 px-3 whitespace-nowrap">
+                  <span class="inline-flex items-center gap-1.5">
+                    <span class="text-sm">${meta.flag}</span>
+                    <span class="font-medium text-white">${meta.name}</span>
+                  </span>
+                </td>
+                <td class="py-2.5 px-3 text-slate-300 max-w-[200px] truncate" title="${escapeHtml(v.page)}">${escapeHtml(v.page)}</td>
+                <td class="py-2.5 px-3 whitespace-nowrap ${srcBadgeClass}">
+                  ${escapeHtml(v.source)}
+                </td>
+                <td class="py-2.5 px-3 whitespace-nowrap text-slate-400 text-[11px]">
+                  ${deviceIcon}
+                </td>
+                <td class="py-2.5 px-3 text-right whitespace-nowrap">
+                  ${statusBadge}
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+      }
+    }
+
+    function simulateLiveVisitor() {
+      const countries = ['US', 'GB', 'PK', 'AU', 'CA', 'DE', 'SA'];
+      const pages = [
+        'Home Storefront',
+        'Women Designer Dress',
+        'Fine Gold & Diamond Jewelry',
+        'Luxury Chronograph Watch',
+        'Designer Handbag & Clutch',
+        'Checkout Page'
+      ];
+      const sources = ['Google Organic', 'Direct / Storefront', 'WhatsApp Share', 'Social Media'];
+      const statuses = ['Browsing Catalog', 'Viewing Product Details', 'Added to Cart', 'In Checkout'];
+
+      const randomCountry = countries[Math.floor(Math.random() * countries.length)];
+      const randomPage = pages[Math.floor(Math.random() * pages.length)];
+      const randomSource = sources[Math.floor(Math.random() * sources.length)];
+      const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+      const randomDevice = Math.random() > 0.3 ? 'Mobile' : 'Desktop';
+
+      const data = getStoreTrafficData();
+      data.totalVisits = (data.totalVisits || 0) + 1;
+      data.uniqueVisitors = (data.uniqueVisitors || 0) + 1;
+      data.countryCounts[randomCountry] = (data.countryCounts[randomCountry] || 0) + 1;
+      data.sourceCounts[randomSource] = (data.sourceCounts[randomSource] || 0) + 1;
+      data.deviceCounts[randomDevice] = (data.deviceCounts[randomDevice] || 0) + 1;
+
+      const newEntry = {
+        id: 'vis_sim_' + Date.now().toString(36),
+        timestamp: Date.now(),
+        country: randomCountry,
+        page: randomPage,
+        source: randomSource,
+        device: randomDevice,
+        status: randomStatus
+      };
+
+      data.visitorsList.unshift(newEntry);
+      if (data.visitorsList.length > 100) data.visitorsList = data.visitorsList.slice(0, 100);
+
+      localStorage.setItem('shoppaza_traffic_analytics_real', JSON.stringify(data));
+      renderTrafficAnalytics();
+      const meta = COUNTRY_METADATA[randomCountry] || { name: randomCountry, flag: '🌐' };
+      showToast(`Live visitor simulated from ${meta.flag} ${meta.name} (${randomPage})`, 'success');
+    }
+
+    function resetTrafficTelemetry() {
+      if (!confirm('Reset traffic telemetry to default baseline?')) return;
+      localStorage.removeItem('shoppaza_traffic_analytics_real');
+      renderTrafficAnalytics();
+      showToast('Traffic telemetry reset to baseline metrics.', 'success');
+    }
+
+    // ---------------- ANALYTICS ----------------
+    function renderCategoryAnalytics() {
+      const container = document.getElementById('analyticsCategoriesBar');
+      if (!container) return;
+      const counts = {};
+      allProducts.forEach(p => {
+        counts[p.category] = (counts[p.category] || 0) + 1;
+      });
+
+      const sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]).slice(0, 5);
+      container.innerHTML = sorted.map(([cat, count]) => {
+        const pct = Math.round((count / allProducts.length) * 100);
+        return `
+          <div>
+            <div class="flex justify-between text-xs mb-1">
+              <span class="text-slate-300">${cat}</span>
+              <span class="text-slate-400">${count} items (${pct}%)</span>
+            </div>
+            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+              <div class="bg-emerald-500 h-full" style="width: ${pct}%"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ---------------- GLOBAL SEARCH ----------------
+    function handleGlobalSearch(e) {
+      if (e.key === 'Enter') {
+        const q = e.target.value.trim();
+        if (q) {
+          switchTab('products');
+          document.getElementById('productFilterInput').value = q;
+          filterAdminProducts();
+        }
+      }
+    }
+    // ---------------- SECURITY SANITIZER ----------------
+    function escapeHtml(str) {
+      if (typeof str !== 'string') return str;
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+  </script>
+
+  <!-- ================= ADD STAFF MODAL ================= -->
+  <div id="addStaffModal" class="fixed inset-0 z-[90] bg-black/80 hidden backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-shopify-sidebar border border-shopify-border rounded-2xl max-w-md w-full p-6 relative shadow-2xl space-y-4 text-xs">
+      <div class="flex items-center justify-between pb-3 border-b border-shopify-border">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-user-shield text-emerald-400 text-base"></i>
+          <h3 class="font-bold text-white text-sm">Add Staff / Promoter Account</h3>
+        </div>
+        <button type="button" onclick="closeAddStaffModal()" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <form onsubmit="handleSaveNewStaff(event)" class="space-y-4">
+        <div>
+          <label class="block text-slate-400 mb-1">Staff Member Name / Identifier</label>
+          <input type="text" id="staffNewName" required placeholder="e.g. TikTok Chat Promoter, Telegram Desk" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-white">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Passcode (For Lock Screen Login)</label>
+          <div class="flex gap-2">
+            <input type="text" id="staffNewPasscode" required placeholder="e.g. STAFF-2026" class="flex-1 bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-white font-mono uppercase">
+            <button type="button" onclick="generateRandomStaffPasscode()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition" title="Generate Random Key">
+              <i class="fa-solid fa-shuffle"></i>
+            </button>
+          </div>
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Role / Permissions</label>
+          <div class="p-3 rounded-lg bg-slate-900/80 border border-slate-800 space-y-1">
+            <div class="font-bold text-emerald-400 flex items-center gap-1.5">
+              <i class="fa-solid fa-eye"></i> Read-Only Viewer (Dekhne ki had tak)
+            </div>
+            <div class="text-[11px] text-slate-400">
+              Can view catalog products, prices, and orders to guide customers. Cannot edit products, delete data, or view Stripe credentials.
+            </div>
+          </div>
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Channel / Notes</label>
+          <input type="text" id="staffNewNotes" placeholder="e.g. Handles inquiries from TikTok live and Telegram" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-white">
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="closeAddStaffModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg shadow">Create Staff Account</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>
+ + parseFloat(o.affiliate_commission).toFixed(2) : ''}"`,
         `"${o.fulfillment}"`,
         `"${o.courier || ''}"`,
         `"${o.tracking || ''}"`
@@ -2586,15 +3501,67 @@
 
     // ---------------- COUPONS & AFFILIATE MANAGEMENT ----------------
     function toggleCouponTypeFields(type) {
-      const wigBox = document.getElementById('wigAffiliateFields');
+      const notice = document.getElementById('categoryHelpNotice');
       const stdBox = document.getElementById('standardDiscountFields');
+      const affBox = document.getElementById('affiliateDetailsFields');
+      const commInput = document.getElementById('newCouponCommission');
+
       if (type === 'wig_tiered') {
-        if (wigBox) wigBox.classList.remove('hidden');
         if (stdBox) stdBox.classList.add('hidden');
+        if (affBox) affBox.classList.remove('hidden');
+        if (commInput) commInput.value = '5.00';
+        if (notice) {
+          notice.className = 'p-3.5 rounded-xl border border-indigo-500/30 bg-indigo-950/40 text-indigo-200 text-[11px] leading-relaxed space-y-1';
+          notice.innerHTML = '<div class="font-bold flex items-center gap-1.5 text-indigo-300"><i class="fa-solid fa-wand-magic-sparkles"></i> Wigs Collection Only (150 Items)</div>' +
+            '<div>• Customer pays <strong>$35.99</strong> on shorter wigs ($2–$3 factory cost).</div>' +
+            '<div>• Customer pays <strong>$41.99</strong> on 28"-32" wigs ($5 factory cost).</div>' +
+            '<div>• Retail price ($190–$230) is wiped out; customer only pays $35.99/$41.99.</div>';
+        }
+      } else if (type === 'jewelry_fixed') {
+        if (stdBox) stdBox.classList.add('hidden');
+        if (affBox) affBox.classList.remove('hidden');
+        if (commInput) commInput.value = '3.00';
+        if (notice) {
+          notice.className = 'p-3.5 rounded-xl border border-rose-500/30 bg-rose-950/40 text-rose-200 text-[11px] leading-relaxed space-y-1';
+          notice.innerHTML = '<div class="font-bold flex items-center gap-1.5 text-rose-300"><i class="fa-solid fa-gem"></i> Jewelry Collection Only (Necklaces & Bracelets)</div>' +
+            '<div>• Customer pays fixed <strong>$15.80</strong> per item (original price wiped).</div>' +
+            '<div>• Valid on Necklaces & Pendants (85 items) and Bracelets & Bangles (43 items).</div>';
+        }
+      } else if (type === 'watch_fixed') {
+        if (stdBox) stdBox.classList.add('hidden');
+        if (affBox) affBox.classList.remove('hidden');
+        if (commInput) commInput.value = '4.00';
+        if (notice) {
+          notice.className = 'p-3.5 rounded-xl border border-amber-500/30 bg-amber-950/40 text-amber-200 text-[11px] leading-relaxed space-y-1';
+          notice.innerHTML = '<div class="font-bold flex items-center gap-1.5 text-amber-300"><i class="fa-solid fa-clock"></i> Luxury Watches Only (15 Items)</div>' +
+            '<div>• Customer pays fixed <strong>$22.00</strong> per watch (original price wiped).</div>' +
+            '<div>• Valid on all 15 Luxury Chronograph & Watch products.</div>';
+        }
       } else {
-        if (wigBox) wigBox.classList.add('hidden');
         if (stdBox) stdBox.classList.remove('hidden');
+        if (affBox) affBox.classList.remove('hidden');
+        if (notice) {
+          notice.className = 'p-3.5 rounded-xl border border-emerald-500/30 bg-emerald-950/40 text-emerald-200 text-[11px] leading-relaxed';
+          notice.innerHTML = '<div>• Storewide discount applied to all products in cart.</div>';
+        }
       }
+    }
+
+    function openCreateCouponModal(presetType) {
+      const modal = document.getElementById('createCouponModal');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      const typeSelect = document.getElementById('newCouponType');
+      if (typeSelect && presetType) {
+        typeSelect.value = presetType;
+        toggleCouponTypeFields(presetType);
+      } else {
+        toggleCouponTypeFields(typeSelect ? typeSelect.value : 'wig_tiered');
+      }
+    }
+
+    function closeCreateCouponModal() {
+      document.getElementById('createCouponModal').classList.add('hidden');
     }
 
     async function copyCouponCode(code) {
@@ -2604,6 +3571,15 @@
       } catch(e) {
         showToast('Promo Code: ' + code, 'info');
       }
+    }
+
+    async function deleteAdminCoupon(codeToDelete) {
+      if (!confirm('Are you sure you want to delete promo code ' + codeToDelete + '?')) return;
+      let stored = JSON.parse(localStorage.getItem('shoppaza_coupons') || '[]');
+      stored = stored.filter(c => c.code.toUpperCase() !== codeToDelete.toUpperCase());
+      localStorage.setItem('shoppaza_coupons', JSON.stringify(stored));
+      renderDiscounts();
+      showToast('Coupon ' + codeToDelete + ' removed from store.', 'info');
     }
 
     async function renderDiscounts() {
@@ -2627,45 +3603,57 @@
       const allCoupons = Array.from(map.values());
 
       container.innerHTML = allCoupons.map((d) => {
-        const isWigTiered = (d.type === 'wig_tiered');
-        const badgeColor = isWigTiered ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
-        const badgeText = isWigTiered ? '🌟 WIG AFFILIATE ($35.99 / $41.99)' : (d.discount || (d.value ? d.value + '% Off' : 'Active Promo'));
-        const workerInfo = d.worker ? '<div class="text-xs text-indigo-300 font-semibold"><i class="fa-solid fa-user-tag mr-1"></i> Worker: ' + escapeHtml(d.worker) + (d.commission_usd ? ' • Commission: $' + parseFloat(d.commission_usd).toFixed(2) : '') + '</div>' : '';
+        let badgeColor = 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+        let badgeText = d.discount || (d.value ? d.value + '% Off' : 'Active Promo');
+        let icon = '<i class="fa-solid fa-ticket"></i>';
+
+        if (d.type === 'wig_tiered') {
+          badgeColor = 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30';
+          badgeText = '🌟 WIGS ($35.99 / $41.99)';
+          icon = '<i class="fa-solid fa-wand-magic-sparkles"></i>';
+        } else if (d.type === 'jewelry_fixed') {
+          badgeColor = 'bg-rose-500/20 text-rose-300 border border-rose-500/30';
+          badgeText = '💎 JEWELRY ($15.80 FLAT)';
+          icon = '<i class="fa-solid fa-gem"></i>';
+        } else if (d.type === 'watch_fixed') {
+          badgeColor = 'bg-amber-500/20 text-amber-300 border border-amber-500/30';
+          badgeText = '⌚ WATCHES ($22.00 FLAT)';
+          icon = '<i class="fa-solid fa-clock"></i>';
+        }
+
+        const workerInfo = d.worker ? '<div class="text-xs text-slate-300 font-semibold flex items-center gap-1.5"><i class="fa-solid fa-user-tag text-emerald-400"></i> Worker: ' + escapeHtml(d.worker) + (d.commission_usd ? ' • <span class="text-amber-400 font-bold">Commission: $' + parseFloat(d.commission_usd).toFixed(2) + '</span>' : '') + '</div>' : '';
 
         return '<div class="p-5 rounded-2xl bg-shopify-sidebar border border-shopify-border space-y-3 relative group hover:border-slate-700 transition">' +
           '<div class="flex justify-between items-center">' +
-            '<span class="px-2.5 py-0.5 rounded-full font-bold text-[10px] ' + badgeColor + ' font-mono">' + badgeText + '</span>' +
+            '<span class="px-2.5 py-0.5 rounded-full font-bold text-[10px] ' + badgeColor + ' font-mono flex items-center gap-1">' + icon + ' ' + badgeText + '</span>' +
             '<span class="text-xs text-slate-400">' + (d.uses || '0 Used') + '</span>' +
           '</div>' +
           '<div class="flex items-center justify-between">' +
             '<div class="text-2xl font-mono font-extrabold text-white tracking-wider">' + d.code + '</div>' +
-            '<button onclick="copyCouponCode(\'' + d.code + '\')" class="text-xs px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 transition flex items-center gap-1" title="Copy Code">' +
-              '<i class="fa-regular fa-copy"></i> Copy' +
-            '</button>' +
+            '<div class="flex items-center gap-1">' +
+              '<button onclick="copyCouponCode(\'' + d.code + '\')" class="text-xs px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 transition flex items-center gap-1" title="Copy Code">' +
+                '<i class="fa-regular fa-copy"></i> Copy' +
+              '</button>' +
+              '<button onclick="deleteAdminCoupon(\'' + d.code + '\')" class="text-xs px-2 py-1 bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 rounded-lg border border-rose-800/40 transition" title="Delete Coupon">' +
+                '<i class="fa-regular fa-trash-can"></i>' +
+              '</button>' +
+            '</div>' +
           '</div>' +
           workerInfo +
-          '<div class="text-xs text-slate-400 leading-relaxed">' + (d.desc || (isWigTiered ? 'Headband Wigs promo: $35.99 short / $41.99 long' : d.discount + ' storewide')) + '</div>' +
+          '<div class="text-xs text-slate-400 leading-relaxed">' + (d.desc || 'Category-specific affiliate promo code') + '</div>' +
         '</div>';
       }).join('');
-    }
-
-    function openCreateCouponModal() {
-      document.getElementById('createCouponModal').classList.remove('hidden');
-    }
-
-    function closeCreateCouponModal() {
-      document.getElementById('createCouponModal').classList.add('hidden');
     }
 
     function handleSaveNewCoupon(e) {
       e.preventDefault();
       const code = document.getElementById('newCouponCode').value.trim().toUpperCase();
       const type = document.getElementById('newCouponType').value;
+      const worker = document.getElementById('newCouponWorker')?.value.trim() || 'Affiliate Partner';
+      const commission = parseFloat(document.getElementById('newCouponCommission')?.value) || 5.00;
       
       let newC = {};
       if (type === 'wig_tiered') {
-        const worker = document.getElementById('newCouponWorker')?.value.trim() || 'Affiliate Partner';
-        const commission = parseFloat(document.getElementById('newCouponCommission')?.value) || 5.00;
         newC = {
           code: code,
           type: 'wig_tiered',
@@ -2673,7 +3661,29 @@
           tierB_usd: 41.99,
           worker: worker,
           commission_usd: commission,
-          desc: 'Special VIP Affiliate rate for ' + worker + ' ($35.99 / $41.99). Commission: $' + commission.toFixed(2),
+          desc: 'Wigs Only: $35.99 short / $41.99 long. Worker: ' + worker + ' (Commission: $' + commission.toFixed(2) + ')',
+          status: 'Active',
+          uses: '0 Used'
+        };
+      } else if (type === 'jewelry_fixed') {
+        newC = {
+          code: code,
+          type: 'jewelry_fixed',
+          target_usd: 15.80,
+          worker: worker,
+          commission_usd: commission,
+          desc: 'Jewelry Only (Necklaces & Bracelets): $15.80 flat. Worker: ' + worker + ' (Commission: $' + commission.toFixed(2) + ')',
+          status: 'Active',
+          uses: '0 Used'
+        };
+      } else if (type === 'watch_fixed') {
+        newC = {
+          code: code,
+          type: 'watch_fixed',
+          target_usd: 22.00,
+          worker: worker,
+          commission_usd: commission,
+          desc: 'Luxury Watches Only (15 products): $22.00 flat. Worker: ' + worker + ' (Commission: $' + commission.toFixed(2) + ')',
           status: 'Active',
           uses: '0 Used'
         };
@@ -2685,7 +3695,8 @@
           type: type,
           value: parseFloat(val) || 10,
           discount: discount,
-          worker: 'Storewide',
+          worker: worker || 'Storewide',
+          commission_usd: commission,
           desc: discount + ' storewide checkout discount',
           status: 'Active',
           uses: '0 Used'
@@ -2693,13 +3704,14 @@
       }
 
       const stored = JSON.parse(localStorage.getItem('shoppaza_coupons') || '[]');
-      stored.unshift(newC);
-      localStorage.setItem('shoppaza_coupons', JSON.stringify(stored));
+      const filtered = stored.filter(c => c.code.toUpperCase() !== code);
+      filtered.unshift(newC);
+      localStorage.setItem('shoppaza_coupons', JSON.stringify(filtered));
 
       closeCreateCouponModal();
       e.target.reset();
       renderDiscounts();
-      showToast('Affiliate Coupon ' + code + ' activated on Shoppaza!', 'success');
+      showToast('Affiliate Voucher ' + code + ' activated on Shoppaza!', 'success');
     }
     // ---------------- ADMIN PROFILE & PASSCODE CHANGE ----------------
     function loadAdminProfile() {

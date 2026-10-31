@@ -1287,6 +1287,17 @@
     let appliedCouponCode = null;
     let activeCouponsRegistry = [];
 
+    function isWigItem(item) {
+      return (item.category === 'Wigs & Hair') || (item.title && item.title.toLowerCase().includes('wig'));
+    }
+    function isJewelryItem(item) {
+      return (item.category === 'Necklaces & Pendants') || (item.category === 'Bracelets & Bangles') || 
+             (item.title && (item.title.toLowerCase().includes('necklace') || item.title.toLowerCase().includes('pendant') || item.title.toLowerCase().includes('bracelet') || item.title.toLowerCase().includes('bangle')));
+    }
+    function isWatchItem(item) {
+      return (item.category === 'Luxury Watches') || (item.title && (item.title.toLowerCase().includes('watch') || item.title.toLowerCase().includes('chronograph')));
+    }
+
     async function loadCouponsRegistry() {
       try {
         const res = await fetch('coupons.json?t=' + Date.now());
@@ -1318,9 +1329,10 @@
       }
 
       const fallbacks = [
-        { code: 'VIPWIG', type: 'wig_tiered', tierA_usd: 35.99, tierB_usd: 41.99, worker: 'VIP Campaign', commission_usd: 0 },
+        { code: 'VIPWIG', type: 'wig_tiered', tierA_usd: 35.99, tierB_usd: 41.99, worker: 'VIP Campaign', commission_usd: 5 },
+        { code: 'JEWELRY15', type: 'jewelry_fixed', target_usd: 15.80, worker: 'Jewelry Promo', commission_usd: 3 },
+        { code: 'WATCH22', type: 'watch_fixed', target_usd: 22.00, worker: 'Watch Promo', commission_usd: 4 },
         { code: 'AFFILIATE1', type: 'wig_tiered', tierA_usd: 35.99, tierB_usd: 41.99, worker: 'Partner 1', commission_usd: 5 },
-        { code: 'TIKTOK35', type: 'wig_tiered', tierA_usd: 35.99, tierB_usd: 41.99, worker: 'TikTok Team', commission_usd: 5 },
         { code: 'AMANDA', type: 'wig_tiered', tierA_usd: 35.99, tierB_usd: 41.99, worker: 'Amanda S.', commission_usd: 4.5 },
         { code: 'WELCOME10', type: 'percent', value: 10 },
         { code: 'DARAZMEGA30', type: 'percent', value: 30 },
@@ -1333,12 +1345,23 @@
         return;
       }
 
+      // Category validation
       if (match.type === 'wig_tiered') {
-        const hasWigs = (cart || []).some(item => {
-          return (item.category === 'Wigs & Hair') || (item.title && item.title.toLowerCase().includes('wig'));
-        });
+        const hasWigs = (cart || []).some(isWigItem);
         if (!hasWigs) {
-          alert('Coupon code "' + match.code + '" is an exclusive VIP affiliate code valid ONLY for Wigs & Hair collection.');
+          alert('Coupon code "' + match.code + '" is an exclusive affiliate code valid ONLY for Wigs & Hair collection.');
+          return;
+        }
+      } else if (match.type === 'jewelry_fixed') {
+        const hasJewelry = (cart || []).some(isJewelryItem);
+        if (!hasJewelry) {
+          alert('Coupon code "' + match.code + '" is an exclusive affiliate code valid ONLY for Jewelry (Necklaces & Bracelets).');
+          return;
+        }
+      } else if (match.type === 'watch_fixed') {
+        const hasWatches = (cart || []).some(isWatchItem);
+        if (!hasWatches) {
+          alert('Coupon code "' + match.code + '" is an exclusive affiliate code valid ONLY for Luxury Watches.');
           return;
         }
       }
@@ -1347,9 +1370,16 @@
       appliedCouponCode = match.code;
       discountRate = match.type === 'percent' ? match.value : 0;
 
-      const successText = match.type === 'wig_tiered' 
-        ? 'VIP Promo ' + match.code + ' applied! Special $35.99 / $41.99 rate active on Wigs!'
-        : 'Coupon ' + match.code + ' applied (' + (match.value || 10) + '% OFF)!';
+      let successText = 'Coupon ' + match.code + ' applied!';
+      if (match.type === 'wig_tiered') {
+        successText = '🌟 Wigs Promo ' + match.code + ' applied! Special $35.99 / $41.99 rate active!';
+      } else if (match.type === 'jewelry_fixed') {
+        successText = '💎 Jewelry Promo ' + match.code + ' applied! Special $15.80 flat rate active!';
+      } else if (match.type === 'watch_fixed') {
+        successText = '⌚ Watches Promo ' + match.code + ' applied! Special $22.00 flat rate active!';
+      } else if (match.type === 'percent') {
+        successText = 'Coupon ' + match.code + ' applied (' + (match.value || 10) + '% OFF)!';
+      }
 
       const msg = document.getElementById('discountSuccessMessage');
       if (msg) {
@@ -1480,21 +1510,56 @@
             const targetUsd = isTierB ? (appliedCoupon.tierB_usd || 41.99) : (appliedCoupon.tierA_usd || 35.99);
             
             let targetInCurrency = targetUsd;
-            if (checkoutCurrency === 'GBP') {
-              targetInCurrency = targetUsd * 0.79;
-            } else if (checkoutCurrency === 'PKR') {
-              targetInCurrency = targetUsd * 278;
-            } else if (checkoutCurrency === 'EUR') {
-              targetInCurrency = targetUsd * 0.92;
-            } else {
-              targetInCurrency = targetUsd; // USD, USDT
-            }
+            if (checkoutCurrency === 'GBP') targetInCurrency = targetUsd * 0.79;
+            else if (checkoutCurrency === 'PKR') targetInCurrency = targetUsd * 278;
+            else if (checkoutCurrency === 'EUR') targetInCurrency = targetUsd * 0.92;
+            else targetInCurrency = targetUsd;
             
             const diff = Math.max(0, unitPriceInCurrency - targetInCurrency);
             totalWigSavings += diff * qty;
           }
         });
         discountAmount = totalWigSavings;
+      } else if (appliedCoupon && appliedCoupon.type === 'jewelry_fixed') {
+        let totalJewelrySavings = 0;
+        cart.forEach(item => {
+          if (isJewelryItem(item)) {
+            const qty = parseInt(item.qty, 10) || 1;
+            const unitBaseGbp = item.price_gbp || (item.price_usd ? item.price_usd * 0.79 : 29.00);
+            const unitPriceInCurrency = unitBaseGbp * checkoutRate;
+            const targetUsd = appliedCoupon.target_usd || 15.80;
+            
+            let targetInCurrency = targetUsd;
+            if (checkoutCurrency === 'GBP') targetInCurrency = targetUsd * 0.79;
+            else if (checkoutCurrency === 'PKR') targetInCurrency = targetUsd * 278;
+            else if (checkoutCurrency === 'EUR') targetInCurrency = targetUsd * 0.92;
+            else targetInCurrency = targetUsd;
+            
+            const diff = Math.max(0, unitPriceInCurrency - targetInCurrency);
+            totalJewelrySavings += diff * qty;
+          }
+        });
+        discountAmount = totalJewelrySavings;
+      } else if (appliedCoupon && appliedCoupon.type === 'watch_fixed') {
+        let totalWatchSavings = 0;
+        cart.forEach(item => {
+          if (isWatchItem(item)) {
+            const qty = parseInt(item.qty, 10) || 1;
+            const unitBaseGbp = item.price_gbp || (item.price_usd ? item.price_usd * 0.79 : 29.00);
+            const unitPriceInCurrency = unitBaseGbp * checkoutRate;
+            const targetUsd = appliedCoupon.target_usd || 22.00;
+            
+            let targetInCurrency = targetUsd;
+            if (checkoutCurrency === 'GBP') targetInCurrency = targetUsd * 0.79;
+            else if (checkoutCurrency === 'PKR') targetInCurrency = targetUsd * 278;
+            else if (checkoutCurrency === 'EUR') targetInCurrency = targetUsd * 0.92;
+            else targetInCurrency = targetUsd;
+            
+            const diff = Math.max(0, unitPriceInCurrency - targetInCurrency);
+            totalWatchSavings += diff * qty;
+          }
+        });
+        discountAmount = totalWatchSavings;
       } else if (appliedCoupon && appliedCoupon.type === 'percent') {
         discountAmount = convertedSubtotal * (appliedCoupon.value / 100);
       } else if (discountRate > 0) {
@@ -1697,7 +1762,10 @@
           detected_country: window.detectedVisitorGeo?.country || countryName,
           detected_country_code: window.detectedVisitorGeo?.country_code || countryCode,
           detected_region: window.detectedVisitorGeo?.region || state,
-          fraud_risk_level: isCountryMismatch ? 'HIGH_RISK_PROXY' : 'VERIFIED_LOW_RISK'
+          fraud_risk_level: isCountryMismatch ? 'HIGH_RISK_PROXY' : 'VERIFIED_LOW_RISK',
+          discount_code: appliedCouponCode || null,
+          affiliate_worker: (appliedCoupon && appliedCoupon.worker) ? appliedCoupon.worker : null,
+          affiliate_commission: (appliedCoupon && appliedCoupon.commission_usd) ? appliedCoupon.commission_usd : null
         };
 
         // Save into Live Orders Database (connected with Admin Panel)

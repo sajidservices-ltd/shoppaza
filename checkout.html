@@ -288,33 +288,20 @@
           <div class="space-y-3">
             <h2 class="text-base font-bold text-slate-900 tracking-tight">Shipping method</h2>
 
-            <div class="rounded-lg border border-slate-300 divide-y divide-slate-200 overflow-hidden text-xs">
-              
-              <!-- Standard Shipping (Default) -->
-              <label class="p-3.5 flex items-center justify-between cursor-pointer bg-slate-50/60 hover:bg-slate-50 transition" id="labelShipStandard">
+            <div class="rounded-lg border border-slate-300 overflow-hidden text-xs">
+              <!-- Single Clean Shipping Option -->
+              <div class="p-3.5 flex items-center justify-between bg-slate-50/60" id="labelShipStandard">
                 <div class="flex items-center gap-3">
-                  <input type="radio" name="shippingMethod" value="standard" checked onchange="handleShippingMethodChange('standard')" class="w-4 h-4 text-shopify-link focus:ring-0 border-slate-300">
+                  <input type="radio" name="shippingMethod" value="standard" checked class="w-4 h-4 text-shopify-link focus:ring-0 border-slate-300 pointer-events-none">
                   <div>
-                    <div class="font-bold text-slate-900" id="shipStandardTitle">Standard Insured Tracked Delivery</div>
+                    <div class="font-bold text-slate-900 text-xs sm:text-sm" id="shipStandardTitle">Standard Insured Tracked Delivery</div>
                     <div class="text-[11px] text-slate-500" id="shipStandardTime">6 to 12 business days • End-to-End Tracking</div>
                   </div>
                 </div>
                 <div class="font-bold text-emerald-700 uppercase" id="shipStandardPrice">FREE</div>
-              </label>
-
-              <!-- Express Priority Shipping -->
-              <label class="p-3.5 flex items-center justify-between cursor-pointer hover:bg-slate-50 transition" id="labelShipExpress">
-                <div class="flex items-center gap-3">
-                  <input type="radio" name="shippingMethod" value="express" onchange="handleShippingMethodChange('express')" class="w-4 h-4 text-shopify-link focus:ring-0 border-slate-300">
-                  <div>
-                    <div class="font-bold text-slate-900" id="shipExpressTitle">VIP Priority Line (Fast-Tracked & Insured)</div>
-                    <div class="text-[11px] text-slate-500" id="shipExpressTime">4 to 8 business days • Priority Dispatch Queue</div>
-                  </div>
-                </div>
-                <div class="font-bold text-slate-900 font-mono" id="shipExpressPrice">£3.99</div>
-              </label>
-
+              </div>
             </div>
+            <div id="labelShipExpress" class="hidden" style="display:none !important;"></div>
           </div>
 
           <!-- ================= 5. PAYMENT SECTION ================= -->
@@ -1159,19 +1146,12 @@
       checkoutRate = cfg.rate;
       try { localStorage.setItem('shoppaza_currency', checkoutCurrency); } catch(e) {}
 
-      // Update Shipping text & prices
-      document.getElementById('shipStandardTitle').innerText = cfg.standardShipTitle;
-      if (document.getElementById('shipStandardTime')) {
-        document.getElementById('shipStandardTime').innerText = cfg.standardShipTime;
-      }
-      document.getElementById('shipStandardPrice').innerText = cfg.standardPrice === 0 ? 'FREE' : `${cfg.symbol}${cfg.standardPrice.toFixed(2)}`;
+      // Update Shipping text & prices (Single Clean Shipping Line)
+      const t = document.getElementById('shipStandardTitle');
+      if (t) t.innerText = 'Standard Insured Tracked Delivery';
+      const tm = document.getElementById('shipStandardTime');
+      if (tm) tm.innerText = '6 to 12 business days • End-to-End Tracking';
       
-      document.getElementById('shipExpressTitle').innerText = cfg.expressShipTitle;
-      if (document.getElementById('shipExpressTime')) {
-        document.getElementById('shipExpressTime').innerText = cfg.expressShipTime;
-      }
-      document.getElementById('shipExpressPrice').innerText = `${cfg.symbol}${cfg.expressPrice.toFixed(cfg.currency === 'PKR' ? 0 : 2)}`;
-
       // Afterpay availability (UK, US, AU)
       const afterpayEl = document.getElementById('containerAfterpayOption');
       const expressAfterpay = document.getElementById('btnExpressAfterpay');
@@ -1499,8 +1479,7 @@
       let promoShippingFeeUsd = 0;
       let promoItemsDiscountGbp = 0;
 
-      const destCode = document.getElementById('destCountry')?.value || 'GB';
-      const cfg = countryCurrencyMap[destCode] || countryCurrencyMap['GB'];
+      selectedShippingMethod = 'standard';
 
       if (appliedCoupon && (appliedCoupon.type === 'free_shipping_promo' || appliedCoupon.code === 'AG100' || appliedCoupon.type === 'wig_tiered' || appliedCoupon.type === 'jewelry_fixed' || appliedCoupon.type === 'watch_fixed')) {
         isPromoFreeShipping = true;
@@ -1536,10 +1515,9 @@
         discountAmount = promoItemsDiscountGbp * checkoutRate;
 
         // Shipping fee is set to the calculated per-item shipping
-        const expressExtra = (selectedShippingMethod === 'express' ? cfg.expressPrice : 0);
-        shippingCost = convertedPromoShip + expressExtra;
+        shippingCost = convertedPromoShip;
 
-        // Update shipping selector UI on the left
+        // Update single shipping option UI on the left
         const stdPriceEl = document.getElementById('shipStandardPrice');
         if (stdPriceEl) {
           stdPriceEl.innerText = `${checkoutCurrencySymbol}${convertedPromoShip.toFixed(checkoutCurrency === 'PKR' ? 0 : 2)}`;
@@ -1547,35 +1525,42 @@
         }
         const stdTitleEl = document.getElementById('shipStandardTitle');
         if (stdTitleEl) {
-          stdTitleEl.innerText = 'Insured Tracked Delivery (Promo Shipping Rate)';
+          stdTitleEl.innerText = 'Standard Insured Tracked Delivery';
         }
         const stdTimeEl = document.getElementById('shipStandardTime');
         if (stdTimeEl) {
-          stdTimeEl.innerText = '4 to 8 business days • End-to-End Tracking';
+          stdTimeEl.innerText = '6 to 12 business days • End-to-End Tracking';
         }
       } else {
-        // Standard normal store checkout
+        // Standard normal store checkout (No Promo Code) -> 100% FREE Shipping
         if (appliedCoupon && appliedCoupon.type === 'percent') {
           discountAmount = convertedSubtotal * (appliedCoupon.value / 100);
         } else if (discountRate > 0) {
           discountAmount = convertedSubtotal * (discountRate / 100);
         }
 
-        shippingCost = (selectedShippingMethod === 'express' ? cfg.expressPrice : cfg.standardPrice);
+        shippingCost = 0.0;
 
         const stdPriceEl = document.getElementById('shipStandardPrice');
         if (stdPriceEl) {
-          stdPriceEl.innerText = cfg.standardPrice === 0 ? 'FREE' : `${cfg.symbol}${cfg.standardPrice.toFixed(2)}`;
+          stdPriceEl.innerText = 'FREE';
           stdPriceEl.className = 'font-bold text-emerald-700 uppercase';
         }
         const stdTitleEl = document.getElementById('shipStandardTitle');
         if (stdTitleEl) {
-          stdTitleEl.innerText = cfg.standardShipTitle || 'Standard Insured Tracked Delivery';
+          stdTitleEl.innerText = 'Standard Insured Tracked Delivery';
         }
         const stdTimeEl = document.getElementById('shipStandardTime');
         if (stdTimeEl) {
-          stdTimeEl.innerText = cfg.standardShipTime || '6 to 12 business days • End-to-End Tracking';
+          stdTimeEl.innerText = '6 to 12 business days • End-to-End Tracking';
         }
+      }
+
+      // Hide express shipping option completely
+      const expEl = document.getElementById('labelShipExpress');
+      if (expEl) {
+        expEl.style.display = 'none';
+        expEl.classList.add('hidden');
       }
 
       const convertedSubtotalAfterDiscount = Math.max(0, convertedSubtotal - discountAmount);

@@ -1,5 +1,5 @@
-// Shoppaza Progressive Web App Service Worker (PWA v3.0 - High Reliability)
-const CACHE_NAME = 'shoppaza-core-v3.0';
+// Shoppaza Progressive Web App Service Worker (PWA v3.1 - High Speed Performance)
+const CACHE_NAME = 'shoppaza-core-v3.1';
 const STATIC_ASSETS = [
   '/',
   '/product',
@@ -16,7 +16,7 @@ const STATIC_ASSETS = [
   '/logo-white.svg',
   '/icon-192.png',
   '/icon-512.png',
-  '/checkout.js'
+  '/categories-data.json'
 ];
 
 // Install: Cache critical fast shell assets (lightweight, zero timeouts)
@@ -35,13 +35,13 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Activate: Instant cache takeover and purge old caches
+// Activate: Instant cache takeover and purge ALL outdated caches immediately
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
       return Promise.all(
         keys.filter((key) => key !== CACHE_NAME).map((key) => {
-          console.log('[SW] Purging outdated cache:', key);
+          console.log('[SW] Auto-Purging outdated cache:', key);
           return caches.delete(key);
         })
       );
@@ -49,7 +49,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch Strategy: Network-First with Cache Fallback for HTML, Stale-While-Revalidate for Static Assets
+// Fetch Strategy: Stale-While-Revalidate for sub-millisecond instant loads
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   const url = new URL(req.url);
@@ -59,7 +59,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 2. Skip cross-origin non-HTTP schemes (e.g. chrome-extension://)
+  // 2. Skip cross-origin non-HTTP schemes
   if (!url.protocol.startsWith('http')) {
     return;
   }
@@ -85,27 +85,48 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 4. Products Catalog: Network-First with Stale-Fallback (Normalized cache key)
+  // 4. Products Catalog: Fast Stale-While-Revalidate (Instant local response in 0ms + background refresh)
   if (url.pathname.endsWith('products.json')) {
     event.respondWith(
-      fetch(req)
-        .then((response) => {
-          if (response && response.status === 200) {
-            const clone = response.clone();
-            // Cache under clean /products.json without cache-busting query params
-            caches.open(CACHE_NAME).then((cache) => cache.put('/products.json', clone));
-          }
-          return response;
-        })
-        .catch(async () => {
-          const cached = await caches.match('/products.json');
-          return cached || Response.error();
-        })
+      caches.match('/products.json').then((cached) => {
+        const fetchPromise = fetch(req)
+          .then((networkResponse) => {
+            if (networkResponse && networkResponse.status === 200) {
+              const clone = networkResponse.clone();
+              caches.open(CACHE_NAME).then((cache) => cache.put('/products.json', clone));
+            }
+            return networkResponse;
+          })
+          .catch(() => cached);
+
+        // Return cached instantly if available; otherwise wait for network
+        return cached || fetchPromise;
+      })
     );
     return;
   }
 
-  // 5. Stale-While-Revalidate for other static assets
+  // 5. Categories Data: Fast Stale-While-Revalidate
+  if (url.pathname.endsWith('categories-data.json')) {
+    event.respondWith(
+      caches.match('/categories-data.json').then((cached) => {
+        const fetchPromise = fetch(req)
+          .then((networkResponse) => {
+            if (networkResponse && networkResponse.status === 200) {
+              const clone = networkResponse.clone();
+              caches.open(CACHE_NAME).then((cache) => cache.put('/categories-data.json', clone));
+            }
+            return networkResponse;
+          })
+          .catch(() => cached);
+
+        return cached || fetchPromise;
+      })
+    );
+    return;
+  }
+
+  // 6. Stale-While-Revalidate for other static assets
   event.respondWith(
     caches.match(req).then((cached) => {
       const fetchPromise = fetch(req)

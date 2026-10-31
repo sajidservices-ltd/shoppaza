@@ -1867,7 +1867,7 @@
           grid.innerHTML = catData.map(c => `
             <div onclick="filterCategory('${c.name}')" class="bg-white rounded-lg border border-slate-200 hover:border-daraz-orange p-3 flex flex-col items-center justify-between hover:shadow-md transition cursor-pointer group">
               <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden bg-slate-50 mb-2 border border-slate-100">
-                <img src="${c.image}" alt="${c.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.src='favicon.svg'">
+                <img src="${c.image}" alt="${c.name}" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.src='favicon.svg'">
               </div>
               <div class="text-[11px] font-bold text-slate-800 group-hover:text-daraz-orange transition truncate max-w-full">${c.name}</div>
               <div class="text-[10px] text-slate-400 font-medium">${c.count}</div>
@@ -2040,7 +2040,7 @@
       container.innerHTML = flashItems.map(p => `
         <div onclick="openQuickView(${p.id})" class="bg-white rounded border border-slate-200 overflow-hidden hover:shadow-md transition cursor-pointer group flex flex-col justify-between">
           <div class="aspect-square relative overflow-hidden bg-slate-50">
-            <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.src='favicon.svg'">
+            <img src="${p.image}" alt="${p.title}" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.src='favicon.svg'">
             <span class="absolute top-1.5 left-1.5 bg-daraz-orange text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow">-${p.discount}%</span>
           </div>
           <div class="p-2 space-y-1">
@@ -2228,7 +2228,7 @@
         <div onclick="openQuickView(${p.id})" class="bg-white rounded border border-slate-200 hover:border-daraz-orange hover:shadow-md transition duration-150 flex flex-col justify-between cursor-pointer group">
           <!-- 1:1 Image -->
           <div class="aspect-square relative overflow-hidden bg-slate-50">
-            <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-200" onerror="this.src='favicon.svg'">
+            <img src="${p.image}" alt="${p.title}" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition duration-200" onerror="this.src='favicon.svg'">
             <span class="absolute top-1.5 left-1.5 bg-daraz-orange text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow">-${p.discount || 30}%</span>
           </div>
 

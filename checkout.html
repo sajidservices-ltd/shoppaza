@@ -291,8 +291,8 @@
                 <div class="flex items-center gap-3">
                   <input type="radio" name="shippingMethod" value="standard" checked onchange="handleShippingMethodChange('standard')" class="w-4 h-4 text-shopify-link focus:ring-0 border-slate-300">
                   <div>
-                    <div class="font-bold text-slate-900" id="shipStandardTitle">Royal Mail Tracked 24 (Next-Day Dispatched)</div>
-                    <div class="text-[11px] text-slate-500" id="shipStandardTime">1 to 2 business days</div>
+                    <div class="font-bold text-slate-900" id="shipStandardTitle">Standard Insured Tracked Delivery</div>
+                    <div class="text-[11px] text-slate-500" id="shipStandardTime">6 to 12 business days • End-to-End Tracking</div>
                   </div>
                 </div>
                 <div class="font-bold text-emerald-700 uppercase" id="shipStandardPrice">FREE</div>
@@ -303,11 +303,11 @@
                 <div class="flex items-center gap-3">
                   <input type="radio" name="shippingMethod" value="express" onchange="handleShippingMethodChange('express')" class="w-4 h-4 text-shopify-link focus:ring-0 border-slate-300">
                   <div>
-                    <div class="font-bold text-slate-900" id="shipExpressTitle">Royal Mail Special Delivery Guaranteed by 1pm</div>
-                    <div class="text-[11px] text-slate-500" id="shipExpressTime">Guaranteed Next Day with Signature</div>
+                    <div class="font-bold text-slate-900" id="shipExpressTitle">VIP Priority Line (Fast-Tracked & Insured)</div>
+                    <div class="text-[11px] text-slate-500" id="shipExpressTime">4 to 8 business days • Priority Dispatch Queue</div>
                   </div>
                 </div>
-                <div class="font-bold text-slate-900 font-mono" id="shipExpressPrice">£4.99</div>
+                <div class="font-bold text-slate-900 font-mono" id="shipExpressPrice">£3.99</div>
               </label>
 
             </div>
@@ -580,7 +580,7 @@
           <div class="flex justify-between items-center">
             <span class="flex items-center gap-1.5">
               <span>Shipping</span>
-              <i class="fa-regular fa-circle-question text-slate-400 text-[10px]" title="Tracked delivery direct from Edinburgh fulfillment center"></i>
+              <i class="fa-regular fa-circle-question text-slate-400 text-[10px]" title="Insured tracked delivery direct to your doorstep"></i>
             </span>
             <span class="font-bold text-emerald-700 uppercase" id="desktopSummaryShipping">Free</span>
           </div>
@@ -605,7 +605,7 @@
           </div>
           <div class="space-y-1.5 text-[11px] text-slate-500">
             <div class="flex items-center gap-2"><i class="fa-solid fa-rotate-left text-daraz-orange text-xs"></i> 30-Day Hassle-Free Returns & Full Refund</div>
-            <div class="flex items-center gap-2"><i class="fa-solid fa-truck-fast text-sky-600 text-xs"></i> Dispatched with Royal Mail Tracked Delivery</div>
+            <div class="flex items-center gap-2"><i class="fa-solid fa-truck-fast text-sky-600 text-xs"></i> Fully Insured with End-to-End Parcel Tracking</div>
             <div class="flex items-center gap-2"><i class="fa-solid fa-lock text-emerald-600 text-xs"></i> PCI-DSS Level 1 Encrypted 256-Bit SSL Checkout</div>
           </div>
         </div>
@@ -644,15 +644,15 @@
 
     // Currency Conversion Table relative to GBP
     const countryCurrencyMap = {
-      GB: { currency: 'GBP', symbol: '£', rate: 1.0, standardShipTitle: 'Royal Mail Tracked 24 (Next-Day Dispatched)', standardPrice: 0.0, expressShipTitle: 'Royal Mail Special Delivery by 1pm', expressPrice: 4.99 },
-      US: { currency: 'USD', symbol: '$', rate: 1.27, standardShipTitle: 'USPS Priority Air Tracked (Direct from UK)', standardPrice: 0.0, expressShipTitle: 'DHL Express Worldwide (2-3 Business Days)', expressPrice: 15.00 },
-      AU: { currency: 'AUD', symbol: 'A$', rate: 1.95, standardShipTitle: 'Australia Post International Express Tracked', standardPrice: 0.0, expressShipTitle: 'DHL Express Worldwide Tracked', expressPrice: 22.00 },
-      DE: { currency: 'EUR', symbol: '€', rate: 1.17, standardShipTitle: 'DPD Europe Tracked Courier', standardPrice: 0.0, expressShipTitle: 'DHL Express Europe Overnight', expressPrice: 9.99 },
-      FR: { currency: 'EUR', symbol: '€', rate: 1.17, standardShipTitle: 'La Poste Colissimo International Tracked', standardPrice: 0.0, expressShipTitle: 'DHL Express Europe Overnight', expressPrice: 9.99 },
-      CA: { currency: 'CAD', symbol: 'C$', rate: 1.74, standardShipTitle: 'Canada Post Tracked Airway', standardPrice: 0.0, expressShipTitle: 'DHL Express Airway Guaranteed', expressPrice: 18.00 },
-      PK: { currency: 'PKR', symbol: '₨ ', rate: 352.0, standardShipTitle: 'DHL eCommerce Air Tracked', standardPrice: 0.0, expressShipTitle: 'DHL Worldwide Priority Express', expressPrice: 3500.0 },
-      AE: { currency: 'AED', symbol: 'AED ', rate: 4.66, standardShipTitle: 'Emirates Post Tracked Airway', standardPrice: 0.0, expressShipTitle: 'DHL Express Middle East', expressPrice: 45.0 },
-      SA: { currency: 'SAR', symbol: 'SAR ', rate: 4.76, standardShipTitle: 'SMSA Express Air Tracked', standardPrice: 0.0, expressShipTitle: 'DHL Express Direct', expressPrice: 50.0 }
+      GB: { currency: 'GBP', symbol: '£', rate: 1.0, standardShipTitle: 'Standard Insured Tracked Delivery', standardShipTime: '5 to 9 business days • End-to-End Tracking', standardPrice: 0.0, expressShipTitle: 'VIP Priority Line (Fast-Tracked & Insured)', expressShipTime: '3 to 6 business days • Priority Dispatch Queue', expressPrice: 3.99 },
+      US: { currency: 'USD', symbol: '$', rate: 1.27, standardShipTitle: 'Standard Insured Tracked Delivery', standardShipTime: '6 to 12 business days • End-to-End Tracking', standardPrice: 0.0, expressShipTitle: 'VIP Priority Line (Fast-Tracked & Insured)', expressShipTime: '4 to 8 business days • Priority Dispatch Queue', expressPrice: 4.99 },
+      AU: { currency: 'AUD', symbol: 'A$', rate: 1.95, standardShipTitle: 'Standard Insured Tracked Delivery', standardShipTime: '6 to 12 business days • End-to-End Tracking', standardPrice: 0.0, expressShipTitle: 'VIP Priority Line (Fast-Tracked & Insured)', expressShipTime: '4 to 8 business days • Priority Dispatch Queue', expressPrice: 6.99 },
+      DE: { currency: 'EUR', symbol: '€', rate: 1.17, standardShipTitle: 'Standard Insured Tracked Delivery', standardShipTime: '5 to 10 business days • End-to-End Tracking', standardPrice: 0.0, expressShipTitle: 'VIP Priority Line (Fast-Tracked & Insured)', expressShipTime: '3 to 7 business days • Priority Dispatch Queue', expressPrice: 4.99 },
+      FR: { currency: 'EUR', symbol: '€', rate: 1.17, standardShipTitle: 'Standard Insured Tracked Delivery', standardShipTime: '5 to 10 business days • End-to-End Tracking', standardPrice: 0.0, expressShipTitle: 'VIP Priority Line (Fast-Tracked & Insured)', expressShipTime: '3 to 7 business days • Priority Dispatch Queue', expressPrice: 4.99 },
+      CA: { currency: 'CAD', symbol: 'C$', rate: 1.74, standardShipTitle: 'Standard Insured Tracked Delivery', standardShipTime: '6 to 12 business days • End-to-End Tracking', standardPrice: 0.0, expressShipTitle: 'VIP Priority Line (Fast-Tracked & Insured)', expressShipTime: '4 to 8 business days • Priority Dispatch Queue', expressPrice: 6.99 },
+      PK: { currency: 'PKR', symbol: '₨ ', rate: 352.0, standardShipTitle: 'Standard Insured Tracked Delivery', standardShipTime: '7 to 14 business days • End-to-End Tracking', standardPrice: 0.0, expressShipTitle: 'VIP Priority Line (Fast-Tracked & Insured)', expressShipTime: '5 to 9 business days • Priority Dispatch Queue', expressPrice: 1200.0 },
+      AE: { currency: 'AED', symbol: 'AED ', rate: 4.66, standardShipTitle: 'Standard Insured Tracked Delivery', standardShipTime: '5 to 10 business days • End-to-End Tracking', standardPrice: 0.0, expressShipTitle: 'VIP Priority Line (Fast-Tracked & Insured)', expressShipTime: '3 to 7 business days • Priority Dispatch Queue', expressPrice: 18.0 },
+      SA: { currency: 'SAR', symbol: 'SAR ', rate: 4.76, standardShipTitle: 'Standard Insured Tracked Delivery', standardShipTime: '5 to 10 business days • End-to-End Tracking', standardPrice: 0.0, expressShipTitle: 'VIP Priority Line (Fast-Tracked & Insured)', expressShipTime: '3 to 7 business days • Priority Dispatch Queue', expressPrice: 20.0 }
     };
 
     
@@ -1071,9 +1071,15 @@
 
       // Update Shipping text & prices
       document.getElementById('shipStandardTitle').innerText = cfg.standardShipTitle;
+      if (document.getElementById('shipStandardTime')) {
+        document.getElementById('shipStandardTime').innerText = cfg.standardShipTime;
+      }
       document.getElementById('shipStandardPrice').innerText = cfg.standardPrice === 0 ? 'FREE' : `${cfg.symbol}${cfg.standardPrice.toFixed(2)}`;
       
       document.getElementById('shipExpressTitle').innerText = cfg.expressShipTitle;
+      if (document.getElementById('shipExpressTime')) {
+        document.getElementById('shipExpressTime').innerText = cfg.expressShipTime;
+      }
       document.getElementById('shipExpressPrice').innerText = `${cfg.symbol}${cfg.expressPrice.toFixed(cfg.currency === 'PKR' ? 0 : 2)}`;
 
       // Afterpay availability (UK, US, AU)

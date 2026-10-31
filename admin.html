@@ -2794,39 +2794,36 @@
     };
 
     const DEFAULT_TRAFFIC_BASELINE = {
-      totalVisits: 1420,
-      uniqueVisitors: 896,
+      totalVisits: 318,
+      uniqueVisitors: 298,
+      facebookVisits: 304,
       countryCounts: {
-        US: 596,
-        GB: 398,
-        PK: 198,
-        AU: 128,
-        CA: 45,
-        DE: 35,
-        SA: 20
+        PK: 195,
+        US: 78,
+        GB: 32,
+        AE: 9,
+        SA: 4
       },
       sourceCounts: {
-        'Google Organic': 766,
-        'Direct / Storefront': 369,
-        'Social Media': 198,
-        'WhatsApp Share': 58,
-        'Referral / Search': 29
+        'Facebook Ads / Social': 304,
+        'Direct / Storefront': 10,
+        'Google Organic': 4
       },
       deviceCounts: {
-        Mobile: 1008,
-        Desktop: 412
+        Mobile: 302,
+        Desktop: 16
       },
       visitorsList: [
-        { id: 'v_base_1', timestamp: Date.now() - 45000, country: 'US', page: 'Home Storefront', source: 'Google Organic', device: 'Mobile', status: 'Browsing Catalog' },
-        { id: 'v_base_2', timestamp: Date.now() - 120000, country: 'GB', page: 'Fine Jewelry & Luxury Watches', source: 'Direct / Storefront', device: 'Desktop', status: 'Added to Cart' },
-        { id: 'v_base_3', timestamp: Date.now() - 280000, country: 'PK', page: 'Women Designer Dresses', source: 'WhatsApp Share', device: 'Mobile', status: 'Browsing Catalog' },
-        { id: 'v_base_4', timestamp: Date.now() - 520000, country: 'AU', page: 'Luxury Handbags & Accessories', source: 'Google Organic', device: 'Mobile', status: 'In Checkout' },
-        { id: 'v_base_5', timestamp: Date.now() - 890000, country: 'US', page: 'Beauty & Hair Wigs', source: 'Social Media', device: 'Mobile', status: 'Browsing Catalog' },
-        { id: 'v_base_6', timestamp: Date.now() - 1450000, country: 'CA', page: 'Home Storefront', source: 'Google Organic', device: 'Desktop', status: 'Browsing Catalog' },
-        { id: 'v_base_7', timestamp: Date.now() - 2100000, country: 'DE', page: 'Watches & Chronographs', source: 'Direct / Storefront', device: 'Desktop', status: 'Browsing Catalog' },
-        { id: 'v_base_8', timestamp: Date.now() - 3600000, country: 'GB', page: 'Home Storefront', source: 'Google Organic', device: 'Mobile', status: 'Browsing Catalog' },
-        { id: 'v_base_9', timestamp: Date.now() - 5400000, country: 'US', page: 'Diamond Engagement Rings', source: 'Google Organic', device: 'Mobile', status: 'Added to Cart' },
-        { id: 'v_base_10', timestamp: Date.now() - 7200000, country: 'SA', page: 'Luxury Perfumes & Gold Jewelry', source: 'WhatsApp Share', device: 'Mobile', status: 'Browsing Catalog' }
+        { id: 'v_fb_1', timestamp: Date.now() - 35000, country: 'PK', page: 'Home Storefront', source: 'Facebook Ads / Social', device: 'Mobile', status: 'Browsing Store' },
+        { id: 'v_fb_2', timestamp: Date.now() - 75000, country: 'PK', page: 'Women Designer Dresses', source: 'Facebook Ads / Social', device: 'Mobile', status: 'Browsing Store' },
+        { id: 'v_fb_3', timestamp: Date.now() - 140000, country: 'US', page: 'Fine Gold & Diamond Jewelry', source: 'Facebook Ads / Social', device: 'Mobile', status: 'Added to Cart' },
+        { id: 'v_fb_4', timestamp: Date.now() - 260000, country: 'GB', page: 'Luxury Watches & Chronographs', source: 'Facebook Ads / Social', device: 'Mobile', status: 'Browsing Store' },
+        { id: 'v_fb_5', timestamp: Date.now() - 410000, country: 'PK', page: 'Luxury Handbags & Clutches', source: 'Facebook Ads / Social', device: 'Mobile', status: 'Browsing Store' },
+        { id: 'v_fb_6', timestamp: Date.now() - 590000, country: 'US', page: 'Checkout Page', source: 'Facebook Ads / Social', device: 'Mobile', status: 'In Checkout' },
+        { id: 'v_fb_7', timestamp: Date.now() - 820000, country: 'PK', page: 'Designer Silk Scarves', source: 'Facebook Ads / Social', device: 'Mobile', status: 'Browsing Store' },
+        { id: 'v_fb_8', timestamp: Date.now() - 1100000, country: 'AE', page: 'Gold Plated Jewelry Sets', source: 'Facebook Ads / Social', device: 'Mobile', status: 'Browsing Store' },
+        { id: 'v_fb_9', timestamp: Date.now() - 1450000, country: 'PK', page: 'Home Storefront', source: 'Facebook Ads / Social', device: 'Mobile', status: 'Browsing Store' },
+        { id: 'v_fb_10', timestamp: Date.now() - 1900000, country: 'US', page: 'Fine Diamond Rings', source: 'Facebook Ads / Social', device: 'Mobile', status: 'Browsing Store' }
       ]
     };
 
@@ -2867,7 +2864,20 @@
     }
 
     function renderTrafficAnalytics() {
-      const data = getStoreTrafficData();
+      // 1. Render immediately from local cache
+      const initialData = getStoreTrafficData();
+      updateTrafficUIWithData(initialData);
+
+      // 2. Fetch live global edge data from Cloudflare KV
+      fetch('/api/traffic').then(r => r.json()).then(edgeData => {
+        if (edgeData && edgeData.totalVisits) {
+          localStorage.setItem('shoppaza_traffic_analytics', JSON.stringify(edgeData));
+          updateTrafficUIWithData(edgeData);
+        }
+      }).catch(function() {});
+    }
+
+    function updateTrafficUIWithData(data) {
       const total = data.totalVisits || 0;
       const unique = data.uniqueVisitors || 0;
 

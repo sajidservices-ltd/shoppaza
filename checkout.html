@@ -1072,6 +1072,21 @@
         if (traffic.visitorsList.length > 100) traffic.visitorsList = traffic.visitorsList.slice(0, 100);
         traffic.lastUpdated = Date.now();
         localStorage.setItem('shoppaza_traffic_analytics', JSON.stringify(traffic));
+
+        // Real-Time Global Edge Sync to Cloudflare KV
+        try {
+          fetch('/api/traffic', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              country: country,
+              page: pageName,
+              source: source,
+              device: device,
+              isNewVisitor: isNewVisitor
+            })
+          }).catch(function() {});
+        } catch(e) {}
       } catch(err) {
         console.warn('Traffic telemetry logging error:', err);
       }

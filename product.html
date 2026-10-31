@@ -1082,10 +1082,17 @@
         const device = isMobile ? 'Mobile' : 'Desktop';
 
         const ref = (document.referrer || '').toLowerCase();
+        const searchStr = (window.location.search || '').toLowerCase();
+        const hasFb = ref.includes('facebook.') || ref.includes('fb.me') || searchStr.includes('fbclid') || searchStr.includes('utm_source=facebook') || searchStr.includes('utm_source=fb');
+        const hasGoogle = ref.includes('google.') || searchStr.includes('gclid') || searchStr.includes('utm_source=google');
+        const hasTiktok = ref.includes('tiktok.') || searchStr.includes('ttclid');
+
         let source = 'Direct / Storefront';
-        if (ref.includes('google.')) source = 'Google Organic';
+        if (hasFb) source = 'Facebook Ads / Social';
+        else if (hasGoogle) source = 'Google Organic';
+        else if (hasTiktok) source = 'TikTok Ads / Social';
         else if (ref.includes('bing.') || ref.includes('yahoo.') || ref.includes('duckduckgo.')) source = 'Search Engine';
-        else if (ref.includes('facebook.') || ref.includes('instagram.') || ref.includes('tiktok.') || ref.includes('t.co') || ref.includes('twitter.')) source = 'Social Media';
+        else if (ref.includes('instagram.') || ref.includes('t.co') || ref.includes('twitter.') || ref.includes('x.com')) source = 'Social Media';
         else if (ref.includes('whatsapp') || ref.includes('wa.me')) source = 'WhatsApp Share';
         else if (ref && !ref.includes('shoppaza.com')) {
           try { source = 'Referral (' + new URL(document.referrer).hostname + ')'; } catch(e) { source = 'External Referral'; }

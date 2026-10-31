@@ -2935,10 +2935,12 @@
       const sourcesContainer = document.getElementById('trafficSourcesList');
       if (sourcesContainer) {
         const sourceIcons = {
+          'Facebook Ads / Social': 'fa-brands fa-facebook text-blue-500',
           'Google Organic': 'fa-brands fa-google text-blue-400',
           'Direct / Storefront': 'fa-solid fa-compass text-amber-400',
-          'Social Media': 'fa-brands fa-instagram text-pink-400',
           'WhatsApp Share': 'fa-brands fa-whatsapp text-emerald-400',
+          'TikTok Ads / Social': 'fa-brands fa-tiktok text-slate-200',
+          'Social Media': 'fa-brands fa-instagram text-pink-400',
           'Referral / Search': 'fa-solid fa-arrow-up-right-from-square text-indigo-400'
         };
         const srcEntries = Object.entries(data.sourceCounts || {}).sort((a,b) => b[1] - a[1]);
@@ -3027,7 +3029,8 @@
               : '<i class="fa-solid fa-laptop text-cyan-400 mr-1"></i> Desktop';
 
             let srcBadgeClass = 'text-slate-300';
-            if (v.source.includes('Google')) srcBadgeClass = 'text-blue-400 font-medium';
+            if (v.source.includes('Facebook')) srcBadgeClass = 'text-blue-500 font-semibold';
+            else if (v.source.includes('Google')) srcBadgeClass = 'text-blue-400 font-medium';
             else if (v.source.includes('WhatsApp')) srcBadgeClass = 'text-emerald-400 font-medium';
 
             return `

@@ -223,7 +223,7 @@
             <div>
               <label class="block text-[11px] font-semibold text-slate-500 uppercase mb-1">Country / Region</label>
               <select id="destCountry" onchange="handleCountryChange(this.value)" class="shopify-select">
-                <option value="GB" selected>United Kingdom (£ GBP)</option>
+                <option value="GB">United Kingdom (£ GBP)</option>
                 <option value="US">United States ($ USD)</option>
                 <option value="AU">Australia (A$ AUD)</option>
                 <option value="DE">Germany (€ EUR)</option>
@@ -631,66 +631,147 @@
     };
 
     
-    // Auto Geo-IP Visitor Country & State Detection (Shopify Standard & Anti-Fraud)
-    async function detectVisitorGeoLocation() {
+    // Bulletproof Fallback States for Global Destinations
+    const DEFAULT_STATES = {
+      AU: 'New South Wales',
+      US: 'California',
+      GB: 'England',
+      PK: 'Punjab',
+      CA: 'Ontario',
+      DE: 'Bavaria',
+      FR: 'Île-de-France',
+      IT: 'Lombardy',
+      ES: 'Madrid',
+      NL: 'North Holland',
+      IE: 'Dublin',
+      AE: 'Dubai',
+      SA: 'Riyadh',
+      NZ: 'Auckland',
+      SG: 'Singapore',
+      JP: 'Tokyo'
+    };
+
+    function applyDetectedGeo(countryCode, stateName, countryName, ip) {
+      if (!countryCode) return;
+      countryCode = countryCode.toUpperCase();
+
+      const destSel = document.getElementById('destCountry');
+      if (destSel) {
+        let exists = false;
+        for (let i = 0; i < destSel.options.length; i++) {
+          if (destSel.options[i].value === countryCode) {
+            destSel.selectedIndex = i;
+            exists = true;
+            break;
+          }
+        }
+        if (!exists) {
+          const opt = document.createElement('option');
+          opt.value = countryCode;
+          opt.text = `${countryName || countryCode} (${countryCode})`;
+          destSel.add(opt);
+          destSel.value = countryCode;
+        }
+      }
+
+      // Auto-fill ONLY State / Territory (Leaving city, street address, and postcode completely blank for user)
+      const custState = document.getElementById('custState');
+      if (custState) {
+        const finalState = stateName || DEFAULT_STATES[countryCode] || '';
+        if (finalState) {
+          custState.value = finalState;
+        }
+      }
+
+      // Switch localized currency and regional payment methods (Afterpay for AU/US, etc.)
+      handleCountryChange(countryCode);
+
+      // Save into memory for anti-fraud telemetry
+      window.detectedVisitorGeo = {
+        ip: ip || '',
+        country_code: countryCode,
+        country: countryName || countryCode,
+        region: stateName || DEFAULT_STATES[countryCode] || '',
+        timestamp: new Date().toISOString()
+      };
+
+      // Store in session storage for instant zero-latency page transitions
       try {
-        let geoData = null;
-        try {
-          const res = await fetch('https://ipwho.is/');
-          const json = await res.json();
-          if (json && json.success) geoData = json;
-        } catch(e) {}
+        sessionStorage.setItem('shoppaza_visitor_country', countryCode);
+        if (stateName) sessionStorage.setItem('shoppaza_visitor_state', stateName);
+        if (ip) sessionStorage.setItem('shoppaza_visitor_ip', ip);
+      } catch(e) {}
 
-        if (!geoData) {
-          try {
-            const res2 = await fetch('https://get.geojs.io/v1/ip/geo.json');
-            geoData = await res2.json();
-          } catch(e) {}
+      // Render Green Trust Badge in Delivery header
+      const notice = document.getElementById('geoDetectionNotice');
+      if (notice) {
+        const displayState = stateName || DEFAULT_STATES[countryCode] || '';
+        notice.innerHTML = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-medium"><i class="fa-solid fa-location-dot text-emerald-600"></i> Delivery automatically localized for <strong>${displayState ? displayState + ', ' : ''}${countryName || countryCode}</strong></span>`;
+        notice.classList.remove('hidden');
+      }
+      console.log('Geo-Localization Applied:', window.detectedVisitorGeo);
+    }
+
+    async function detectVisitorGeoLocation() {
+      // Tier 1: Instant synchronous lookup from session cache (0 milliseconds)
+      try {
+        const cachedCountry = sessionStorage.getItem('shoppaza_visitor_country');
+        const cachedState = sessionStorage.getItem('shoppaza_visitor_state');
+        const cachedIp = sessionStorage.getItem('shoppaza_visitor_ip');
+        if (cachedCountry) {
+          applyDetectedGeo(cachedCountry, cachedState, '', cachedIp);
         }
+      } catch(e) {}
 
+      // Tier 2: Query Cloudflare trace on same domain (100% reliable, zero blocker interference)
+      let traceCountry = '';
+      let clientIp = '';
+      try {
+        const traceRes = await fetch('/cdn-cgi/trace');
+        const traceText = await traceRes.text();
+        traceText.split('\n').forEach(line => {
+          const parts = line.split('=');
+          if (parts[0] === 'loc') traceCountry = parts[1].trim().toUpperCase();
+          if (parts[0] === 'ip') clientIp = parts[1].trim();
+        });
+      } catch(e) {}
+
+      if (traceCountry) {
+        applyDetectedGeo(traceCountry, DEFAULT_STATES[traceCountry] || '', '', clientIp);
+      }
+
+      // Tier 3: Fetch exact State / Region name via GeoJS & IPwho.is
+      let detectedState = '';
+      let detectedCountry = traceCountry;
+      let detectedCountryName = '';
+
+      try {
+        const geoUrl = clientIp ? `https://get.geojs.io/v1/ip/geo/${clientIp}.json` : 'https://get.geojs.io/v1/ip/geo.json';
+        const geoRes = await fetch(geoUrl);
+        const geoData = await geoRes.json();
         if (geoData) {
-          const code = (geoData.country_code || geoData.country_code2 || '').toUpperCase();
-          const country = geoData.country || geoData.country_name || '';
-          const region = geoData.region || geoData.state || '';
-          const city = geoData.city || '';
-          const ip = geoData.ip || '';
-
-          window.detectedVisitorGeo = { ip, country_code: code, country, region, city };
-
-          const destSel = document.getElementById('destCountry');
-          if (destSel && code) {
-            let exists = false;
-            for (let i = 0; i < destSel.options.length; i++) {
-              if (destSel.options[i].value === code) {
-                destSel.selectedIndex = i;
-                exists = true;
-                break;
-              }
-            }
-            if (!exists) {
-              const opt = document.createElement('option');
-              opt.value = code;
-              opt.text = `${country} (${code})`;
-              destSel.add(opt);
-              destSel.value = code;
-            }
-            handleCountryChange(code);
-          }
-
-          const custState = document.getElementById('custState');
-          if (custState && region && (!custState.value || custState.value.trim() === '')) {
-            custState.value = region;
-          }
-
-          const notice = document.getElementById('geoDetectionNotice');
-          if (notice) {
-            notice.innerHTML = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-medium"><i class="fa-solid fa-location-dot text-emerald-600"></i> ${region ? region + ', ' : ''}${country}</span>`;
-            notice.classList.remove('hidden');
-          }
-          console.log('Visitor Geo Detected & Localized:', window.detectedVisitorGeo);
+          if (geoData.country_code) detectedCountry = geoData.country_code.toUpperCase();
+          if (geoData.region) detectedState = geoData.region;
+          if (geoData.country) detectedCountryName = geoData.country;
+          if (geoData.ip) clientIp = geoData.ip;
         }
-      } catch (err) {
-        console.warn('Geo IP detection error:', err);
+      } catch(e) {}
+
+      if (!detectedState) {
+        try {
+          const whoRes = await fetch('https://ipwho.is/');
+          const whoData = await whoRes.json();
+          if (whoData && whoData.success) {
+            if (whoData.country_code) detectedCountry = whoData.country_code.toUpperCase();
+            if (whoData.region) detectedState = whoData.region;
+            if (whoData.country) detectedCountryName = whoData.country;
+            if (whoData.ip) clientIp = whoData.ip;
+          }
+        } catch(e) {}
+      }
+
+      if (detectedCountry) {
+        applyDetectedGeo(detectedCountry, detectedState || DEFAULT_STATES[detectedCountry] || '', detectedCountryName, clientIp);
       }
     }
 
@@ -718,13 +799,16 @@
         }
       } catch(e) {}
 
-      // 3. Set initial country based on saved currency
-      const savedCurr = localStorage.getItem('shoppaza_currency');
-      if (savedCurr === 'USD') document.getElementById('destCountry').value = 'US';
-      else if (savedCurr === 'PKR') document.getElementById('destCountry').value = 'PK';
-      
-      handleCountryChange(document.getElementById('destCountry').value);
+      // 3. Trigger immediate Geo-IP visitor localization (Shopify Standard Country & State detection)
+      detectVisitorGeoLocation();
     });
+
+    // Execute immediately on script load as well for 0-latency auto-fill
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      detectVisitorGeoLocation();
+    } else {
+      document.addEventListener('DOMContentLoaded', detectVisitorGeoLocation);
+    }
 
     function showEmptyCartNotice() {
       const form = document.getElementById('shopifyCheckoutForm');

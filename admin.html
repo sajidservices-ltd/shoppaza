@@ -63,19 +63,19 @@
 
       <form id="adminLoginForm" onsubmit="handleAdminLogin(event)" class="space-y-5">
         <div>
-          <label class="block text-xs font-semibold uppercase text-slate-300 tracking-wider mb-2">Master Administrator Passcode</label>
+          <label class="block text-xs font-semibold uppercase text-slate-300 tracking-wider mb-2">Merchant Owner or Staff Passcode</label>
           <div class="relative">
-            <input type="password" id="adminSecretInput" required placeholder="Enter Admin Secret Passcode" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-emerald-500 font-mono tracking-wider">
+            <input type="password" id="adminSecretInput" required placeholder="Enter Owner Master Key or Staff Key" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-emerald-500 font-mono tracking-wider">
             <button type="button" onclick="togglePassVisibility()" class="absolute right-4 top-3.5 text-slate-500 hover:text-slate-300">
               <i class="fa-solid fa-eye" id="eyeIcon"></i>
             </button>
           </div>
-          <p class="text-[11px] text-slate-500 mt-2 flex items-center gap-1.5"><i class="fa-solid fa-shield-halved text-emerald-400"></i> Encrypted Merchant Portal • Authorized Personnel Only</p>
+          <p class="text-[11px] text-slate-500 mt-2 flex items-center gap-1.5"><i class="fa-solid fa-shield-halved text-emerald-400"></i> Encrypted Merchant Portal • Owner & Authorized Team Access</p>
         </div>
 
         <div id="loginError" class="hidden p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs flex items-center gap-2">
           <i class="fa-solid fa-triangle-exclamation"></i>
-          <span>Invalid passcode. Please enter the correct master key.</span>
+          <span>Invalid passcode. Please enter a valid master or staff passcode.</span>
         </div>
 
         <button type="submit" class="w-full py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm transition shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2">
@@ -178,6 +178,16 @@
 
     <!-- MAIN RIGHT CONTENT AREA -->
     <main class="flex-1 flex flex-col min-h-screen bg-slate-950 overflow-y-auto">
+
+      <!-- Viewer Mode Read-Only Banner -->
+      <div id="viewerRoleBanner" class="hidden bg-indigo-950 border-b border-indigo-800 px-6 py-2.5 flex items-center justify-between text-xs text-indigo-200">
+        <div class="flex items-center gap-2.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-indigo-400 animate-pulse"></span>
+          <span>Logged in as: <strong id="bannerStaffUserName" class="text-white font-semibold">Social Media Promoter / Chat Operator</strong> • <span class="text-indigo-300">Read-Only View Mode (Administrative settings locked)</span></span>
+        </div>
+        <span class="px-2.5 py-0.5 rounded-full bg-indigo-900 border border-indigo-700 font-bold text-[10px] text-indigo-300">Staff Account</span>
+      </div>
+
       
       <!-- TOP APP HEADER -->
       <header class="h-16 bg-shopify-sidebar border-b border-shopify-border px-6 flex items-center justify-between sticky top-0 z-40">
@@ -192,7 +202,7 @@
           <a href="index.html" target="_blank" class="text-xs font-semibold bg-shopify-surface hover:bg-slate-800 text-slate-200 px-3 py-2 rounded-lg border border-shopify-border transition flex items-center gap-2">
             <i class="fa-solid fa-globe text-emerald-400"></i> View Online Store
           </a>
-          <button onclick="openAddProductModal()" class="text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-2 rounded-lg shadow transition flex items-center gap-1.5">
+          <button onclick="openAddProductModal()" id="btnTopAddProduct" class="text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-2 rounded-lg shadow transition flex items-center gap-1.5">
             <i class="fa-solid fa-plus"></i> Add Product
           </button>
         </div>
@@ -218,7 +228,7 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             <div class="bg-shopify-sidebar border border-shopify-border p-5 rounded-2xl">
               <span class="text-xs text-slate-400 font-semibold uppercase">Total Sales</span>
-              <div class="text-2xl font-extrabold text-white mt-2" id="kpiTotalSales">£4,892.40</div>
+              <div class="text-2xl font-extrabold text-white mt-2" id="kpiTotalSales">£0.00</div>
               <div class="text-xs text-emerald-400 mt-1 flex items-center gap-1">
                 <i class="fa-solid fa-arrow-trend-up"></i> Multi-currency enabled
               </div>
@@ -226,7 +236,7 @@
 
             <div class="bg-shopify-sidebar border border-shopify-border p-5 rounded-2xl">
               <span class="text-xs text-slate-400 font-semibold uppercase">Total Orders</span>
-              <div class="text-2xl font-extrabold text-white mt-2" id="kpiTotalOrders">4 Orders</div>
+              <div class="text-2xl font-extrabold text-white mt-2" id="kpiTotalOrders">0 Orders</div>
               <div class="text-xs text-emerald-400 mt-1 flex items-center gap-1">
                 <i class="fa-solid fa-truck-fast"></i> Fully Tracked
               </div>
@@ -234,7 +244,7 @@
 
             <div class="bg-shopify-sidebar border border-shopify-border p-5 rounded-2xl">
               <span class="text-xs text-slate-400 font-semibold uppercase">Average Order Value</span>
-              <div class="text-2xl font-extrabold text-white mt-2" id="kpiAOV">£122.31</div>
+              <div class="text-2xl font-extrabold text-white mt-2" id="kpiAOV">£0.00</div>
               <div class="text-xs text-slate-400 mt-1">Live Cart Conversion</div>
             </div>
 
@@ -246,7 +256,7 @@
           </div>
 
           <!-- Quick Action Bar -->
-          <div class="p-4 bg-shopify-surface/60 border border-shopify-border rounded-2xl flex flex-wrap gap-3 items-center justify-between">
+          <div id="quickManagementActions" class="p-4 bg-shopify-surface/60 border border-shopify-border rounded-2xl flex flex-wrap gap-3 items-center justify-between">
             <div class="text-xs text-slate-300 font-medium flex items-center gap-2">
               <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i>
               <span>Quick Management Shortcuts:</span>
@@ -302,7 +312,7 @@
               <h2 class="text-2xl font-bold text-white tracking-tight">Complete Products Catalog</h2>
               <p class="text-xs text-slate-400 mt-1">Full edit access: adjust titles, categories, prices, images, stock, or upload bulk CSV.</p>
             </div>
-            <div class="flex flex-wrap items-center gap-2">
+            <div id="productManagementActions" class="flex flex-wrap items-center gap-2">
               <button onclick="openBulkPriceModal()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
                 <i class="fa-solid fa-tags text-emerald-400"></i> Bulk Prices
               </button>
@@ -383,7 +393,10 @@
               <button onclick="exportOrdersCSV()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
                 <i class="fa-solid fa-file-csv text-emerald-400"></i> Export Orders (CSV)
               </button>
-              <button onclick="openCreateManualOrderModal()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
+              <button onclick="confirmResetAllOrders()" class="px-3 py-2 bg-red-950/40 hover:bg-red-900/60 text-red-300 border border-red-800/50 rounded-xl text-xs font-semibold transition flex items-center gap-1.5" id="btnResetOrders">
+                <i class="fa-solid fa-trash-can"></i> Clear Test Orders (Reset 0.00)
+              </button>
+              <button onclick="openCreateManualOrderModal()" id="btnCreateManualOrder" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
                 <i class="fa-solid fa-plus"></i> Create Manual Order
               </button>
             </div>
@@ -652,6 +665,27 @@
                   Save Profile Info
                 </button>
               </form>
+            </div>
+
+            <!-- Staff & Promoter Team Accounts (Read-Only) -->
+            <div class="p-6 rounded-2xl bg-shopify-sidebar border border-shopify-border space-y-4 lg:col-span-2">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-shopify-border">
+                <div>
+                  <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-users-gear text-emerald-400"></i> Staff & Social Media Promoter Accounts (Read-Only)
+                  </h3>
+                  <p class="text-xs text-slate-400 mt-0.5">
+                    Create separate passcodes for your marketing and chat staff (TikTok, Telegram, WhatsApp chat operators). Staff members can view live catalog items and orders to assist customers, but are completely restricted from editing products, changing passcodes, or accessing Stripe keys.
+                  </p>
+                </div>
+                <button type="button" onclick="openAddStaffModal()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow">
+                  <i class="fa-solid fa-user-plus"></i> Add Staff Account
+                </button>
+              </div>
+
+              <div id="staffAccountsList" class="space-y-2.5">
+                <!-- Rendered dynamically -->
+              </div>
             </div>
 
           </div>
@@ -1220,13 +1254,155 @@
       { name: "Tech Accessories & Audio", category: "Phone Accessories", badge: "Fast Charging" }
     ];
 
-    // Seed Orders
-    const defaultOrders = [
-      { id: '#SHP-1042', customer: 'Emma Watson', email: 'emma.w@example.co.uk', phone: '+44 7911 123456', address: '221B Baker Street, London, NW1 6XE', country: 'United Kingdom', total: '£186.00', payment: 'Paid via Stripe', fulfillment: 'Shipped', courier: 'Royal Mail Tracked 24', tracking: 'GB982341029X', date: 'Today, 14:20' },
-      { id: '#SHP-1041', customer: 'Liam Thorne', email: 'liam.t@usretail.com', phone: '+1 212 555 0199', address: '742 Evergreen Terrace, Springfield, OR', country: 'United States', total: '$245.99', payment: 'Paid via USDT', fulfillment: 'Processing', courier: 'DHL Express Worldwide', tracking: 'DHL-489102834', date: 'Today, 12:45' },
-      { id: '#SHP-1040', customer: 'Zahid Mehmood', email: 'zahid.m@gmail.com', phone: '+92 300 1234567', address: 'House 42, Street 8, F-7/2, Islamabad', country: 'Pakistan', total: '₨ 48,500', payment: 'Paid via Stripe', fulfillment: 'Fulfilled', courier: 'TCS Express', tracking: 'TCS-77889911', date: 'Yesterday' },
-      { id: '#SHP-1039', customer: 'Sophia Müller', email: 'sophia.m@example.de', phone: '+49 30 123456', address: 'Friedrichstraße 43, Berlin', country: 'Germany', total: '£171.00', payment: 'Paid via Card', fulfillment: 'Fulfilled', courier: 'DPD Europe', tracking: 'DPD-99882244', date: '2 days ago' }
-    ];
+    // Orders Database (Zero Initial Orders - Clean Slate)
+    const defaultOrders = [];
+
+    // Ensure one-time cleanup of test orders so dashboard starts clean at £0.00
+    if (localStorage.getItem('shoppaza_zero_orders_v1') !== 'clean') {
+      localStorage.removeItem('shoppaza_live_orders');
+      localStorage.setItem('shoppaza_zero_orders_v1', 'clean');
+    }
+
+    // Staff Accounts Preconfiguration
+    const DEFAULT_STAFF_KEY = 'STAFF-2026';
+
+    function getStaffAccounts() {
+      const saved = localStorage.getItem('shoppaza_staff_accounts');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        } catch(e) {}
+      }
+      const initial = [
+        {
+          id: 'staff_1',
+          name: 'Social Media Promoter',
+          passcode: DEFAULT_STAFF_KEY,
+          role: 'viewer',
+          channel: 'TikTok / Telegram / Instagram',
+          created: 'Active'
+        }
+      ];
+      localStorage.setItem('shoppaza_staff_accounts', JSON.stringify(initial));
+      return initial;
+    }
+
+    function saveStaffAccounts(accounts) {
+      localStorage.setItem('shoppaza_staff_accounts', JSON.stringify(accounts));
+      renderStaffAccounts();
+    }
+
+    function renderStaffAccounts() {
+      const container = document.getElementById('staffAccountsList');
+      if (!container) return;
+      const accounts = getStaffAccounts();
+
+      if (accounts.length === 0) {
+        container.innerHTML = `
+          <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 text-center text-slate-500 text-xs">
+            No staff accounts configured. Click "+ Add Staff Account" to create a read-only passcode for your team.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = accounts.map(a => `
+        <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-full bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 flex items-center justify-center font-bold text-xs flex-shrink-0">
+              ${(a.name || 'ST').slice(0, 2).toUpperCase()}
+            </div>
+            <div>
+              <div class="font-bold text-white text-xs flex items-center gap-2">
+                <span>${escapeHtml(a.name)}</span>
+                <span class="px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-semibold text-[10px] border border-indigo-500/30">
+                  <i class="fa-solid fa-eye text-[9px]"></i> Read-Only (View Only)
+                </span>
+              </div>
+              <div class="text-[11px] text-slate-400 mt-0.5">
+                Channel / Notes: <strong class="text-slate-300">${escapeHtml(a.channel || 'Promoter Desk')}</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <div class="p-2 rounded-lg bg-slate-950 border border-slate-800 font-mono text-xs text-emerald-400 font-bold flex items-center gap-2">
+              <i class="fa-solid fa-key text-[10px] text-slate-500"></i>
+              <span>${escapeHtml(a.passcode)}</span>
+              <button type="button" onclick="navigator.clipboard.writeText('${escapeHtml(a.passcode)}'); showToast('Passcode copied to clipboard!', 'success');" title="Copy Passcode" class="text-slate-400 hover:text-white ml-1">
+                <i class="fa-solid fa-copy"></i>
+              </button>
+            </div>
+            <button type="button" onclick="deleteStaffAccount('${a.id}')" title="Delete Staff Account" class="p-2 text-slate-500 hover:text-red-400 rounded-lg hover:bg-red-500/10 transition">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openAddStaffModal() {
+      const modal = document.getElementById('addStaffModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeAddStaffModal() {
+      const modal = document.getElementById('addStaffModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function generateRandomStaffPasscode() {
+      const num = Math.floor(1000 + Math.random() * 9000);
+      const pass = 'PROMO-' + num;
+      const inp = document.getElementById('staffNewPasscode');
+      if (inp) inp.value = pass;
+    }
+
+    function handleSaveNewStaff(e) {
+      e.preventDefault();
+      const name = (document.getElementById('staffNewName')?.value || '').trim();
+      const passcode = (document.getElementById('staffNewPasscode')?.value || '').trim().toUpperCase();
+      const channel = (document.getElementById('staffNewNotes')?.value || '').trim() || 'Social Media Promoter';
+
+      if (!name || !passcode) {
+        alert('Please provide staff name and passcode.');
+        return;
+      }
+
+      const accounts = getStaffAccounts();
+      if (accounts.some(a => a.passcode === passcode)) {
+        alert('This passcode is already assigned to another staff member. Please use a unique passcode.');
+        return;
+      }
+
+      const newStaff = {
+        id: 'staff_' + Date.now(),
+        name,
+        passcode,
+        role: 'viewer',
+        channel,
+        created: new Date().toLocaleDateString('en-GB')
+      };
+
+      accounts.push(newStaff);
+      saveStaffAccounts(accounts);
+      closeAddStaffModal();
+      showToast(`Staff account "${name}" created! Passcode: ${passcode}`, 'success');
+      
+      // Clear inputs
+      if (document.getElementById('staffNewName')) document.getElementById('staffNewName').value = '';
+      if (document.getElementById('staffNewPasscode')) document.getElementById('staffNewPasscode').value = '';
+      if (document.getElementById('staffNewNotes')) document.getElementById('staffNewNotes').value = '';
+    }
+
+    function deleteStaffAccount(id) {
+      if (!confirm('Are you sure you want to remove this staff account? They will no longer be able to log in.')) return;
+      let accounts = getStaffAccounts();
+      accounts = accounts.filter(a => a.id !== id);
+      saveStaffAccounts(accounts);
+      showToast('Staff account removed.', 'info');
+    }
 
     // Initialize
     window.addEventListener('DOMContentLoaded', () => {
@@ -1235,7 +1411,8 @@
 
       // Check session
       if (sessionStorage.getItem('shoppaza_admin_auth') === 'true') {
-        unlockDashboard();
+        const savedRole = sessionStorage.getItem('shoppaza_admin_role') || 'admin';
+        unlockDashboard(savedRole);
       }
 
       loadAdminProfile();
@@ -1243,6 +1420,7 @@
       loadProductsData();
       renderOrders();
       renderCustomers();
+      renderStaffAccounts();
       renderDiscounts();
       renderSliderBannersSummary();
       loadStripeSettings();
@@ -1269,34 +1447,97 @@
       const now = Date.now();
       if (now < loginLockoutTime) {
         const remaining = Math.ceil((loginLockoutTime - now) / 1000);
-        alert(`Too many failed attempts. Security cooldown active. Please wait ${remaining} seconds.`);
+        alert(`Security cooldown active. Please wait ${remaining} seconds.`);
         return;
       }
 
       const entered = document.getElementById('adminSecretInput').value.trim();
-      const currentSecret = localStorage.getItem('shoppaza_admin_passcode') || DEFAULT_MASTER_KEY;
-      
-      // Strict authentication (Zero backdoor keys)
-      if (entered === currentSecret) {
+      const currentMasterSecret = localStorage.getItem('shoppaza_admin_passcode') || DEFAULT_MASTER_KEY;
+      const staffAccounts = getStaffAccounts();
+      const matchedStaff = staffAccounts.find(s => s.passcode === entered || s.passcode.toUpperCase() === entered.toUpperCase());
+
+      // 1. Check Owner Master Key
+      if (entered === currentMasterSecret) {
         loginFailedAttempts = 0;
         sessionStorage.setItem('shoppaza_admin_auth', 'true');
-        unlockDashboard();
-        showToast('Authentication successful. Welcome to Shoppaza Admin!', 'success');
-      } else {
+        sessionStorage.setItem('shoppaza_admin_role', 'admin');
+        sessionStorage.setItem('shoppaza_admin_user_name', 'Sajid Mehmood');
+        sessionStorage.setItem('shoppaza_admin_user_title', 'Owner & Director (SAJID SERVICES LTD)');
+        unlockDashboard('admin');
+        showToast('Authenticated as Store Owner (Full Access)', 'success');
+      } 
+      // 2. Check Staff Passcode (Read-Only Viewer)
+      else if (matchedStaff) {
+        loginFailedAttempts = 0;
+        sessionStorage.setItem('shoppaza_admin_auth', 'true');
+        sessionStorage.setItem('shoppaza_admin_role', 'viewer');
+        sessionStorage.setItem('shoppaza_admin_user_name', matchedStaff.name);
+        sessionStorage.setItem('shoppaza_admin_user_title', 'Promoter / Chat Agent (Read-Only)');
+        unlockDashboard('viewer');
+        showToast(`Authenticated as ${matchedStaff.name} (View Only Mode)`, 'info');
+      } 
+      // 3. Failed
+      else {
         loginFailedAttempts++;
         const errorEl = document.getElementById('loginError');
         errorEl.classList.remove('hidden');
 
         if (loginFailedAttempts >= 5) {
-          loginLockoutTime = Date.now() + 60000; // 60s cooldown
+          loginLockoutTime = Date.now() + 60000;
           alert('Security Alert: 5 failed attempts detected. Terminal locked for 60 seconds.');
         }
       }
     }
 
-    function unlockDashboard() {
+    function unlockDashboard(role = 'admin') {
       document.getElementById('adminLockScreen').classList.add('hidden');
       document.getElementById('adminApp').classList.remove('hidden');
+      applyRolePermissions(role);
+    }
+
+    function applyRolePermissions(role) {
+      const isViewer = (role === 'viewer');
+      const viewerBanner = document.getElementById('viewerRoleBanner');
+      const tabPayments = document.getElementById('tabBtn-payments');
+      const tabSettings = document.getElementById('tabBtn-settings');
+      const quickActions = document.getElementById('quickManagementActions');
+      const btnTopAddProduct = document.getElementById('btnTopAddProduct');
+      const btnResetOrders = document.getElementById('btnResetOrders');
+      const btnCreateManualOrder = document.getElementById('btnCreateManualOrder');
+      const productActions = document.getElementById('productManagementActions');
+
+      const userName = sessionStorage.getItem('shoppaza_admin_user_name') || (isViewer ? 'Promoter / Staff' : 'Sajid Mehmood');
+      const userTitle = sessionStorage.getItem('shoppaza_admin_user_title') || (isViewer ? 'Promoter (Read-Only)' : 'Owner & Director');
+
+      const bannerName = document.getElementById('bannerStaffUserName');
+      if (bannerName) bannerName.innerText = userName;
+
+      const nameEl = document.getElementById('sidebarUserName');
+      const roleEl = document.getElementById('sidebarUserRole');
+      const avatarEl = document.getElementById('sidebarUserAvatar');
+      if (nameEl) nameEl.innerText = userName;
+      if (roleEl) roleEl.innerText = userTitle;
+      if (avatarEl) avatarEl.innerText = isViewer ? 'ST' : 'SM';
+
+      if (isViewer) {
+        if (viewerBanner) viewerBanner.classList.remove('hidden');
+        if (tabPayments) tabPayments.classList.add('hidden');
+        if (tabSettings) tabSettings.classList.add('hidden');
+        if (quickActions) quickActions.classList.add('hidden');
+        if (btnTopAddProduct) btnTopAddProduct.classList.add('hidden');
+        if (btnResetOrders) btnResetOrders.classList.add('hidden');
+        if (btnCreateManualOrder) btnCreateManualOrder.classList.add('hidden');
+        if (productActions) productActions.classList.add('hidden');
+      } else {
+        if (viewerBanner) viewerBanner.classList.add('hidden');
+        if (tabPayments) tabPayments.classList.remove('hidden');
+        if (tabSettings) tabSettings.classList.remove('hidden');
+        if (quickActions) quickActions.classList.remove('hidden');
+        if (btnTopAddProduct) btnTopAddProduct.classList.remove('hidden');
+        if (btnResetOrders) btnResetOrders.classList.remove('hidden');
+        if (btnCreateManualOrder) btnCreateManualOrder.classList.remove('hidden');
+        if (productActions) productActions.classList.remove('hidden');
+      }
     }
 
     function logoutAdmin() {
@@ -1313,6 +1554,12 @@
         if (panel) panel.classList.add('hidden');
         if (btn) btn.classList.remove('sidebar-active');
       });
+
+      const role = sessionStorage.getItem('shoppaza_admin_role') || 'admin';
+      if (role === 'viewer' && (tabName === 'payments' || tabName === 'settings')) {
+        alert('Access Restricted: Only the store owner can access settings or payment gateways.');
+        return;
+      }
 
       const activePanel = document.getElementById('panel-' + tabName);
       const activeBtn = document.getElementById('tabBtn-' + tabName);
@@ -1404,6 +1651,8 @@
 
     function renderAdminProducts() {
       const tbody = document.getElementById('adminProductTableBody');
+      const role = sessionStorage.getItem('shoppaza_admin_role') || 'admin';
+      const isViewer = (role === 'viewer');
       const query = (document.getElementById('productFilterInput')?.value || '').toLowerCase().trim();
       const selectedCat = document.getElementById('categoryFilterSelect')?.value || 'all';
       const stockFilter = document.getElementById('stockFilterSelect')?.value || 'all';
@@ -1452,6 +1701,13 @@
                 ${isStock ? 'In Stock' : 'Out of Stock'}
               </button>
             </td>
+            ${isViewer ? `
+            <td class="p-3 text-right">
+              <span class="text-slate-500 text-[11px] italic px-2 py-1 bg-slate-900 border border-slate-800 rounded">
+                <i class="fa-solid fa-eye text-indigo-400 mr-1"></i>View Only
+              </span>
+            </td>
+            ` : `
             <td class="p-3 text-right space-x-1">
               <button onclick="openEditProductModal(${p.id})" class="text-slate-400 hover:text-emerald-400 p-1.5 transition" title="Edit Product">
                 <i class="fa-solid fa-pen-to-square"></i>
@@ -1463,6 +1719,7 @@
                 <i class="fa-solid fa-trash-can"></i>
               </button>
             </td>
+            `}
           `;
           tbody.appendChild(tr);
         });
@@ -1810,6 +2067,15 @@
     }
 
     // ---------------- ORDERS MANAGEMENT & TRACKING ----------------
+    function confirmResetAllOrders() {
+      if (confirm('Are you sure you want to clear all test orders and reset revenue to £0.00?\nThis provides a 100% clean slate for real incoming orders.')) {
+        localStorage.removeItem('shoppaza_live_orders');
+        renderOrders();
+        renderCustomers();
+        showToast('All orders cleared! Total sales reset to £0.00.', 'success');
+      }
+    }
+
     function renderOrders() {
       const recentTbody = document.getElementById('recentOrdersTable');
       const fullTbody = document.getElementById('fullOrdersTableBody');
@@ -1819,11 +2085,54 @@
       const liveOrders = JSON.parse(localStorage.getItem('shoppaza_live_orders') || '[]');
       const allOrders = [...liveOrders, ...defaultOrders];
 
-      document.getElementById('sidebarOrdersBadge').innerText = allOrders.length;
-      document.getElementById('kpiTotalOrders').innerText = allOrders.length + ' Orders';
+      // Calculate Real Revenue
+      let totalSalesGbp = 0;
+      allOrders.forEach(o => {
+        const raw = String(o.total || '0').replace(/[^0-9.]/g, '');
+        const val = parseFloat(raw) || 0;
+        totalSalesGbp += val;
+      });
+
+      const aov = allOrders.length > 0 ? (totalSalesGbp / allOrders.length) : 0;
+
+      const kpiSales = document.getElementById('kpiTotalSales');
+      const kpiOrders = document.getElementById('kpiTotalOrders');
+      const kpiAov = document.getElementById('kpiAOV');
+      const badge = document.getElementById('sidebarOrdersBadge');
+
+      if (kpiSales) kpiSales.innerText = `£${totalSalesGbp.toFixed(2)}`;
+      if (kpiOrders) kpiOrders.innerText = `${allOrders.length} Orders`;
+      if (kpiAov) kpiAov.innerText = `£${aov.toFixed(2)}`;
+      if (badge) badge.innerText = allOrders.length;
+
+      if (allOrders.length === 0) {
+        if (recentTbody) {
+          recentTbody.innerHTML = `
+            <tr>
+              <td colspan="8" class="p-8 text-center text-slate-500 text-xs">
+                <i class="fa-solid fa-receipt text-3xl mb-2 text-slate-600 block"></i>
+                No orders received yet. Live customer orders will appear here automatically in real time.
+              </td>
+            </tr>
+          `;
+        }
+        if (fullTbody) {
+          fullTbody.innerHTML = `
+            <tr>
+              <td colspan="9" class="p-8 text-center text-slate-500 text-xs">
+                <i class="fa-solid fa-receipt text-3xl mb-2 text-slate-600 block"></i>
+                No live orders found. Orders placed by shoppers will appear here with fulfillment and tracking controls.
+              </td>
+            </tr>
+          `;
+        }
+        return;
+      }
+
+      const role = sessionStorage.getItem('shoppaza_admin_role') || 'admin';
+      const isViewer = (role === 'viewer');
 
       allOrders.forEach(o => {
-        // Status Colors
         const fulfillColor = o.fulfillment === 'Fulfilled' || o.fulfillment === 'Shipped'
           ? 'bg-emerald-500/20 text-emerald-300'
           : (o.fulfillment === 'Processing' ? 'bg-indigo-500/20 text-indigo-300' : 'bg-amber-500/20 text-amber-300');
@@ -1834,15 +2143,15 @@
           trRecent.className = 'hover:bg-shopify-surface/50 transition';
           trRecent.innerHTML = `
             <td class="p-3 font-bold text-white cursor-pointer hover:text-emerald-400" onclick="openOrderModal('${o.id}')">${o.id}</td>
-            <td class="p-3 text-slate-300">${o.customer}</td>
-            <td class="p-3 text-slate-400">${o.country || 'United Kingdom'}</td>
+            <td class="p-3 text-slate-300">${escapeHtml(o.customer)}</td>
+            <td class="p-3 text-slate-400">${escapeHtml(o.country || 'United Kingdom')}</td>
             <td class="p-3 text-emerald-400 font-mono font-bold">${o.total}</td>
             <td class="p-3"><span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-[10px]">${o.payment}</span></td>
             <td class="p-3"><span class="px-2 py-0.5 rounded-full ${fulfillColor} font-bold text-[10px]">${o.fulfillment}</span></td>
             <td class="p-3 font-mono text-[11px] text-slate-300">${o.tracking || '<span class="text-slate-500">Unassigned</span>'}</td>
             <td class="p-3 text-right">
               <button onclick="openOrderModal('${o.id}')" class="px-2.5 py-1 bg-shopify-surface hover:bg-slate-800 text-slate-200 rounded border border-shopify-border text-xs">
-                Manage
+                ${isViewer ? 'View' : 'Manage'}
               </button>
             </td>
           `;
@@ -1856,8 +2165,8 @@
           trFull.innerHTML = `
             <td class="p-4 font-bold text-white cursor-pointer hover:text-emerald-400" onclick="openOrderModal('${o.id}')">${o.id}</td>
             <td class="p-4 text-slate-400">${o.date || 'Today'}</td>
-            <td class="p-4 text-slate-200 font-medium">${o.customer}</td>
-            <td class="p-4 text-slate-400">${o.country || 'UK'}</td>
+            <td class="p-4 text-slate-200 font-medium">${escapeHtml(o.customer)}</td>
+            <td class="p-4 text-slate-400">${escapeHtml(o.country || 'UK')}</td>
             <td class="p-4"><span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-[10px]">${o.payment}</span></td>
             <td class="p-4"><span class="px-2.5 py-0.5 rounded-full ${fulfillColor} font-bold text-[10px]">${o.fulfillment}</span></td>
             <td class="p-4 font-mono text-slate-300 text-xs">
@@ -1866,7 +2175,7 @@
             <td class="p-4 font-bold font-mono text-emerald-400">${o.total}</td>
             <td class="p-4 text-right">
               <button onclick="openOrderModal('${o.id}')" class="px-3 py-1.5 bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-300 border border-emerald-500/30 rounded-lg text-xs font-semibold transition">
-                <i class="fa-solid fa-truck mr-1"></i> Edit / Track
+                <i class="fa-solid fa-truck mr-1"></i> ${isViewer ? 'View Status' : 'Edit / Track'}
               </button>
             </td>
           `;
@@ -2027,12 +2336,36 @@
     function renderCustomers() {
       const container = document.getElementById('customersList');
       if (!container) return;
-      const customers = [
-        { name: 'Emma Watson', email: 'emma.w@example.co.uk', orders: 4, spent: '£684.00', country: 'United Kingdom' },
-        { name: 'Liam Thorne', email: 'liam.t@usretail.com', orders: 2, spent: '$491.98', country: 'United States' },
-        { name: 'Chloe Dubois', email: 'chloe.d@example.fr', orders: 3, spent: '£294.00', country: 'France' },
-        { name: 'Zahid Mehmood', email: 'zahid.m@gmail.com', orders: 1, spent: '₨ 48,500', country: 'Pakistan' }
-      ];
+
+      const liveOrders = JSON.parse(localStorage.getItem('shoppaza_live_orders') || '[]');
+      const custMap = {};
+      liveOrders.forEach(o => {
+        const email = o.email || `${(o.customer || 'customer').toLowerCase().replace(/\s+/g, '')}@example.com`;
+        if (!custMap[email]) {
+          custMap[email] = {
+            name: o.customer || 'Customer',
+            email: o.email || 'Registered Customer',
+            orders: 0,
+            spent: 0,
+            country: o.country || 'United Kingdom'
+          };
+        }
+        custMap[email].orders++;
+        const raw = String(o.total || '0').replace(/[^0-9.]/g, '');
+        custMap[email].spent += (parseFloat(raw) || 0);
+      });
+
+      const customers = Object.values(custMap);
+
+      if (customers.length === 0) {
+        container.innerHTML = `
+          <div class="p-8 rounded-xl bg-shopify-surface border border-shopify-border text-center text-slate-500 text-xs">
+            <i class="fa-solid fa-users text-3xl mb-2 text-slate-600 block"></i>
+            No registered customer profiles yet. Customer accounts are created automatically when orders are placed.
+          </div>
+        `;
+        return;
+      }
 
       container.innerHTML = customers.map(c => `
         <div class="p-4 rounded-xl bg-shopify-surface border border-shopify-border flex items-center justify-between">
@@ -2041,13 +2374,13 @@
               ${c.name.split(' ').map(n => n[0]).join('')}
             </div>
             <div>
-              <div class="font-bold text-white text-sm">${c.name}</div>
-              <div class="text-xs text-slate-400">${c.email} • ${c.country}</div>
+              <div class="font-bold text-white text-sm">${escapeHtml(c.name)}</div>
+              <div class="text-xs text-slate-400">${escapeHtml(c.email)} • ${escapeHtml(c.country)}</div>
             </div>
           </div>
           <div class="text-right">
-            <div class="font-bold font-mono text-emerald-400 text-sm">${c.spent}</div>
-            <div class="text-xs text-slate-400">${c.orders} orders placed</div>
+            <div class="font-bold font-mono text-emerald-400 text-sm">£${c.spent.toFixed(2)}</div>
+            <div class="text-xs text-slate-400">${c.orders} order${c.orders === 1 ? '' : 's'} placed</div>
           </div>
         </div>
       `).join('');
@@ -2309,5 +2642,57 @@
       return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
     }
   </script>
+
+  <!-- ================= ADD STAFF MODAL ================= -->
+  <div id="addStaffModal" class="fixed inset-0 z-[90] bg-black/80 hidden backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-shopify-sidebar border border-shopify-border rounded-2xl max-w-md w-full p-6 relative shadow-2xl space-y-4 text-xs">
+      <div class="flex items-center justify-between pb-3 border-b border-shopify-border">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-user-shield text-emerald-400 text-base"></i>
+          <h3 class="font-bold text-white text-sm">Add Staff / Promoter Account</h3>
+        </div>
+        <button type="button" onclick="closeAddStaffModal()" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <form onsubmit="handleSaveNewStaff(event)" class="space-y-4">
+        <div>
+          <label class="block text-slate-400 mb-1">Staff Member Name / Identifier</label>
+          <input type="text" id="staffNewName" required placeholder="e.g. TikTok Chat Promoter, Telegram Desk" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-white">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Passcode (For Lock Screen Login)</label>
+          <div class="flex gap-2">
+            <input type="text" id="staffNewPasscode" required placeholder="e.g. STAFF-2026" class="flex-1 bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-white font-mono uppercase">
+            <button type="button" onclick="generateRandomStaffPasscode()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition" title="Generate Random Key">
+              <i class="fa-solid fa-shuffle"></i>
+            </button>
+          </div>
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Role / Permissions</label>
+          <div class="p-3 rounded-lg bg-slate-900/80 border border-slate-800 space-y-1">
+            <div class="font-bold text-emerald-400 flex items-center gap-1.5">
+              <i class="fa-solid fa-eye"></i> Read-Only Viewer (Dekhne ki had tak)
+            </div>
+            <div class="text-[11px] text-slate-400">
+              Can view catalog products, prices, and orders to guide customers. Cannot edit products, delete data, or view Stripe credentials.
+            </div>
+          </div>
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Channel / Notes</label>
+          <input type="text" id="staffNewNotes" placeholder="e.g. Handles inquiries from TikTok live and Telegram" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-white">
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="closeAddStaffModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg shadow">Create Staff Account</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
 </body>
 </html>

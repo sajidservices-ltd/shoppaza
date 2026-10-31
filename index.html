@@ -1701,16 +1701,19 @@
       try {
         let data = [];
         try {
-          const res = await fetch('products.json?v=' + Date.now());
+          const res = await fetch('products.json');
           if (res.ok) data = await res.json();
         } catch(e) {}
 
         if (!data || data.length === 0) {
-          const fallbackRes = await fetch('products.json');
-          data = await fallbackRes.json();
+          // Retry with cache-bust only if initial load failed
+          try {
+            const fallbackRes = await fetch('products.json?t=' + Date.now());
+            if (fallbackRes.ok) data = await fallbackRes.json();
+          } catch(e) {}
         }
 
-        allRawProducts = data;
+        allRawProducts = data || [];
         
         // 1. Merge locally created products
         const localProds = JSON.parse(localStorage.getItem('shoppaza_custom_products') || '[]');

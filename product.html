@@ -807,8 +807,19 @@
 
     async function loadProductsAndInit() {
       try {
-        const res = await fetch('products.json');
-        let data = await res.json();
+        let data = [];
+        try {
+          const res = await fetch('products.json');
+          if (res.ok) data = await res.json();
+        } catch(e) {}
+
+        if (!data || data.length === 0) {
+          try {
+            const fallbackRes = await fetch('products.json?t=' + Date.now());
+            if (fallbackRes.ok) data = await fallbackRes.json();
+          } catch(e) {}
+        }
+        data = data || [];
 
         // Merge locally created products
         const localProds = JSON.parse(localStorage.getItem('shoppaza_custom_products') || '[]');

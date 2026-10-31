@@ -133,7 +133,7 @@ function renderShopifyCheckoutSummary() {
 
       if (isWigItem(item)) {
         const isTierB = (item.price_usd && item.price_usd > 200);
-        const shipPerUnit = isTierB ? 41.99 : 35.99;
+        const shipPerUnit = isTierB ? 38.00 : 34.00;
         promoShippingFeeUsd += shipPerUnit * qty;
         promoProductDiscountGbp += unitPriceGbp * qty;
       } else if (isJewelryItem(item)) {

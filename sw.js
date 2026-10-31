@@ -1,5 +1,5 @@
 // Shoppaza Progressive Web App Service Worker (PWA v3.1 - High Speed Performance)
-const CACHE_NAME = 'shoppaza-core-v4.5';
+const CACHE_NAME = 'shoppaza-core-v4.6';
 const STATIC_ASSETS = [
   '/',
   '/product',

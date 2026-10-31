@@ -1309,11 +1309,11 @@
       }
 
       const fallbacks = [
-        { code: 'VIPWIG', type: 'wig_tiered', tierA_usd: 35.99, tierB_usd: 41.99, worker: 'VIP Campaign', commission_usd: 5 },
+        { code: 'VIPWIG', type: 'wig_tiered', tierA_usd: 34.00, tierB_usd: 38.00, worker: 'VIP Campaign', commission_usd: 5 },
         { code: 'JEWELRY15', type: 'jewelry_fixed', target_usd: 15.80, worker: 'Jewelry Promo', commission_usd: 3 },
         { code: 'WATCH22', type: 'watch_fixed', target_usd: 22.00, worker: 'Watch Promo', commission_usd: 4 },
-        { code: 'AFFILIATE1', type: 'wig_tiered', tierA_usd: 35.99, tierB_usd: 41.99, worker: 'Partner 1', commission_usd: 5 },
-        { code: 'AMANDA', type: 'wig_tiered', tierA_usd: 35.99, tierB_usd: 41.99, worker: 'Amanda S.', commission_usd: 4.5 },
+        { code: 'AFFILIATE1', type: 'wig_tiered', tierA_usd: 34.00, tierB_usd: 38.00, worker: 'Partner 1', commission_usd: 5 },
+        { code: 'AMANDA', type: 'wig_tiered', tierA_usd: 34.00, tierB_usd: 38.00, worker: 'Amanda S.', commission_usd: 4.5 },
         { code: 'WELCOME10', type: 'percent', value: 10 },
         { code: 'DARAZMEGA30', type: 'percent', value: 30 },
         { code: 'CRYPTO5', type: 'percent', value: 5 }
@@ -1352,7 +1352,7 @@
 
       let successText = 'Coupon ' + match.code + ' applied!';
       if (match.type === 'wig_tiered') {
-        successText = '🌟 Wigs Promo ' + match.code + ' applied! Special $35.99 / $41.99 rate active!';
+        successText = '🌟 Wigs Promo ' + match.code + ' applied! Special $34.00 / $38.00 rate active!';
       } else if (match.type === 'jewelry_fixed') {
         successText = '💎 Jewelry Promo ' + match.code + ' applied! Special $15.80 flat rate active!';
       } else if (match.type === 'watch_fixed') {
@@ -1488,9 +1488,9 @@
           const unitBaseGbp = item.price_gbp || (item.price_usd ? item.price_usd * 0.79 : 29.00);
 
           if (isWigItem(item)) {
-            // Wigs: $35.99 for shorter ($190-$195 retail), $41.99 for 28-32" / 250% density ($220-$230 retail)
+            // Wigs: $34.00 for shorter ($190-$195 retail), $38.00 for 28-32" / 250% density ($220-$230 retail)
             const isTierB = (item.price_usd && item.price_usd > 200);
-            const shipPerUnit = isTierB ? 41.99 : 35.99;
+            const shipPerUnit = isTierB ? 38.00 : 34.00;
             promoShippingFeeUsd += shipPerUnit * qty;
             promoItemsDiscountGbp += unitBaseGbp * qty;
           } else if (isJewelryItem(item)) {

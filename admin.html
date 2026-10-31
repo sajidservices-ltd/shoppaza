@@ -1384,7 +1384,7 @@
           <div>
             <label class="block text-slate-400 mb-1 font-semibold">Promotion Type</label>
             <select id="newCouponType" onchange="const c = document.getElementById('couponValueContainer'); if(c) c.style.display = (this.value === 'free_shipping_promo' ? 'none' : 'block');" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:border-emerald-500 focus:outline-none">
-              <option value="free_shipping_promo">🎁 100% Free Items Promo (Customer pays only Shipping: Wigs $35.99/$41.99, Jewelry $15.80, Watches $22.00)</option>
+              <option value="free_shipping_promo">🎁 100% Free Items Promo (Customer pays only Shipping: Wigs $34/$38, Jewelry $15.80, Watches $22.00)</option>
               <option value="percent">Percentage Discount (%)</option>
               <option value="fixed">Fixed Amount (£ GBP)</option>
             </select>
@@ -2579,7 +2579,7 @@
 
       const storedCoupons = JSON.parse(localStorage.getItem('shoppaza_coupons') || '[]');
       const defaultCoupons = [
-        { code: 'AG100', type: 'free_shipping_promo', discount: '100% Free Items (Shipping Only)', uses: '0 Used', status: 'Active', desc: 'Customer pays only Shipping (Wigs $35.99/$41.99, Jewelry $15.80, Watches $22.00 per item)' }
+        { code: 'AG100', type: 'free_shipping_promo', discount: '100% Free Items (Shipping Only)', uses: '0 Used', status: 'Active', desc: 'Customer pays only Shipping (Wigs $34/$38, Jewelry $15.80, Watches $22.00 per item)' }
       ];
 
       const map = new Map();
@@ -2650,7 +2650,7 @@
           code: code,
           type: 'free_shipping_promo',
           discount: '100% Free Items (Shipping Only)',
-          desc: '100% Free Items Promo — Customer pays only Shipping (Wigs $35.99/$41.99, Jewelry $15.80, Watches $22.00 per item)',
+          desc: '100% Free Items Promo — Customer pays only Shipping (Wigs $34/$38, Jewelry $15.80, Watches $22.00 per item)',
           status: 'Active',
           uses: '0 Used'
         };

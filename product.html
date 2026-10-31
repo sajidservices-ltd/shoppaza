@@ -497,68 +497,297 @@
     </div>
   </div>
 
-  <!-- ================= 9. CHECKOUT MODAL ================= -->
-  <div id="checkoutModal" class="fixed inset-0 z-[80] bg-black/80 hidden backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-xl max-w-lg w-full p-6 relative shadow-2xl max-h-[92vh] overflow-y-auto">
-      <button onclick="closeCheckoutModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-800 text-lg">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-
-      <div class="flex items-center gap-2 mb-4 pb-3 border-b border-slate-200">
-        <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm font-bold">
-          <i class="fa-solid fa-lock"></i>
+    <!-- ================= SHOPIFY-GRADE LUXURY CHECKOUT EXPERIENCE ================= -->
+  <div id="checkoutModal" class="fixed inset-0 z-[80] bg-black/80 hidden backdrop-blur-md flex items-center justify-center p-2 sm:p-4 md:p-6 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-5xl w-full relative shadow-2xl overflow-hidden my-auto border border-slate-200">
+      
+      <!-- Top Bar -->
+      <div class="px-6 py-4 bg-slate-950 text-white flex items-center justify-between border-b border-slate-800">
+        <div class="flex items-center gap-3">
+          <img src="logo-white.svg" alt="Shoppaza" class="h-6 w-auto">
+          <span class="text-[11px] font-semibold text-slate-400 border-l border-slate-700 pl-3 hidden sm:inline">SAJID SERVICES LTD (SC874640) • 256-Bit SSL Checkout</span>
         </div>
-        <div>
-          <h3 class="font-bold text-slate-900 text-base">Secure Checkout</h3>
-          <p class="text-slate-500 text-[11px]">Processed under SAJID SERVICES LTD (SC874640)</p>
+        <div class="flex items-center gap-3">
+          <span class="text-xs text-emerald-400 font-bold flex items-center gap-1.5"><i class="fa-solid fa-lock"></i> Encrypted</span>
+          <button type="button" onclick="closeCheckoutModal()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition">
+            <i class="fa-solid fa-xmark text-sm"></i>
+          </button>
         </div>
       </div>
 
-      <form id="checkoutForm" onsubmit="handleCheckoutSubmit(event)" class="space-y-4 text-xs">
-        <div>
-          <label class="block text-slate-700 font-semibold mb-1">Full Name</label>
-          <input type="text" id="custName" required placeholder="John Doe" class="w-full bg-slate-50 border border-slate-200 rounded p-2.5 focus:border-daraz-orange focus:outline-none">
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
+      <!-- Main 2-Column Shopify Layout -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 min-h-[580px]">
+        
+        <!-- LEFT COLUMN: Checkout Journey (7 cols) -->
+        <div class="lg:col-span-7 p-6 sm:p-8 space-y-6 max-h-[80vh] overflow-y-auto">
+          
+          <!-- Express Checkout Buttons -->
           <div>
-            <label class="block text-slate-700 font-semibold mb-1">Email</label>
-            <input type="email" id="custEmail" required placeholder="name@example.com" class="w-full bg-slate-50 border border-slate-200 rounded p-2.5 focus:border-daraz-orange focus:outline-none">
+            <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 text-center">Express Checkout</div>
+            <div class="grid grid-cols-3 gap-2">
+              <button type="button" onclick="selectExpressPayment('apple')" class="py-2.5 px-3 rounded-lg bg-black hover:bg-slate-900 text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow">
+                <i class="fa-brands fa-apple text-sm"></i> Pay
+              </button>
+              <button type="button" onclick="selectExpressPayment('amazon')" id="btnExpressAmazon" class="py-2.5 px-3 rounded-lg bg-[#FF9900] hover:bg-[#e68a00] text-slate-950 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow">
+                <i class="fa-brands fa-amazon text-sm"></i> Pay
+              </button>
+              <button type="button" onclick="selectExpressPayment('afterpay')" id="btnExpressAfterpay" class="py-2.5 px-3 rounded-lg bg-[#B2FCE4] hover:bg-[#9eedd5] text-slate-900 text-xs font-extrabold transition flex items-center justify-center gap-1 shadow">
+                afterpay<span class="text-[9px]">®</span>
+              </button>
+            </div>
+            <div class="relative my-5 text-center">
+              <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-200"></div></div>
+              <span class="relative bg-white px-3 text-[11px] font-bold text-slate-400 uppercase">OR CONTINUE BELOW</span>
+            </div>
           </div>
-          <div>
-            <label class="block text-slate-700 font-semibold mb-1">Phone</label>
-            <input type="tel" id="custPhone" required placeholder="+44 7911 123456" class="w-full bg-slate-50 border border-slate-200 rounded p-2.5 focus:border-daraz-orange focus:outline-none">
+
+          <form id="shopifyCheckoutForm" onsubmit="handleShopifyCheckoutSubmit(event)" class="space-y-5">
+            
+            <!-- Contact -->
+            <div>
+              <div class="flex justify-between items-center mb-1.5">
+                <h4 class="text-sm font-bold text-slate-900">Contact</h4>
+                <a href="#" onclick="openAuthModal('signin'); return false;" class="text-xs text-daraz-orange font-semibold hover:underline">Log in</a>
+              </div>
+              <input type="email" id="checkoutEmail" required placeholder="Email or mobile phone number" class="w-full border border-slate-300 rounded-lg p-3 text-xs text-slate-900 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900">
+              <label class="flex items-center gap-2 mt-2 text-[11px] text-slate-600 cursor-pointer">
+                <input type="checkbox" checked class="rounded border-slate-300 text-slate-900 focus:ring-0">
+                <span>Email me with news and exclusive offers</span>
+              </label>
+            </div>
+
+            <!-- Delivery Address -->
+            <div class="space-y-3 pt-2">
+              <h4 class="text-sm font-bold text-slate-900">Delivery Address</h4>
+              
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Country / Region</label>
+                <select id="checkoutCountry" onchange="handleCheckoutCountryChange(this.value)" class="w-full border border-slate-300 rounded-lg p-3 text-xs text-slate-900 bg-white focus:outline-none focus:border-slate-900">
+                  <option value="GB" selected>United Kingdom (£ GBP)</option>
+                  <option value="US">United States ($ USD)</option>
+                  <option value="AU">Australia (A$ AUD)</option>
+                  <option value="CA">Canada ($ CAD)</option>
+                  <option value="DE">Germany (€ EUR)</option>
+                  <option value="FR">France (€ EUR)</option>
+                  <option value="AE">United Arab Emirates (AED)</option>
+                  <option value="SA">Saudi Arabia (SAR)</option>
+                  <option value="PK">Pakistan (₨ PKR)</option>
+                </select>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <input type="text" id="checkoutFirstName" required placeholder="First name" class="w-full border border-slate-300 rounded-lg p-3 text-xs text-slate-900 focus:outline-none focus:border-slate-900">
+                <input type="text" id="checkoutLastName" required placeholder="Last name" class="w-full border border-slate-300 rounded-lg p-3 text-xs text-slate-900 focus:outline-none focus:border-slate-900">
+              </div>
+
+              <input type="text" id="checkoutStreet" required placeholder="Address (House number and street name)" class="w-full border border-slate-300 rounded-lg p-3 text-xs text-slate-900 focus:outline-none focus:border-slate-900">
+              <input type="text" id="checkoutSuite" placeholder="Apartment, suite, unit (optional)" class="w-full border border-slate-300 rounded-lg p-3 text-xs text-slate-900 focus:outline-none focus:border-slate-900">
+
+              <div class="grid grid-cols-2 gap-3">
+                <input type="text" id="checkoutCity" required placeholder="City" class="w-full border border-slate-300 rounded-lg p-3 text-xs text-slate-900 focus:outline-none focus:border-slate-900">
+                <input type="text" id="checkoutPostal" required placeholder="Postcode / ZIP" class="w-full border border-slate-300 rounded-lg p-3 text-xs text-slate-900 focus:outline-none focus:border-slate-900">
+              </div>
+
+              <input type="tel" id="checkoutPhone" required placeholder="Phone number for delivery tracking" class="w-full border border-slate-300 rounded-lg p-3 text-xs text-slate-900 focus:outline-none focus:border-slate-900">
+            </div>
+
+            <!-- Shipping Method -->
+            <div class="space-y-2 pt-2">
+              <h4 class="text-sm font-bold text-slate-900">Shipping Method</h4>
+              <div class="p-3.5 border-2 border-slate-900 bg-slate-50/50 rounded-xl flex items-center justify-between text-xs">
+                <div class="flex items-center gap-3">
+                  <div class="w-4 h-4 rounded-full bg-slate-900 flex items-center justify-center text-white text-[8px]"><i class="fa-solid fa-check"></i></div>
+                  <div>
+                    <span class="font-bold text-slate-900" id="checkoutShippingTitle">Royal Mail Tracked 24</span>
+                    <span class="text-[11px] text-slate-500 block">Fast tracked 24-48h dispatched from Edinburgh, UK</span>
+                  </div>
+                </div>
+                <span class="font-bold text-emerald-600 uppercase text-xs tracking-wider">FREE</span>
+              </div>
+            </div>
+
+            <!-- Payment Method Section -->
+            <div class="space-y-3 pt-2">
+              <div class="flex items-center justify-between">
+                <h4 class="text-sm font-bold text-slate-900">Payment</h4>
+                <span class="text-[11px] text-slate-500">All transactions are encrypted and secure</span>
+              </div>
+
+              <!-- Payment Accordion Options -->
+              <div class="border border-slate-300 rounded-xl overflow-hidden divide-y divide-slate-200 text-xs">
+                
+                <!-- Option 1: Credit / Debit Card (Stripe) -->
+                <div class="bg-white">
+                  <label class="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50 transition" onclick="togglePaymentSection('card')">
+                    <div class="flex items-center gap-3">
+                      <input type="radio" name="paymentOption" value="card" checked class="text-slate-900 focus:ring-0">
+                      <span class="font-bold text-slate-900">Credit / Debit Card</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-lg text-slate-600">
+                      <i class="fa-brands fa-cc-visa text-blue-800"></i>
+                      <i class="fa-brands fa-cc-mastercard text-rose-600"></i>
+                      <i class="fa-brands fa-cc-amex text-sky-600"></i>
+                      <span class="text-[11px] font-bold text-slate-400 font-mono">+more</span>
+                    </div>
+                  </label>
+
+                  <!-- Card Fields Sub-panel -->
+                  <div id="paymentFields-card" class="p-4 bg-slate-50 border-t border-slate-200 space-y-3">
+                    <div class="relative">
+                      <input type="text" id="cardHolderName" placeholder="Cardholder Name" class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 focus:outline-none focus:border-slate-900">
+                    </div>
+                    <div class="relative">
+                      <input type="text" id="cardNumberInput" maxlength="19" oninput="formatCardNumber(this)" placeholder="Card number (16 digits)" class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 font-mono tracking-wider focus:outline-none focus:border-slate-900">
+                      <div class="absolute right-3 top-2.5 text-slate-400 text-sm">
+                        <i class="fa-solid fa-lock text-slate-400" id="cardBrandIcon"></i>
+                      </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                      <input type="text" id="cardExpiryInput" maxlength="5" oninput="formatCardExpiry(this)" placeholder="MM / YY" class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 font-mono text-center focus:outline-none focus:border-slate-900">
+                      <div class="relative">
+                        <input type="password" id="cardCvcInput" maxlength="4" placeholder="Security code (CVC)" class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 font-mono text-center focus:outline-none focus:border-slate-900">
+                        <i class="fa-solid fa-circle-question absolute right-3 top-3 text-slate-400 cursor-pointer" title="3 or 4 digit code on the back of your card"></i>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-2 text-[10px] text-slate-500">
+                      <i class="fa-solid fa-shield-halved text-emerald-600"></i>
+                      <span>PCI-DSS Level 1 Encrypted via Stripe Gateway</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Option 2: Afterpay / Clearpay -->
+                <div id="containerAfterpayOption" class="bg-white">
+                  <label class="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50 transition" onclick="togglePaymentSection('afterpay')">
+                    <div class="flex items-center gap-3">
+                      <input type="radio" name="paymentOption" value="afterpay" class="text-slate-900 focus:ring-0">
+                      <span class="font-bold text-slate-900">Afterpay / Clearpay</span>
+                    </div>
+                    <span class="px-2 py-0.5 rounded bg-[#B2FCE4] text-slate-900 font-extrabold text-[10px]">4 Interest-Free Payments</span>
+                  </label>
+                  <div id="paymentFields-afterpay" class="hidden p-4 bg-slate-50 border-t border-slate-200 text-xs text-slate-600 space-y-2">
+                    <p>Pay 4 installments of <strong class="text-slate-900" id="afterpayInstallmentText">£0.00</strong> every 2 weeks. No interest, no fees when you pay on time.</p>
+                    <p class="text-[11px] text-slate-500">You will be redirected to Afterpay to complete your purchase securely.</p>
+                  </div>
+                </div>
+
+                <!-- Option 3: Amazon Pay -->
+                <div id="containerAmazonOption" class="bg-white">
+                  <label class="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50 transition" onclick="togglePaymentSection('amazon')">
+                    <div class="flex items-center gap-3">
+                      <input type="radio" name="paymentOption" value="amazon" class="text-slate-900 focus:ring-0">
+                      <span class="font-bold text-slate-900">Amazon Pay</span>
+                    </div>
+                    <i class="fa-brands fa-amazon text-slate-800 text-base"></i>
+                  </label>
+                  <div id="paymentFields-amazon" class="hidden p-4 bg-slate-50 border-t border-slate-200 text-xs text-slate-600 space-y-2">
+                    <p>Use your stored Amazon payment methods and address book for 1-click checkout.</p>
+                  </div>
+                </div>
+
+                <!-- Option 4: Crypto USDT -->
+                <div class="bg-white">
+                  <label class="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50 transition" onclick="togglePaymentSection('crypto')">
+                    <div class="flex items-center gap-3">
+                      <input type="radio" name="paymentOption" value="crypto" class="text-slate-900 focus:ring-0">
+                      <span class="font-bold text-slate-900">USDT / Web3 Crypto (TRC-20)</span>
+                    </div>
+                    <span class="text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 font-mono font-bold">TRC20</span>
+                  </label>
+                  <div id="paymentFields-crypto" class="hidden p-4 bg-slate-50 border-t border-slate-200 text-xs text-slate-600 space-y-2 font-mono">
+                    <p>Company Wallet: <code class="bg-white px-2 py-1 rounded border border-slate-300 text-emerald-700 font-bold">TShpza874640EdinUK99x2</code></p>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Billing Address Checkbox -->
+            <div class="border border-slate-300 rounded-xl p-3.5 bg-white space-y-2 text-xs">
+              <label class="flex items-center gap-2 cursor-pointer font-semibold text-slate-800">
+                <input type="radio" name="billingOption" value="same" checked class="text-slate-900">
+                <span>Use shipping address as billing address</span>
+              </label>
+            </div>
+
+            <!-- Big Pay Now Button -->
+            <button type="submit" id="btnShopifyPayNow" class="w-full py-4 bg-slate-950 hover:bg-black text-white font-extrabold text-sm uppercase tracking-wider rounded-xl transition shadow-xl flex items-center justify-center gap-2">
+              <i class="fa-solid fa-lock text-emerald-400"></i>
+              <span id="btnPayNowText">Pay now • £0.00</span>
+            </button>
+
+            <!-- Policy Guarantee Badges -->
+            <div class="grid grid-cols-3 gap-2 pt-2 text-center text-[10px] text-slate-500 border-t border-slate-100">
+              <div><i class="fa-solid fa-rotate-left text-daraz-orange"></i> 30-Day Money Back</div>
+              <div><i class="fa-solid fa-shield-halved text-emerald-600"></i> 100% Secure Checkout</div>
+              <div><i class="fa-solid fa-truck-fast text-sky-600"></i> Royal Mail Dispatched</div>
+            </div>
+
+          </form>
+        </div>
+
+        <!-- RIGHT COLUMN: Shopify Order Summary (5 cols) -->
+        <div class="lg:col-span-5 bg-slate-50/90 border-t lg:border-t-0 lg:border-l border-slate-200 p-6 sm:p-8 flex flex-col justify-between max-h-[80vh] overflow-y-auto">
+          
+          <div class="space-y-6">
+            <h4 class="text-sm font-bold text-slate-900 pb-2 border-b border-slate-200 flex items-center justify-between">
+              <span>Order Summary</span>
+              <span class="text-xs font-normal text-slate-500" id="checkoutItemsCount">0 items</span>
+            </h4>
+
+            <!-- Dynamic Cart Items Preview -->
+            <div id="checkoutItemsList" class="space-y-3.5 max-h-[220px] overflow-y-auto pr-1">
+              <!-- Rendered via JS -->
+            </div>
+
+            <!-- Discount Code Input -->
+            <div class="flex gap-2">
+              <input type="text" id="checkoutDiscountInput" placeholder="Discount code or gift card" class="flex-1 border border-slate-300 rounded-lg px-3 py-2.5 text-xs text-slate-900 uppercase font-mono focus:outline-none focus:border-slate-900">
+              <button type="button" onclick="applyCheckoutDiscount()" class="px-4 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold rounded-lg transition">
+                Apply
+              </button>
+            </div>
+            <div id="discountAppliedMsg" class="hidden text-xs text-emerald-600 font-bold flex items-center gap-1.5">
+              <i class="fa-solid fa-tag"></i> <span>Coupon applied successfully!</span>
+            </div>
+
+            <!-- Price Breakdown -->
+            <div class="space-y-2.5 text-xs text-slate-600 pt-3 border-t border-slate-200">
+              <div class="flex justify-between">
+                <span>Subtotal</span>
+                <span class="font-semibold text-slate-900" id="summarySubtotal">£0.00</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Shipping (Royal Mail Tracked 24)</span>
+                <span class="font-bold text-emerald-600 uppercase">Free</span>
+              </div>
+              <div class="flex justify-between text-slate-500">
+                <span>Estimated taxes (UK VAT 20%)</span>
+                <span>Included</span>
+              </div>
+              <div class="flex justify-between items-baseline pt-3 border-t border-slate-300 text-slate-900">
+                <span class="text-base font-bold">Total</span>
+                <div class="text-right">
+                  <span class="text-[11px] text-slate-400 font-mono mr-1" id="summaryCurrencyCode">GBP</span>
+                  <span class="text-2xl font-black text-slate-950 font-mono" id="summaryTotalAmount">£0.00</span>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div>
-          <label class="block text-slate-700 font-semibold mb-1">Shipping Address</label>
-          <input type="text" id="custAddress" required placeholder="Street address, apartment, suite" class="w-full bg-slate-50 border border-slate-200 rounded p-2.5 focus:border-daraz-orange focus:outline-none">
-        </div>
-
-        <div>
-          <label class="block text-slate-700 font-semibold mb-2">Payment Gateway</label>
-          <div class="space-y-2">
-            <label class="flex items-center gap-3 p-2.5 border border-slate-200 rounded cursor-pointer hover:border-daraz-orange bg-slate-50">
-              <input type="radio" name="paymentMethod" value="Stripe" checked class="text-daraz-orange">
-              <span class="font-bold text-slate-800">Stripe (Card / Apple Pay / Google Pay)</span>
-            </label>
-            <label class="flex items-center gap-3 p-2.5 border border-slate-200 rounded cursor-pointer hover:border-daraz-orange bg-slate-50">
-              <input type="radio" name="paymentMethod" value="USDT" class="text-daraz-orange">
-              <span class="font-bold text-emerald-700">USDT / Web3 Crypto</span>
-            </label>
+          <!-- Merchant Legal Trust Card -->
+          <div class="mt-6 p-4 rounded-xl bg-white border border-slate-200 text-[11px] text-slate-500 space-y-1">
+            <div class="font-bold text-slate-800 flex items-center gap-1.5">
+              <i class="fa-solid fa-building text-slate-700"></i> SAJID SERVICES LTD
+            </div>
+            <div>CRN: SC874640 • Registered in Edinburgh, Scotland</div>
+            <div>Office 146 18 Young St, Unit Lge, EH2 4JB, UK</div>
           </div>
+
         </div>
 
-        <div class="p-3 bg-slate-100 rounded flex justify-between font-bold text-slate-900 text-sm">
-          <span>Amount Payable:</span>
-          <span class="text-daraz-orange" id="checkoutPayableAmount">£0.00</span>
-        </div>
+      </div>
 
-        <button type="submit" class="w-full py-3 bg-daraz-orange hover:bg-daraz-orangeDark text-white font-bold rounded shadow transition">
-          PLACE ORDER NOW
-        </button>
-      </form>
     </div>
   </div>
 
@@ -1271,5 +1500,6 @@
       });
     }
   </script>
+  <script src="checkout.js"></script>
 </body>
 </html>

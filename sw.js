@@ -14,7 +14,8 @@ const STATIC_ASSETS = [
   '/logo.svg',
   '/logo-white.svg',
   '/icon-192.png',
-  '/icon-512.png'
+  '/icon-512.png',
+  '/checkout.js'
 ];
 
 // Install: Cache critical fast shell assets (lightweight, zero timeouts)

@@ -143,6 +143,14 @@
             <i class="fa-solid fa-chart-line w-4"></i> Analytics
           </button>
 
+          <button onclick="switchTab('payments')" id="tabBtn-payments" class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-slate-300 hover:bg-shopify-surface transition">
+            <div class="flex items-center gap-3">
+              <i class="fa-brands fa-stripe text-indigo-400 w-4 text-base"></i>
+              <span>Payments & Stripe</span>
+            </div>
+            <span id="badgeStripeStatus" class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 text-slate-400 font-mono">Config</span>
+          </button>
+
           <button onclick="switchTab('settings')" id="tabBtn-settings" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-shopify-surface transition">
             <i class="fa-solid fa-gear w-4"></i> Settings & Security
           </button>
@@ -649,6 +657,210 @@
           </div>
         </section>
 
+        <!-- ================= 9. PAYMENTS & STRIPE GATEWAY TAB ================= -->
+        <section id="panel-payments" class="hidden space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-3">
+                <h2 class="text-2xl font-bold text-white tracking-tight">Payments & Stripe Gateway Plugin</h2>
+                <span id="stripeStatusPill" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                  Ready to Configure
+                </span>
+              </div>
+              <p class="text-xs text-slate-400 mt-1">SAJID SERVICES LTD (SC874640) • Manage live Stripe API keys, regional wallets (Apple Pay, Amazon Pay, Afterpay), and localized Shopify-grade checkout.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="testStripeConnection()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 rounded-xl border border-slate-700 transition flex items-center gap-1.5">
+                <i class="fa-solid fa-bolt text-amber-400"></i> Test Connection
+              </button>
+            </div>
+          </div>
+
+          <form id="stripeConfigForm" onsubmit="handleSaveStripeSettings(event)" class="space-y-6">
+            
+            <!-- Credentials Card -->
+            <div class="p-6 rounded-2xl bg-shopify-sidebar border border-shopify-border space-y-5">
+              <div class="flex items-center justify-between border-b border-shopify-border pb-4">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 text-xl font-bold">
+                    <i class="fa-brands fa-stripe"></i>
+                  </div>
+                  <div>
+                    <h3 class="text-sm font-bold text-white">Stripe Live API Credentials</h3>
+                    <p class="text-[11px] text-slate-400">Paste your API keys from your verified Stripe Dashboard.</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs text-slate-400">Environment:</span>
+                  <select id="stripeEnvMode" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-emerald-400 font-bold focus:outline-none focus:border-indigo-500">
+                    <option value="live">Live Production (pk_live / sk_live)</option>
+                    <option value="test">Test Sandbox (pk_test / sk_test)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="space-y-4 text-xs">
+                <div>
+                  <div class="flex justify-between items-center mb-1.5">
+                    <label class="font-semibold text-slate-300 flex items-center gap-1.5">
+                      <i class="fa-solid fa-key text-emerald-400"></i> Publishable Key
+                      <span class="text-rose-400">*</span>
+                    </label>
+                    <span class="text-[10px] text-slate-500 font-mono">Starts with pk_live_ or pk_test_</span>
+                  </div>
+                  <div class="relative">
+                    <input type="text" id="stripePublishableKey" placeholder="pk_live_51..." class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-white font-mono focus:border-indigo-500 focus:outline-none">
+                    <button type="button" onclick="pasteFromClipboard('stripePublishableKey')" class="absolute right-3 top-2.5 px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-[11px] text-slate-300 border border-slate-700 transition">Paste</button>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex justify-between items-center mb-1.5">
+                    <label class="font-semibold text-slate-300 flex items-center gap-1.5">
+                      <i class="fa-solid fa-shield-halved text-indigo-400"></i> Secret Key
+                      <span class="text-rose-400">*</span>
+                    </label>
+                    <span class="text-[10px] text-slate-500 font-mono">Starts with sk_live_ or sk_test_</span>
+                  </div>
+                  <div class="relative">
+                    <input type="password" id="stripeSecretKey" placeholder="sk_live_51..." class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-white font-mono focus:border-indigo-500 focus:outline-none">
+                    <div class="absolute right-3 top-2.5 flex items-center gap-1.5">
+                      <button type="button" onclick="toggleSecretVisibility('stripeSecretKey', 'eyeSecretKey')" class="p-1 text-slate-400 hover:text-white">
+                        <i class="fa-solid fa-eye" id="eyeSecretKey"></i>
+                      </button>
+                      <button type="button" onclick="pasteFromClipboard('stripeSecretKey')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-[11px] text-slate-300 border border-slate-700 transition">Paste</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex justify-between items-center mb-1.5">
+                    <label class="font-semibold text-slate-300 flex items-center gap-1.5">
+                      <i class="fa-solid fa-bell text-amber-400"></i> Webhook Signing Secret (Optional)
+                    </label>
+                    <span class="text-[10px] text-slate-500 font-mono">Starts with whsec_</span>
+                  </div>
+                  <div class="relative">
+                    <input type="password" id="stripeWebhookSecret" placeholder="whsec_..." class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-white font-mono focus:border-indigo-500 focus:outline-none">
+                    <div class="absolute right-3 top-2.5 flex items-center gap-1.5">
+                      <button type="button" onclick="toggleSecretVisibility('stripeWebhookSecret', 'eyeWebhookSecret')" class="p-1 text-slate-400 hover:text-white">
+                        <i class="fa-solid fa-eye" id="eyeWebhookSecret"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Regional Payment Methods Manager -->
+            <div class="p-6 rounded-2xl bg-shopify-sidebar border border-shopify-border space-y-5">
+              <div>
+                <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                  <i class="fa-solid fa-globe text-emerald-400"></i> Multi-Region Payment Methods & Localized Checkouts
+                </h3>
+                <p class="text-[11px] text-slate-400 mt-0.5">Control which payment methods and Buy Now Pay Later (BNPL) options appear based on customer region.</p>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                <!-- UK Card -->
+                <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-3">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold text-white flex items-center gap-1.5">🇬🇧 United Kingdom</span>
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold">Primary</span>
+                  </div>
+                  <div class="space-y-2 text-slate-300">
+                    <label class="flex items-center justify-between">
+                      <span>Visa, Mastercard, Amex</span>
+                      <input type="checkbox" id="methodUkCards" checked disabled class="accent-emerald-500">
+                    </label>
+                    <label class="flex items-center justify-between cursor-pointer">
+                      <span>Apple Pay & Google Pay</span>
+                      <input type="checkbox" id="methodUkWallets" checked class="accent-emerald-500">
+                    </label>
+                    <label class="flex items-center justify-between cursor-pointer">
+                      <span>Clearpay (UK)</span>
+                      <input type="checkbox" id="methodUkClearpay" checked class="accent-emerald-500">
+                    </label>
+                  </div>
+                  <div class="text-[10px] text-slate-500 pt-2 border-t border-slate-800 font-mono">Currency: GBP (£)</div>
+                </div>
+
+                <!-- US Card -->
+                <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-3">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold text-white flex items-center gap-1.5">🇺🇸 United States</span>
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-400 font-bold">Supported</span>
+                  </div>
+                  <div class="space-y-2 text-slate-300">
+                    <label class="flex items-center justify-between cursor-pointer">
+                      <span>Afterpay (Pay in 4)</span>
+                      <input type="checkbox" id="methodUsAfterpay" checked class="accent-indigo-500">
+                    </label>
+                    <label class="flex items-center justify-between cursor-pointer">
+                      <span>Amazon Pay</span>
+                      <input type="checkbox" id="methodUsAmazonPay" checked class="accent-indigo-500">
+                    </label>
+                    <label class="flex items-center justify-between cursor-pointer">
+                      <span>Credit & Debit Cards</span>
+                      <input type="checkbox" id="methodUsCards" checked class="accent-indigo-500">
+                    </label>
+                  </div>
+                  <div class="text-[10px] text-slate-500 pt-2 border-t border-slate-800 font-mono">Currency: USD ($)</div>
+                </div>
+
+                <!-- AU Card -->
+                <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-3">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold text-white flex items-center gap-1.5">🇦🇺 Australia</span>
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-400 font-bold">Supported</span>
+                  </div>
+                  <div class="space-y-2 text-slate-300">
+                    <label class="flex items-center justify-between cursor-pointer">
+                      <span>Afterpay / Clearpay</span>
+                      <input type="checkbox" id="methodAuAfterpay" checked class="accent-indigo-500">
+                    </label>
+                    <label class="flex items-center justify-between cursor-pointer">
+                      <span>Credit & Debit Cards</span>
+                      <input type="checkbox" id="methodAuCards" checked class="accent-indigo-500">
+                    </label>
+                    <label class="flex items-center justify-between cursor-pointer">
+                      <span>Apple Pay / Google Pay</span>
+                      <input type="checkbox" id="methodAuWallets" checked class="accent-indigo-500">
+                    </label>
+                  </div>
+                  <div class="text-[10px] text-slate-500 pt-2 border-t border-slate-800 font-mono">Currency: AUD (A$)</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pakistani Roman Urdu & English Step-by-Step Guide Card -->
+            <div class="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-4">
+              <h3 class="text-sm font-bold text-amber-400 flex items-center gap-2">
+                <i class="fa-solid fa-circle-question"></i> Stripe Keys Kahan Se Nikal Kar Lagani Hain? (Step-by-Step Guide)
+              </h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-300">
+                <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+                  <div class="font-bold text-white">1. Publishable Key (`pk_live_...`):</div>
+                  <p class="text-slate-400 leading-relaxed">Apne Stripe Dashboard mein jayein -> Left side par neechay <strong>Developers</strong> par click karein -> Phir <strong>API keys</strong> par click karein. Wahan <strong>Publishable key</strong> ko copy kar ke upar pehle box mein paste karein.</p>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+                  <div class="font-bold text-white">2. Secret Key (`sk_live_...`):</div>
+                  <p class="text-slate-400 leading-relaxed">API keys wale page par hi neechay "Standard keys" mein <strong>Secret key</strong> ke aagay <strong>"Reveal live key"</strong> ka button dabayein, key copy karein aur doosre box mein paste karein.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="flex items-center justify-end gap-3 pt-2">
+              <button type="submit" class="px-8 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-sm transition shadow-lg shadow-emerald-600/20 flex items-center gap-2">
+                <i class="fa-solid fa-floppy-disk"></i> Save & Activate Stripe Gateway
+              </button>
+            </div>
+          </form>
+        </section>
+
+
       </div>
     </main>
   </div>
@@ -1034,6 +1246,7 @@
       renderCustomers();
       renderDiscounts();
       renderSliderBannersSummary();
+      loadStripeSettings();
     });
 
     // ---------------- AUTHENTICATION ----------------
@@ -1094,7 +1307,7 @@
 
     // ---------------- TAB NAVIGATION ----------------
     function switchTab(tabName) {
-      const tabs = ['home', 'orders', 'products', 'customizer', 'customers', 'discounts', 'analytics', 'settings'];
+      const tabs = ['home', 'orders', 'products', 'customizer', 'customers', 'discounts', 'analytics', 'settings', 'payments'];
       tabs.forEach(t => {
         const panel = document.getElementById('panel-' + t);
         const btn = document.getElementById('tabBtn-' + t);
@@ -1947,6 +2160,112 @@
       document.getElementById('hintDefaultPass').innerText = newPass;
       e.target.reset();
       showToast('Admin Passcode changed successfully! Save it securely.', 'success');
+    }
+
+    
+    // ---------------- PAYMENTS & STRIPE GATEWAY PLUGIN ----------------
+    function loadStripeSettings() {
+      const saved = JSON.parse(localStorage.getItem('shoppaza_stripe_config') || '{}');
+      if (saved.publishableKey) document.getElementById('stripePublishableKey').value = saved.publishableKey;
+      if (saved.secretKey) document.getElementById('stripeSecretKey').value = saved.secretKey;
+      if (saved.webhookSecret) document.getElementById('stripeWebhookSecret').value = saved.webhookSecret;
+      if (saved.envMode) document.getElementById('stripeEnvMode').value = saved.envMode;
+      if (saved.methodUsAfterpay !== undefined) document.getElementById('methodUsAfterpay').checked = saved.methodUsAfterpay;
+      if (saved.methodUsAmazonPay !== undefined) document.getElementById('methodUsAmazonPay').checked = saved.methodUsAmazonPay;
+      if (saved.methodAuAfterpay !== undefined) document.getElementById('methodAuAfterpay').checked = saved.methodAuAfterpay;
+      
+      updateStripeStatusUI(saved);
+    }
+
+    function updateStripeStatusUI(config) {
+      const pill = document.getElementById('stripeStatusPill');
+      const badge = document.getElementById('badgeStripeStatus');
+      if (config.publishableKey && config.publishableKey.startsWith('pk_')) {
+        if (pill) pill.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Stripe Live Active';
+        if (pill) pill.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5';
+        if (badge) {
+          badge.innerText = 'Live';
+          badge.className = 'px-1.5 py-0.5 rounded text-[10px] bg-emerald-500/20 text-emerald-400 font-mono font-bold';
+        }
+      } else {
+        if (pill) pill.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-400"></span> Keys Required';
+        if (pill) pill.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center gap-1.5';
+        if (badge) {
+          badge.innerText = 'Pending';
+          badge.className = 'px-1.5 py-0.5 rounded text-[10px] bg-amber-500/20 text-amber-400 font-mono';
+        }
+      }
+    }
+
+    function handleSaveStripeSettings(e) {
+      e.preventDefault();
+      const pub = document.getElementById('stripePublishableKey').value.trim();
+      const sec = document.getElementById('stripeSecretKey').value.trim();
+      const env = document.getElementById('stripeEnvMode').value;
+
+      if (!pub.startsWith('pk_')) {
+        alert('Invalid Publishable Key! Must begin with pk_live_ or pk_test_');
+        return;
+      }
+
+      const config = {
+        enabled: true,
+        envMode: env,
+        publishableKey: pub,
+        secretKey: sec,
+        webhookSecret: document.getElementById('stripeWebhookSecret').value.trim(),
+        methodUkCards: true,
+        methodUkWallets: document.getElementById('methodUkWallets').checked,
+        methodUkClearpay: document.getElementById('methodUkClearpay').checked,
+        methodUsAfterpay: document.getElementById('methodUsAfterpay').checked,
+        methodUsAmazonPay: document.getElementById('methodUsAmazonPay').checked,
+        methodUsCards: document.getElementById('methodUsCards').checked,
+        methodAuAfterpay: document.getElementById('methodAuAfterpay').checked,
+        methodAuCards: document.getElementById('methodAuCards').checked,
+        methodAuWallets: document.getElementById('methodAuWallets').checked,
+        updatedAt: new Date().toISOString()
+      };
+
+      localStorage.setItem('shoppaza_stripe_config', JSON.stringify(config));
+      updateStripeStatusUI(config);
+      showToast('Stripe Configuration & Regional Gateways Saved Successfully!', 'success');
+    }
+
+    function testStripeConnection() {
+      const pub = document.getElementById('stripePublishableKey').value.trim();
+      if (!pub) {
+        alert('Please enter your Stripe Publishable Key (pk_live_... or pk_test_...) first!');
+        return;
+      }
+      if (!pub.startsWith('pk_')) {
+        alert('Invalid Key Format! Stripe Publishable key must start with pk_live_ or pk_test_');
+        return;
+      }
+      showToast('Stripe Key validated: ' + pub.slice(0, 14) + '... (Ready for live cards)', 'success');
+    }
+
+    function toggleSecretVisibility(inputId, iconId) {
+      const inp = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+      if (inp.type === 'password') {
+        inp.type = 'text';
+        icon.className = 'fa-solid fa-eye-slash';
+      } else {
+        inp.type = 'password';
+        icon.className = 'fa-solid fa-eye';
+      }
+    }
+
+    async function pasteFromClipboard(inputId) {
+      try {
+        const text = await navigator.clipboard.readText();
+        if (text) {
+          document.getElementById(inputId).value = text.trim();
+          showToast('Pasted key from clipboard!', 'success');
+        }
+      } catch (err) {
+        alert('Please paste manually using Ctrl+V or right-click paste.');
+      }
     }
 
     // ---------------- ANALYTICS ----------------

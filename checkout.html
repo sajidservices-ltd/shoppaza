@@ -1163,9 +1163,16 @@
       else input.value = v;
     }
 
-    // Discount Engine
+// Discount Engine
     function applyDiscount(source) {
-      const input = source === 'mobile' ? document.getElementById('mobileDiscountInput') : document.getElementById('desktopDiscountInput');
+      let input = null;
+      if (source === 'mobileInline') {
+        input = document.getElementById('mobileInlineDiscountInput');
+      } else if (source === 'mobile') {
+        input = document.getElementById('mobileDiscountInput');
+      } else {
+        input = document.getElementById('desktopDiscountInput');
+      }
       const val = (input ? input.value : '').trim().toUpperCase();
       if (!val) {
         alert('Please enter a voucher code.');
@@ -1182,10 +1189,13 @@
 
       const msg = document.getElementById('discountSuccessMessage');
       if (msg) msg.classList.remove('hidden');
+      const mobileInlineMsg = document.getElementById('mobileInlineDiscountSuccessMessage');
+      if (mobileInlineMsg) mobileInlineMsg.classList.remove('hidden');
+
       renderOrderSummary();
     }
 
-    // Mobile Summary Collapsible
+    // Mobile Summary Collapsible (Header Bar)
     let isMobileSummaryOpen = false;
     function toggleMobileSummary() {
       isMobileSummaryOpen = !isMobileSummaryOpen;
@@ -1204,20 +1214,78 @@
       }
     }
 
-    // Render Order Summary (Desktop & Mobile)
+    // Mobile Inline Summary Collapsible (Above Pay Now Button)
+    let isMobileInlineSummaryOpen = true;
+    function toggleMobileInlineSummary() {
+      isMobileInlineSummaryOpen = !isMobileInlineSummaryOpen;
+      const content = document.getElementById('mobileInlineSummaryContent');
+      const chevron = document.getElementById('mobileInlineSummaryChevron');
+      if (content) {
+        if (isMobileInlineSummaryOpen) {
+          content.classList.remove('hidden');
+          if (chevron) chevron.classList.remove('rotate-180');
+        } else {
+          content.classList.add('hidden');
+          if (chevron) chevron.classList.add('rotate-180');
+        }
+      }
+    }
+
+    // Update Item Quantity directly on Checkout (+ / -)
+    function updateCheckoutItemQty(itemId, delta) {
+      const idx = cart.findIndex(i => String(i.id) === String(itemId));
+      if (idx === -1) return;
+
+      const currentQty = parseInt(cart[idx].qty, 10) || 1;
+      const newQty = currentQty + delta;
+      if (newQty <= 0) {
+        removeCheckoutItem(itemId);
+        return;
+      }
+
+      cart[idx].qty = newQty;
+      try {
+        localStorage.setItem('shoppaza_cart', JSON.stringify(cart));
+      } catch(e) {}
+
+      renderOrderSummary();
+    }
+
+    // Remove Item directly from Checkout (Trash Can)
+    function removeCheckoutItem(itemId) {
+      cart = cart.filter(i => String(i.id) !== String(itemId));
+      try {
+        localStorage.setItem('shoppaza_cart', JSON.stringify(cart));
+      } catch(e) {}
+
+      if (!cart || cart.length === 0) {
+        showEmptyCartNotice();
+      } else {
+        renderOrderSummary();
+      }
+    }
+
+    // Render Order Summary (Desktop, Mobile Collapsible & Mobile Inline)
     function renderOrderSummary() {
       const desktopList = document.getElementById('desktopCartItemsList');
       const mobileList = document.getElementById('mobileCartItemsList');
+      const mobileInlineList = document.getElementById('mobileInlineCartItemsList');
       const badgeEl = document.getElementById('mobileCartCountBadge');
 
-      const totalItems = cart.reduce((sum, i) => sum + i.qty, 0);
+      if (!cart || cart.length === 0) {
+        if (badgeEl) badgeEl.innerText = '0';
+        showEmptyCartNotice();
+        return;
+      }
+
+      const totalItems = cart.reduce((sum, i) => sum + (parseInt(i.qty, 10) || 1), 0);
       if (badgeEl) badgeEl.innerText = totalItems;
 
       // Calculate totals in base GBP
       let baseSubtotalGbp = 0;
       cart.forEach(item => {
         const price = item.price_gbp || (item.price_usd ? item.price_usd * 0.79 : 29.00);
-        baseSubtotalGbp += price * item.qty;
+        baseSubtotalGbp += price * (parseInt(item.qty, 10) || 1);
       });
 
       const convertedSubtotal = baseSubtotalGbp * checkoutRate;
@@ -1230,21 +1298,35 @@
       const fmtSubtotal = `${checkoutCurrencySymbol}${convertedSubtotal.toFixed(isPKR ? 0 : 2)}`;
       const fmtTotal = `${checkoutCurrencySymbol}${grandTotal.toFixed(isPKR ? 0 : 2)}`;
       const fmtShipping = convertedShipping === 0 ? 'FREE' : `${checkoutCurrencySymbol}${convertedShipping.toFixed(isPKR ? 0 : 2)}`;
+      const fmtDiscount = `-${checkoutCurrencySymbol}${discountAmount.toFixed(isPKR ? 0 : 2)}`;
 
-      // Update Desktop
+      // Update Desktop Summary
       if (document.getElementById('desktopSummarySubtotal')) document.getElementById('desktopSummarySubtotal').innerText = fmtSubtotal;
       if (document.getElementById('desktopSummaryShipping')) document.getElementById('desktopSummaryShipping').innerText = fmtShipping;
       if (document.getElementById('desktopSummaryFinalTotal')) document.getElementById('desktopSummaryFinalTotal').innerText = fmtTotal;
       if (document.getElementById('desktopSummaryCurrencyCode')) document.getElementById('desktopSummaryCurrencyCode').innerText = checkoutCurrency;
 
-      // Update Mobile
+      // Update Mobile Collapsible Summary
       if (document.getElementById('mobileSummaryTotalTop')) document.getElementById('mobileSummaryTotalTop').innerText = fmtTotal;
       if (document.getElementById('mobileSummarySubtotal')) document.getElementById('mobileSummarySubtotal').innerText = fmtSubtotal;
       if (document.getElementById('mobileSummaryShipping')) document.getElementById('mobileSummaryShipping').innerText = fmtShipping;
       if (document.getElementById('mobileSummaryFinalTotal')) document.getElementById('mobileSummaryFinalTotal').innerText = fmtTotal;
       if (document.getElementById('mobileSummaryCurrencyCode')) document.getElementById('mobileSummaryCurrencyCode').innerText = checkoutCurrency;
 
-      // Update Pay Button
+      // Update Mobile Inline Summary (Above Pay Now Button)
+      if (document.getElementById('mobileInlineSubtotal')) document.getElementById('mobileInlineSubtotal').innerText = fmtSubtotal;
+      if (document.getElementById('mobileInlineShipping')) document.getElementById('mobileInlineShipping').innerText = fmtShipping;
+      if (document.getElementById('mobileInlineTotal')) document.getElementById('mobileInlineTotal').innerText = fmtTotal;
+      if (document.getElementById('mobileInlineCurrencyCode')) document.getElementById('mobileInlineCurrencyCode').innerText = checkoutCurrency;
+
+      if (discountRate > 0) {
+        const row = document.getElementById('mobileInlineDiscountRow');
+        const amt = document.getElementById('mobileInlineDiscountAmount');
+        if (row) row.classList.remove('hidden');
+        if (amt) amt.innerText = fmtDiscount;
+      }
+
+      // Update Pay Button Text
       const btnText = document.getElementById('btnPayNowText');
       if (btnText) {
         const checkedOpt = document.querySelector('input[name="paymentOption"]:checked')?.value || 'card';
@@ -1257,28 +1339,58 @@
       const installmentEl = document.getElementById('afterpayInstallmentAmount');
       if (installmentEl) installmentEl.innerText = `${checkoutCurrencySymbol}${(grandTotal / 4).toFixed(isPKR ? 0 : 2)}`;
 
-      // Render Item rows HTML (Exact Shopify style)
+      // Render Item rows HTML with Quantity (+ / -) & Delete controls
       const itemsHtml = cart.map(item => {
-        const itemPrice = (item.price_gbp || (item.price_usd ? item.price_usd * 0.79 : 29.00)) * checkoutRate * item.qty;
-        const fmtItemPrice = `${checkoutCurrencySymbol}${itemPrice.toFixed(isPKR ? 0 : 2)}`;
+        const qty = parseInt(item.qty, 10) || 1;
+        const unitPriceBaseGbp = item.price_gbp || (item.price_usd ? item.price_usd * 0.79 : 29.00);
+        const unitConverted = unitPriceBaseGbp * checkoutRate;
+        const fmtUnitPrice = `${checkoutCurrencySymbol}${unitConverted.toFixed(isPKR ? 0 : 2)}`;
+        
+        const itemTotalPrice = unitConverted * qty;
+        const fmtItemPrice = `${checkoutCurrencySymbol}${itemTotalPrice.toFixed(isPKR ? 0 : 2)}`;
+
+        const safeId = String(item.id).replace(/'/g, "\\'");
 
         return `
-          <div class="flex items-center justify-between gap-3 text-xs">
-            <div class="flex items-center gap-3 min-w-0">
-              <!-- Thumbnail with Shopify Count Badge -->
-              <div class="relative w-16 h-16 rounded-lg border border-slate-200 bg-white flex-shrink-0">
-                <img src="${item.image}" alt="${escapeHtml(item.title)}" class="w-full h-full object-cover rounded-lg" onerror="this.src='favicon.svg'">
-                <span class="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-slate-600 text-white font-bold text-[10px] flex items-center justify-center shadow">
-                  ${item.qty}
-                </span>
+          <div class="p-3 bg-white border border-slate-200/90 rounded-xl shadow-xs space-y-2.5 transition hover:border-slate-300">
+            <div class="flex items-start justify-between gap-3 text-xs">
+              <div class="flex items-center gap-3 min-w-0 flex-1">
+                <!-- Thumbnail with Count Badge -->
+                <div class="relative w-14 h-14 rounded-lg border border-slate-200 bg-slate-50 flex-shrink-0 overflow-hidden">
+                  <img src="${item.image}" alt="${escapeHtml(item.title)}" class="w-full h-full object-cover rounded-lg" onerror="this.src='favicon.svg'">
+                  <span class="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-slate-700 text-white font-bold text-[10px] flex items-center justify-center shadow">
+                    ${qty}
+                  </span>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <h4 class="font-bold text-slate-900 truncate leading-snug" title="${escapeHtml(item.title)}">${escapeHtml(item.title)}</h4>
+                  <div class="text-[11px] text-slate-500 truncate">${escapeHtml(item.category || 'Luxury Collection')}</div>
+                  <div class="text-[11px] text-slate-600 font-mono mt-0.5">${fmtUnitPrice} each</div>
+                </div>
               </div>
-              <div class="min-w-0">
-                <h4 class="font-bold text-slate-900 truncate" title="${escapeHtml(item.title)}">${escapeHtml(item.title)}</h4>
-                <div class="text-[11px] text-slate-500">${escapeHtml(item.category || 'Luxury Collection')}</div>
+              <div class="font-bold text-slate-900 font-mono text-xs whitespace-nowrap pl-2 text-right">
+                ${fmtItemPrice}
               </div>
             </div>
-            <div class="font-bold text-slate-900 font-mono text-xs whitespace-nowrap pl-2">
-              ${fmtItemPrice}
+
+            <!-- Stepper (+ / -) & Remove Controls -->
+            <div class="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
+              <div class="inline-flex items-center border border-slate-200 rounded-lg bg-slate-50 overflow-hidden shadow-2xs">
+                <button type="button" onclick="updateCheckoutItemQty('${safeId}', -1)" title="Decrease quantity" class="w-7 h-7 flex items-center justify-center text-slate-600 hover:bg-slate-200 hover:text-slate-900 active:scale-95 transition font-bold select-none cursor-pointer">
+                  <i class="fa-solid fa-minus text-[10px]"></i>
+                </button>
+                <span class="w-8 text-center font-bold text-slate-900 font-mono text-xs select-none">
+                  ${qty}
+                </span>
+                <button type="button" onclick="updateCheckoutItemQty('${safeId}', 1)" title="Increase quantity" class="w-7 h-7 flex items-center justify-center text-slate-600 hover:bg-slate-200 hover:text-slate-900 active:scale-95 transition font-bold select-none cursor-pointer">
+                  <i class="fa-solid fa-plus text-[10px]"></i>
+                </button>
+              </div>
+
+              <button type="button" onclick="removeCheckoutItem('${safeId}')" title="Remove product from checkout" class="inline-flex items-center gap-1.5 px-2.5 py-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-md transition text-xs font-medium cursor-pointer">
+                <i class="fa-regular fa-trash-can text-xs"></i>
+                <span class="text-[11px]">Remove</span>
+              </button>
             </div>
           </div>
         `;
@@ -1286,9 +1398,10 @@
 
       if (desktopList) desktopList.innerHTML = itemsHtml;
       if (mobileList) mobileList.innerHTML = itemsHtml;
+      if (mobileInlineList) mobileInlineList.innerHTML = itemsHtml;
     }
 
-    // Handle Form Submission
+        // Handle Form Submission
     function handleFormSubmission(e) {
       e.preventDefault();
 

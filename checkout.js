@@ -18,24 +18,7 @@ function openCheckoutModal() {
   if (typeof toggleCartDrawer === 'function') {
     toggleCartDrawer(false);
   }
-  const modal = document.getElementById('checkoutModal');
-  if (modal) {
-    modal.classList.remove('hidden');
-    // Autofill saved customer if any
-    const cust = JSON.parse(localStorage.getItem('shoppaza_customer') || '{}');
-    if (cust.email && document.getElementById('checkoutEmail')) document.getElementById('checkoutEmail').value = cust.email;
-    if (cust.name && document.getElementById('checkoutFirstName')) {
-      const parts = cust.name.split(' ');
-      document.getElementById('checkoutFirstName').value = parts[0] || '';
-      if (parts.length > 1 && document.getElementById('checkoutLastName')) {
-        document.getElementById('checkoutLastName').value = parts.slice(1).join(' ');
-      }
-    }
-    // Set initial region
-    const countryEl = document.getElementById('checkoutCountry');
-    if (countryEl) handleCheckoutCountryChange(countryEl.value);
-    renderShopifyCheckoutSummary();
-  }
+  window.location.href = 'checkout.html';
 }
 
 function closeCheckoutModal() {

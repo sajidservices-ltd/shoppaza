@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - Shoppaza Worldwide</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            shopify: {
+              bg: '#ffffff',
+              sidebar: '#fafafa',
+              border: '#e1e3e5',
+              dark: '#111213',
+              accent: '#008060',
+              link: '#1773b0',
+              inputBorder: '#d9d9d9',
+              activeBorder: '#1773b0'
+            },
+            daraz: {
+              orange: '#F85606',
+              orangeDark: '#d04300'
+            }
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* Clean Shopify form input styling */
+    .shopify-input {
+      width: 100%;
+      border: 1px solid #d9d9d9;
+      border-radius: 6px;
+      padding: 12px 14px;
+      font-size: 13.5px;
+      color: #333333;
+      background-color: #ffffff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .shopify-input:focus {
+      outline: none;
+      border-color: #1773b0;
+      box-shadow: 0 0 0 1px #1773b0;
+    }
+    .shopify-select {
+      width: 100%;
+      border: 1px solid #d9d9d9;
+      border-radius: 6px;
+      padding: 12px 14px;
+      font-size: 13.5px;
+      color: #333333;
+      background-color: #ffffff;
+      transition: border-color 0.15s ease;
+      cursor: pointer;
+    }
+    .shopify-select:focus {
+      outline: none;
+      border-color: #1773b0;
+      box-shadow: 0 0 0 1px #1773b0;
+    }
+    .radio-card {
+      border: 1px solid #d9d9d9;
+      transition: all 0.15s ease;
+    }
+    .radio-card.active {
+      border-color: #1773b0;
+      background-color: #f7f9fa;
+    }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: #f1f1f1; }
+    ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+  </style>
+</head>
+<body class="font-sans antialiased text-slate-800 bg-white min-h-screen">
+
+  <!-- ================= MOBILE HEADER ACCORDION (SHOPIFY STYLE) ================= -->
+  <div class="lg:hidden border-b border-shopify-border bg-shopify-sidebar">
+    <!-- Top brand row -->
+    <div class="px-5 py-4 flex items-center justify-between border-b border-shopify-border/60">
+      <a href="index.html" class="flex items-center gap-2">
+        <img src="logo.svg" alt="Shoppaza" class="h-6 w-auto">
+      </a>
+      <a href="index.html" class="text-xs text-slate-500 hover:text-slate-900 flex items-center gap-1 font-medium">
+        <i class="fa-solid fa-basket-shopping text-slate-700"></i>
+        <span id="mobileCartCountBadge">0</span>
+      </a>
+    </div>
+
+    <!-- Toggle Order Summary bar -->
+    <button type="button" onclick="toggleMobileSummary()" class="w-full px-5 py-3.5 flex items-center justify-between text-xs text-shopify-link bg-[#f5f5f5] hover:bg-slate-100 transition">
+      <div class="flex items-center gap-2 font-medium">
+        <i class="fa-solid fa-cart-shopping text-sm"></i>
+        <span id="mobileSummaryToggleText">Show order summary</span>
+        <i class="fa-solid fa-chevron-down text-[10px] transition duration-200" id="mobileSummaryChevron"></i>
+      </div>
+      <div class="font-black text-slate-900 text-sm font-mono" id="mobileSummaryTotalTop">£0.00</div>
+    </button>
+
+    <!-- Collapsible Mobile Cart Details -->
+    <div id="mobileSummaryContainer" class="hidden px-5 py-5 border-t border-shopify-border bg-shopify-sidebar space-y-4">
+      <div id="mobileCartItemsList" class="space-y-3 max-h-72 overflow-y-auto pr-1">
+        <!-- Injected via JS -->
+      </div>
+
+      <!-- Discount Input -->
+      <div class="flex gap-2 pt-2">
+        <input type="text" id="mobileDiscountInput" placeholder="Discount code or gift card" class="shopify-input uppercase font-mono text-xs flex-1">
+        <button type="button" onclick="applyDiscount('mobile')" class="px-4 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-md text-xs font-bold transition">Apply</button>
+      </div>
+
+      <!-- Price breakdown -->
+      <div class="space-y-2 text-xs text-slate-600 pt-3 border-t border-shopify-border">
+        <div class="flex justify-between">
+          <span>Subtotal</span>
+          <span class="font-bold text-slate-900" id="mobileSummarySubtotal">£0.00</span>
+        </div>
+        <div class="flex justify-between">
+          <span>Shipping</span>
+          <span class="font-semibold text-emerald-700" id="mobileSummaryShipping">Calculated next</span>
+        </div>
+        <div class="flex justify-between text-slate-500">
+          <span>Estimated taxes (UK VAT 20%)</span>
+          <span id="mobileSummaryTaxes">Included</span>
+        </div>
+        <div class="flex justify-between items-baseline pt-2 border-t border-slate-300 text-slate-900">
+          <span class="text-sm font-bold">Total</span>
+          <div class="text-right">
+            <span class="text-[11px] text-slate-400 font-mono mr-1" id="mobileSummaryCurrencyCode">GBP</span>
+            <span class="text-xl font-black text-slate-950 font-mono" id="mobileSummaryFinalTotal">£0.00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MAIN FULL-PAGE 2-COLUMN SHOPIFY CHECKOUT ================= -->
+  <div class="min-h-screen flex flex-col lg:flex-row">
+    
+    <!-- LEFT COLUMN: Checkout Form Journey (58% width on desktop) -->
+    <div class="w-full lg:w-[58%] px-5 sm:px-10 lg:pl-16 lg:pr-12 py-8 lg:py-12 flex flex-col justify-between">
+      <div class="max-w-xl w-full mx-auto lg:mr-0 lg:ml-auto space-y-7">
+        
+        <!-- Store Logo & Trust Banner (Desktop) -->
+        <div class="hidden lg:flex items-center justify-between pb-2">
+          <a href="index.html" class="flex items-center gap-3">
+            <img src="logo.svg" alt="Shoppaza" class="h-8 w-auto">
+          </a>
+          <div class="text-right">
+            <span class="text-[11px] font-bold text-slate-400 flex items-center gap-1.5 justify-end">
+              <i class="fa-solid fa-lock text-emerald-600 text-xs"></i> 256-Bit SSL Encrypted
+            </span>
+            <div class="text-[10px] text-slate-400">SAJID SERVICES LTD (SC874640)</div>
+          </div>
+        </div>
+
+        <!-- ================= 1. EXPRESS CHECKOUT ================= -->
+        <div class="space-y-3" id="expressCheckoutSection">
+          <div class="text-xs text-slate-500 text-center font-medium">Express checkout</div>
+          <div class="grid grid-cols-3 gap-2.5">
+            <!-- Shop / Apple Pay -->
+            <button type="button" onclick="selectExpressMethod('apple')" class="h-11 bg-black hover:bg-slate-900 text-white rounded-md flex items-center justify-center transition shadow-sm">
+              <i class="fa-brands fa-apple text-base mr-1"></i> <span class="font-bold text-xs tracking-wide">Pay</span>
+            </button>
+            <!-- Amazon Pay -->
+            <button type="button" onclick="selectExpressMethod('amazon')" id="btnExpressAmazon" class="h-11 bg-[#FF9900] hover:bg-[#eb8c00] text-slate-950 rounded-md flex items-center justify-center transition shadow-sm font-bold text-xs">
+              <i class="fa-brands fa-amazon text-sm mr-1"></i> Pay
+            </button>
+            <!-- Afterpay / PayPal -->
+            <button type="button" onclick="selectExpressMethod('afterpay')" id="btnExpressAfterpay" class="h-11 bg-[#B2FCE4] hover:bg-[#9dedd3] text-slate-900 rounded-md flex items-center justify-center transition shadow-sm font-bold text-xs tracking-tight">
+              afterpay<span class="text-[10px] font-normal ml-0.5">✦</span>
+            </button>
+          </div>
+
+          <!-- Divider -->
+          <div class="relative py-3 flex items-center justify-center">
+            <div class="border-t border-slate-200 w-full"></div>
+            <span class="bg-white px-3 text-xs uppercase font-medium text-slate-400 absolute">OR</span>
+          </div>
+        </div>
+
+        <!-- MAIN CHECKOUT FORM -->
+        <form id="shopifyCheckoutForm" onsubmit="handleFormSubmission(event)" class="space-y-7">
+          
+          <!-- ================= 2. CONTACT SECTION ================= -->
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <h2 class="text-base font-bold text-slate-900 tracking-tight">Contact</h2>
+              <a href="index.html" class="text-xs text-shopify-link hover:underline font-medium">Sign in</a>
+            </div>
+
+            <div>
+              <input type="text" id="custEmailOrPhone" required placeholder="Email or mobile phone number" class="shopify-input">
+            </div>
+
+            <label class="flex items-center gap-2.5 cursor-pointer text-xs text-slate-600 select-none">
+              <input type="checkbox" id="chkNewsOffers" checked class="w-4 h-4 rounded text-shopify-link focus:ring-0 border-slate-300">
+              <span>Email me with news and offers</span>
+            </label>
+          </div>
+
+          <!-- ================= 3. DELIVERY / SHIPPING ADDRESS ================= -->
+          <div class="space-y-3">
+            <h2 class="text-base font-bold text-slate-900 tracking-tight">Delivery</h2>
+
+            <!-- Country / Region Select -->
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-500 uppercase mb-1">Country / Region</label>
+              <select id="destCountry" onchange="handleCountryChange(this.value)" class="shopify-select">
+                <option value="GB" selected>United Kingdom (£ GBP)</option>
+                <option value="US">United States ($ USD)</option>
+                <option value="AU">Australia (A$ AUD)</option>
+                <option value="DE">Germany (€ EUR)</option>
+                <option value="FR">France (€ EUR)</option>
+                <option value="CA">Canada (C$ CAD)</option>
+                <option value="PK">Pakistan (₨ PKR)</option>
+                <option value="AE">United Arab Emirates (AED)</option>
+                <option value="SA">Saudi Arabia (SAR)</option>
+              </select>
+            </div>
+
+            <!-- First & Last Name (2 Cols) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <input type="text" id="custFirstName" required placeholder="First name" class="shopify-input">
+              </div>
+              <div>
+                <input type="text" id="custLastName" required placeholder="Last name" class="shopify-input">
+              </div>
+            </div>
+
+            <!-- Street Address -->
+            <div class="relative">
+              <input type="text" id="custAddress" required placeholder="Address (House number and street name)" class="shopify-input pr-8">
+              <i class="fa-solid fa-magnifying-glass absolute right-3 top-3.5 text-slate-400 text-xs"></i>
+            </div>
+
+            <!-- Apartment, suite, etc. -->
+            <div>
+              <input type="text" id="custApartment" placeholder="Apartment, suite, unit, building (optional)" class="shopify-input">
+            </div>
+
+            <!-- Suburb / City, State, Postcode (3 Cols) -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <input type="text" id="custCity" required placeholder="City / Suburb" class="shopify-input">
+              </div>
+              <div>
+                <input type="text" id="custState" placeholder="State / Territory" class="shopify-input">
+              </div>
+              <div>
+                <input type="text" id="custPostcode" required placeholder="Postcode / ZIP" class="shopify-input uppercase">
+              </div>
+            </div>
+
+            <!-- Phone (optional) -->
+            <div>
+              <input type="tel" id="custPhone" placeholder="Phone (optional - for delivery alerts)" class="shopify-input">
+            </div>
+          </div>
+
+          <!-- ================= 4. SHIPPING METHOD ================= -->
+          <div class="space-y-3">
+            <h2 class="text-base font-bold text-slate-900 tracking-tight">Shipping method</h2>
+
+            <div class="rounded-lg border border-slate-300 divide-y divide-slate-200 overflow-hidden text-xs">
+              
+              <!-- Standard Shipping (Default) -->
+              <label class="p-3.5 flex items-center justify-between cursor-pointer bg-slate-50/60 hover:bg-slate-50 transition" id="labelShipStandard">
+                <div class="flex items-center gap-3">
+                  <input type="radio" name="shippingMethod" value="standard" checked onchange="handleShippingMethodChange('standard')" class="w-4 h-4 text-shopify-link focus:ring-0 border-slate-300">
+                  <div>
+                    <div class="font-bold text-slate-900" id="shipStandardTitle">Royal Mail Tracked 24 (Next-Day Dispatched)</div>
+                    <div class="text-[11px] text-slate-500" id="shipStandardTime">1 to 2 business days</div>
+                  </div>
+                </div>
+                <div class="font-bold text-emerald-700 uppercase" id="shipStandardPrice">FREE</div>
+              </label>
+
+              <!-- Express Priority Shipping -->
+              <label class="p-3.5 flex items-center justify-between cursor-pointer hover:bg-slate-50 transition" id="labelShipExpress">
+                <div class="flex items-center gap-3">
+                  <input type="radio" name="shippingMethod" value="express" onchange="handleShippingMethodChange('express')" class="w-4 h-4 text-shopify-link focus:ring-0 border-slate-300">
+                  <div>
+                    <div class="font-bold text-slate-900" id="shipExpressTitle">Royal Mail Special Delivery Guaranteed by 1pm</div>
+                    <div class="text-[11px] text-slate-500" id="shipExpressTime">Guaranteed Next Day with Signature</div>
+                  </div>
+                </div>
+                <div class="font-bold text-slate-900 font-mono" id="shipExpressPrice">£4.99</div>
+              </label>
+
+            </div>
+          </div>
+
+          <!-- ================= 5. PAYMENT SECTION ================= -->
+          <div class="space-y-3">
+            <div>
+              <h2 class="text-base font-bold text-slate-900 tracking-tight">Payment</h2>
+              <p class="text-xs text-slate-500">All transactions are secure and encrypted.</p>
+            </div>
+
+            <!-- Payment Options Container -->
+            <div class="rounded-lg border border-slate-300 divide-y divide-slate-200 overflow-hidden text-xs">
+              
+              <!-- Option 1: Credit Card (Stripe PCI Level 1) -->
+              <div class="bg-white">
+                <label class="p-3.5 flex items-center justify-between cursor-pointer hover:bg-slate-50 transition" onclick="selectPaymentOption('card')">
+                  <div class="flex items-center gap-3">
+                    <input type="radio" name="paymentOption" value="card" checked class="w-4 h-4 text-shopify-link focus:ring-0 border-slate-300">
+                    <span class="font-bold text-slate-900">Credit card</span>
+                  </div>
+                  <!-- Card brand badges -->
+                  <div class="flex items-center gap-1.5 text-slate-400">
+                    <span class="px-1.5 py-0.5 rounded border border-slate-200 bg-white font-bold text-[10px] text-blue-800"><i class="fa-brands fa-cc-visa"></i></span>
+                    <span class="px-1.5 py-0.5 rounded border border-slate-200 bg-white font-bold text-[10px] text-rose-600"><i class="fa-brands fa-cc-mastercard"></i></span>
+                    <span class="px-1.5 py-0.5 rounded border border-slate-200 bg-white font-bold text-[10px] text-sky-600"><i class="fa-brands fa-cc-amex"></i></span>
+                    <span class="text-[10px] text-slate-400 font-medium">+4</span>
+                  </div>
+                </label>
+
+                <!-- Nested Credit Card Fields -->
+                <div id="paymentFields-card" class="p-4 bg-slate-50/70 border-t border-slate-200 space-y-3">
+                  <!-- Card Number -->
+                  <div class="relative">
+                    <input type="text" id="cardNumInput" placeholder="Card number" maxlength="19" oninput="formatCardNum(this)" class="shopify-input bg-white pr-9 font-mono">
+                    <i class="fa-solid fa-lock absolute right-3 top-3.5 text-slate-400 text-xs" id="cardBrandIcon"></i>
+                  </div>
+
+                  <!-- Expiration & Security Code (2 Cols) -->
+                  <div class="grid grid-cols-2 gap-3">
+                    <div>
+                      <input type="text" id="cardExpInput" placeholder="Expiration date (MM / YY)" maxlength="7" oninput="formatCardExp(this)" class="shopify-input bg-white font-mono">
+                    </div>
+                    <div class="relative">
+                      <input type="text" id="cardCvvInput" placeholder="Security code (CVV)" maxlength="4" class="shopify-input bg-white font-mono pr-8">
+                      <i class="fa-regular fa-circle-question absolute right-3 top-3.5 text-slate-400 text-xs" title="3-digit security code on the back of your card (4 digits for Amex)"></i>
+                    </div>
+                  </div>
+
+                  <!-- Name on Card -->
+                  <div>
+                    <input type="text" id="cardNameInput" placeholder="Name on card" class="shopify-input bg-white">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Option 2: Afterpay / Clearpay (Pay in 4 installments) -->
+              <div class="bg-white" id="containerAfterpayOption">
+                <label class="p-3.5 flex items-center justify-between cursor-pointer hover:bg-slate-50 transition" onclick="selectPaymentOption('afterpay')">
+                  <div class="flex items-center gap-3">
+                    <input type="radio" name="paymentOption" value="afterpay" class="w-4 h-4 text-shopify-link focus:ring-0 border-slate-300">
+                    <span class="font-bold text-slate-900">Afterpay</span>
+                  </div>
+                  <span class="px-2 py-0.5 rounded bg-[#B2FCE4] text-slate-900 font-bold text-[10px]">4 Interest-Free Payments</span>
+                </label>
+                <div id="paymentFields-afterpay" class="hidden p-4 bg-slate-50/70 border-t border-slate-200 text-xs text-slate-600 space-y-2">
+                  <p>Pay in 4 interest-free installments of <strong class="text-slate-900 font-mono" id="afterpayInstallmentAmount">£0.00</strong> due every 2 weeks.</p>
+                  <p class="text-[11px] text-slate-500">You will be redirected to Afterpay securely to complete your purchase.</p>
+                </div>
+              </div>
+
+              <!-- Option 3: PayPal / Web3 Crypto USDT -->
+              <div class="bg-white">
+                <label class="p-3.5 flex items-center justify-between cursor-pointer hover:bg-slate-50 transition" onclick="selectPaymentOption('crypto')">
+                  <div class="flex items-center gap-3">
+                    <input type="radio" name="paymentOption" value="crypto" class="w-4 h-4 text-shopify-link focus:ring-0 border-slate-300">
+                    <span class="font-bold text-slate-900">USDT Web3 Crypto / Direct Payout</span>
+                  </div>
+                  <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-[10px]">Zero Network Fee</span>
+                </label>
+                <div id="paymentFields-crypto" class="hidden p-4 bg-slate-50/70 border-t border-slate-200 text-xs text-slate-600 space-y-2">
+                  <p>Official merchant wallet: <code class="bg-white px-2 py-1 rounded border border-slate-200 text-slate-900 font-mono font-bold select-all">TShpza874640EdinUK99x2</code> (TRC20)</p>
+                  <p class="text-[11px] text-slate-500">Corporate invoice and proof-of-dispatch issued immediately via SAJID SERVICES LTD.</p>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- ================= 6. BILLING ADDRESS (SEPARATE OR SAME) ================= -->
+            <div class="pt-3 space-y-3">
+              <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Billing address</h3>
+
+              <div class="rounded-lg border border-slate-300 divide-y divide-slate-200 overflow-hidden text-xs">
+                
+                <!-- Same as shipping (Default) -->
+                <label class="p-3.5 flex items-center gap-3 cursor-pointer hover:bg-slate-50 transition" onclick="toggleBillingFields(false)">
+                  <input type="radio" name="billingChoice" value="same" id="billingChoiceSame" checked class="w-4 h-4 text-shopify-link focus:ring-0 border-slate-300">
+                  <span class="font-semibold text-slate-800">Same as shipping address</span>
+                </label>
+
+                <!-- Different billing address (Custom) -->
+                <div>
+                  <label class="p-3.5 flex items-center gap-3 cursor-pointer hover:bg-slate-50 transition" onclick="toggleBillingFields(true)">
+                    <input type="radio" name="billingChoice" value="different" id="billingChoiceDifferent" class="w-4 h-4 text-shopify-link focus:ring-0 border-slate-300">
+                    <span class="font-semibold text-slate-800">Use a different billing address</span>
+                  </label>
+
+                  <!-- Expanded Separate Billing Address Fields -->
+                  <div id="separateBillingFields" class="hidden p-4 bg-slate-50/80 border-t border-slate-200 space-y-3">
+                    <div>
+                      <label class="block text-[11px] font-semibold text-slate-500 uppercase mb-1">Billing Country / Region</label>
+                      <select id="billCountry" class="shopify-select bg-white">
+                        <option value="GB">United Kingdom</option>
+                        <option value="US">United States</option>
+                        <option value="AU">Australia</option>
+                        <option value="DE">Germany</option>
+                        <option value="FR">France</option>
+                        <option value="CA">Canada</option>
+                        <option value="PK">Pakistan</option>
+                        <option value="AE">United Arab Emirates</option>
+                      </select>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <input type="text" id="billFirstName" placeholder="First name" class="shopify-input bg-white">
+                      </div>
+                      <div>
+                        <input type="text" id="billLastName" placeholder="Last name" class="shopify-input bg-white">
+                      </div>
+                    </div>
+
+                    <div>
+                      <input type="text" id="billAddress" placeholder="Billing Street Address" class="shopify-input bg-white">
+                    </div>
+
+                    <div>
+                      <input type="text" id="billApartment" placeholder="Apartment, suite, etc. (optional)" class="shopify-input bg-white">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <div>
+                        <input type="text" id="billCity" placeholder="City / Suburb" class="shopify-input bg-white">
+                      </div>
+                      <div>
+                        <input type="text" id="billState" placeholder="State / Territory" class="shopify-input bg-white">
+                      </div>
+                      <div>
+                        <input type="text" id="billPostcode" placeholder="Postcode / ZIP" class="shopify-input bg-white uppercase">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ================= 7. PAY NOW SUBMIT BUTTON ================= -->
+          <div class="pt-2 space-y-4">
+            <button type="submit" id="btnShopifyPayNow" class="w-full py-4 bg-slate-950 hover:bg-black text-white font-black text-sm uppercase tracking-wider rounded-md transition shadow-lg flex items-center justify-center gap-2">
+              <i class="fa-solid fa-lock text-emerald-400 text-xs"></i>
+              <span id="btnPayNowText">Pay now • £0.00</span>
+            </button>
+
+            <div class="text-[11px] text-slate-500 text-center leading-relaxed">
+              By confirming your order, you authorize SAJID SERVICES LTD (SC874640) to process payment in accordance with our 
+              <a href="terms.html" target="_blank" class="text-shopify-link hover:underline">Terms of Service</a> and 
+              <a href="privacy.html" target="_blank" class="text-shopify-link hover:underline">Privacy Policy</a>.
+            </div>
+          </div>
+
+        </form>
+
+        <!-- Terms and policies Footer -->
+        <div class="pt-8 border-t border-slate-200 flex flex-wrap gap-x-5 gap-y-2 text-xs text-shopify-link">
+          <a href="refund-policy.html" target="_blank" class="hover:underline">Refund policy</a>
+          <a href="shipping-policy.html" target="_blank" class="hover:underline">Shipping policy</a>
+          <a href="privacy.html" target="_blank" class="hover:underline">Privacy policy</a>
+          <a href="terms.html" target="_blank" class="hover:underline">Terms of service</a>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: Shopify Order Summary Sidebar (42% width on desktop, Sticky) -->
+    <div class="hidden lg:block w-[42%] bg-shopify-sidebar border-l border-shopify-border px-8 lg:px-12 py-12 sticky top-0 h-screen overflow-y-auto">
+      <div class="max-w-md space-y-6">
+        
+        <!-- Cart Items Preview -->
+        <div id="desktopCartItemsList" class="space-y-4 max-h-[360px] overflow-y-auto pr-1">
+          <!-- Injected via JS -->
+        </div>
+
+        <!-- Discount Code Input -->
+        <div class="flex gap-2 pt-2">
+          <input type="text" id="desktopDiscountInput" placeholder="Discount code or gift card" class="shopify-input uppercase font-mono text-xs flex-1 bg-white">
+          <button type="button" onclick="applyDiscount('desktop')" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-md text-xs font-bold transition">Apply</button>
+        </div>
+        <div id="discountSuccessMessage" class="hidden text-xs text-emerald-700 font-bold flex items-center gap-1.5">
+          <i class="fa-solid fa-tag"></i> <span>Promo code applied successfully!</span>
+        </div>
+
+        <!-- Price Breakdown -->
+        <div class="space-y-3 text-xs text-slate-600 pt-4 border-t border-shopify-border">
+          <div class="flex justify-between">
+            <span>Subtotal</span>
+            <span class="font-bold text-slate-900 font-mono text-sm" id="desktopSummarySubtotal">£0.00</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="flex items-center gap-1.5">
+              <span>Shipping</span>
+              <i class="fa-regular fa-circle-question text-slate-400 text-[10px]" title="Tracked delivery direct from Edinburgh fulfillment center"></i>
+            </span>
+            <span class="font-bold text-emerald-700 uppercase" id="desktopSummaryShipping">Free</span>
+          </div>
+          <div class="flex justify-between text-slate-500">
+            <span>Estimated taxes (UK VAT 20%)</span>
+            <span id="desktopSummaryTaxes">Included</span>
+          </div>
+          <div class="flex justify-between items-baseline pt-4 border-t border-slate-300 text-slate-900">
+            <span class="text-base font-bold">Total</span>
+            <div class="text-right">
+              <span class="text-xs text-slate-400 font-mono mr-1" id="desktopSummaryCurrencyCode">GBP</span>
+              <span class="text-2xl font-black text-slate-950 font-mono" id="desktopSummaryFinalTotal">£0.00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Corporate Trust Card -->
+        <div class="p-4 rounded-xl bg-white border border-shopify-border space-y-1.5 text-[11px] text-slate-500 shadow-sm">
+          <div class="font-bold text-slate-800 flex items-center gap-2">
+            <i class="fa-solid fa-building text-slate-600"></i> SAJID SERVICES LTD
+          </div>
+          <div>Company No. <strong>SC874640</strong> • Registered in Scotland, UK</div>
+          <div>Office 146 18 Young St, Unit Lge, Edinburgh, EH2 4JB</div>
+          <div class="pt-1 text-emerald-700 font-semibold flex items-center gap-1">
+            <i class="fa-solid fa-shield-halved"></i> 100% Protected Checkout • Official Dispatch Receipt
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ================= JAVASCRIPT ENGINE ================= -->
+  <script>
+    // Checkout State
+    let cart = [];
+    let checkoutCurrency = 'GBP';
+    let checkoutCurrencySymbol = '£';
+    let checkoutRate = 1.0;
+    let selectedShippingMethod = 'standard';
+    let shippingCost = 0.0;
+    let discountRate = 0; // percentage
+
+    // Currency Conversion Table relative to GBP
+    const countryCurrencyMap = {
+      GB: { currency: 'GBP', symbol: '£', rate: 1.0, standardShipTitle: 'Royal Mail Tracked 24 (Next-Day Dispatched)', standardPrice: 0.0, expressShipTitle: 'Royal Mail Special Delivery by 1pm', expressPrice: 4.99 },
+      US: { currency: 'USD', symbol: '$', rate: 1.27, standardShipTitle: 'USPS Priority Air Tracked (Direct from UK)', standardPrice: 0.0, expressShipTitle: 'DHL Express Worldwide (2-3 Business Days)', expressPrice: 15.00 },
+      AU: { currency: 'AUD', symbol: 'A$', rate: 1.95, standardShipTitle: 'Australia Post International Express Tracked', standardPrice: 0.0, expressShipTitle: 'DHL Express Worldwide Tracked', expressPrice: 22.00 },
+      DE: { currency: 'EUR', symbol: '€', rate: 1.17, standardShipTitle: 'DPD Europe Tracked Courier', standardPrice: 0.0, expressShipTitle: 'DHL Express Europe Overnight', expressPrice: 9.99 },
+      FR: { currency: 'EUR', symbol: '€', rate: 1.17, standardShipTitle: 'La Poste Colissimo International Tracked', standardPrice: 0.0, expressShipTitle: 'DHL Express Europe Overnight', expressPrice: 9.99 },
+      CA: { currency: 'CAD', symbol: 'C$', rate: 1.74, standardShipTitle: 'Canada Post Tracked Airway', standardPrice: 0.0, expressShipTitle: 'DHL Express Airway Guaranteed', expressPrice: 18.00 },
+      PK: { currency: 'PKR', symbol: '₨ ', rate: 352.0, standardShipTitle: 'DHL eCommerce Air Tracked', standardPrice: 0.0, expressShipTitle: 'DHL Worldwide Priority Express', expressPrice: 3500.0 },
+      AE: { currency: 'AED', symbol: 'AED ', rate: 4.66, standardShipTitle: 'Emirates Post Tracked Airway', standardPrice: 0.0, expressShipTitle: 'DHL Express Middle East', expressPrice: 45.0 },
+      SA: { currency: 'SAR', symbol: 'SAR ', rate: 4.76, standardShipTitle: 'SMSA Express Air Tracked', standardPrice: 0.0, expressShipTitle: 'DHL Express Direct', expressPrice: 50.0 }
+    };
+
+    // Initialize Page
+    window.addEventListener('DOMContentLoaded', () => {
+      // 1. Load cart
+      try {
+        const savedCart = localStorage.getItem('shoppaza_cart');
+        if (savedCart) cart = JSON.parse(savedCart);
+      } catch(e) {}
+
+      // If cart empty, show alert and offer return
+      if (!cart || cart.length === 0) {
+        showEmptyCartNotice();
+      }
+
+      // 2. Autofill customer if signed in
+      try {
+        const savedCust = JSON.parse(localStorage.getItem('shoppaza_customer') || '{}');
+        if (savedCust.email) document.getElementById('custEmailOrPhone').value = savedCust.email;
+        if (savedCust.name) {
+          const parts = savedCust.name.split(' ');
+          document.getElementById('custFirstName').value = parts[0] || '';
+          if (parts.length > 1) document.getElementById('custLastName').value = parts.slice(1).join(' ');
+        }
+      } catch(e) {}
+
+      // 3. Set initial country based on saved currency
+      const savedCurr = localStorage.getItem('shoppaza_currency');
+      if (savedCurr === 'USD') document.getElementById('destCountry').value = 'US';
+      else if (savedCurr === 'PKR') document.getElementById('destCountry').value = 'PK';
+      
+      handleCountryChange(document.getElementById('destCountry').value);
+    });
+
+    function showEmptyCartNotice() {
+      const form = document.getElementById('shopifyCheckoutForm');
+      if (form) {
+        form.innerHTML = `
+          <div class="py-12 text-center space-y-4">
+            <div class="w-16 h-16 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-2xl mx-auto">
+              <i class="fa-solid fa-basket-shopping"></i>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900">Your shopping bag is empty</h3>
+            <p class="text-xs text-slate-500 max-w-sm mx-auto">You have not added any products to your cart yet. Explore our 805 luxury products to begin checkout.</p>
+            <div class="pt-2">
+              <a href="index.html" class="inline-block px-6 py-3.5 bg-slate-900 hover:bg-black text-white text-xs font-bold uppercase tracking-wider rounded-md transition shadow">
+                Return to Shop Catalog
+              </a>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    // Country Switcher
+    function handleCountryChange(code) {
+      const cfg = countryCurrencyMap[code] || countryCurrencyMap['GB'];
+      checkoutCurrency = cfg.currency;
+      checkoutCurrencySymbol = cfg.symbol;
+      checkoutRate = cfg.rate;
+
+      // Update Shipping text & prices
+      document.getElementById('shipStandardTitle').innerText = cfg.standardShipTitle;
+      document.getElementById('shipStandardPrice').innerText = cfg.standardPrice === 0 ? 'FREE' : `${cfg.symbol}${cfg.standardPrice.toFixed(2)}`;
+      
+      document.getElementById('shipExpressTitle').innerText = cfg.expressShipTitle;
+      document.getElementById('shipExpressPrice').innerText = `${cfg.symbol}${cfg.expressPrice.toFixed(cfg.currency === 'PKR' ? 0 : 2)}`;
+
+      // Afterpay availability (UK, US, AU)
+      const afterpayEl = document.getElementById('containerAfterpayOption');
+      const expressAfterpay = document.getElementById('btnExpressAfterpay');
+      if (code === 'GB' || code === 'US' || code === 'AU') {
+        if (afterpayEl) afterpayEl.classList.remove('hidden');
+        if (expressAfterpay) expressAfterpay.classList.remove('hidden');
+      } else {
+        if (afterpayEl) afterpayEl.classList.add('hidden');
+        if (expressAfterpay) expressAfterpay.classList.add('hidden');
+      }
+
+      renderOrderSummary();
+    }
+
+    // Shipping Method Toggle
+    function handleShippingMethodChange(type) {
+      selectedShippingMethod = type;
+      const code = document.getElementById('destCountry').value;
+      const cfg = countryCurrencyMap[code] || countryCurrencyMap['GB'];
+
+      if (type === 'express') {
+        shippingCost = cfg.expressPrice;
+        document.getElementById('labelShipExpress').classList.add('bg-slate-50/80');
+        document.getElementById('labelShipStandard').classList.remove('bg-slate-50/80');
+      } else {
+        shippingCost = cfg.standardPrice;
+        document.getElementById('labelShipStandard').classList.add('bg-slate-50/80');
+        document.getElementById('labelShipExpress').classList.remove('bg-slate-50/80');
+      }
+      renderOrderSummary();
+    }
+
+    // Billing Address Toggle (User Request)
+    function toggleBillingFields(isDifferent) {
+      const container = document.getElementById('separateBillingFields');
+      if (isDifferent) {
+        container.classList.remove('hidden');
+        // Set required on billing fields
+        document.getElementById('billFirstName').required = true;
+        document.getElementById('billLastName').required = true;
+        document.getElementById('billAddress').required = true;
+        document.getElementById('billCity').required = true;
+        document.getElementById('billPostcode').required = true;
+      } else {
+        container.classList.add('hidden');
+        document.getElementById('billFirstName').required = false;
+        document.getElementById('billLastName').required = false;
+        document.getElementById('billAddress').required = false;
+        document.getElementById('billCity').required = false;
+        document.getElementById('billPostcode').required = false;
+      }
+    }
+
+    // Payment Section Toggle
+    function selectPaymentOption(opt) {
+      ['card', 'afterpay', 'crypto'].forEach(o => {
+        const field = document.getElementById('paymentFields-' + o);
+        if (field) {
+          if (o === opt) field.classList.remove('hidden');
+          else field.classList.add('hidden');
+        }
+      });
+      const radios = document.querySelectorAll('input[name="paymentOption"]');
+      radios.forEach(r => {
+        if (r.value === opt) r.checked = true;
+      });
+
+      const btnText = document.getElementById('btnPayNowText');
+      const totalStr = document.getElementById('desktopSummaryFinalTotal')?.innerText || '£0.00';
+      if (opt === 'afterpay') btnText.innerText = `Pay with Afterpay • ${totalStr}`;
+      else if (opt === 'crypto') btnText.innerText = `Transfer USDT • ${totalStr}`;
+      else btnText.innerText = `Pay now • ${totalStr}`;
+    }
+
+    function selectExpressMethod(type) {
+      if (type === 'apple') {
+        selectPaymentOption('card');
+        alert('Apple Pay / Google Pay selected. Authorize with your saved device pass.');
+      } else if (type === 'amazon') {
+        selectPaymentOption('card');
+        alert('Amazon Pay selected. Sign in to Amazon to complete payment.');
+      } else if (type === 'afterpay') {
+        selectPaymentOption('afterpay');
+      }
+    }
+
+    // Card Input Formatters
+    function formatCardNum(input) {
+      let v = input.value.replace(/\D/g, '').slice(0, 16);
+      const parts = [];
+      for (let i = 0; i < v.length; i += 4) {
+        parts.push(v.slice(i, i + 4));
+      }
+      input.value = parts.join(' ');
+
+      const icon = document.getElementById('cardBrandIcon');
+      if (icon) {
+        if (v.startsWith('4')) icon.className = 'fa-brands fa-cc-visa absolute right-3 top-3.5 text-blue-800 text-sm';
+        else if (/^5[1-5]/.test(v)) icon.className = 'fa-brands fa-cc-mastercard absolute right-3 top-3.5 text-rose-600 text-sm';
+        else if (/^3[47]/.test(v)) icon.className = 'fa-brands fa-cc-amex absolute right-3 top-3.5 text-sky-600 text-sm';
+        else icon.className = 'fa-solid fa-lock absolute right-3 top-3.5 text-slate-400 text-xs';
+      }
+    }
+
+    function formatCardExp(input) {
+      let v = input.value.replace(/\D/g, '').slice(0, 4);
+      if (v.length >= 2) input.value = v.slice(0, 2) + ' / ' + v.slice(2);
+      else input.value = v;
+    }
+
+    // Discount Engine
+    function applyDiscount(source) {
+      const input = source === 'mobile' ? document.getElementById('mobileDiscountInput') : document.getElementById('desktopDiscountInput');
+      const val = (input ? input.value : '').trim().toUpperCase();
+      if (!val) {
+        alert('Please enter a voucher code.');
+        return;
+      }
+
+      if (val === 'WELCOME10') discountRate = 10;
+      else if (val === 'DARAZMEGA30') discountRate = 30;
+      else if (val === 'CRYPTO5') discountRate = 5;
+      else {
+        alert('Invalid or expired discount code.');
+        return;
+      }
+
+      const msg = document.getElementById('discountSuccessMessage');
+      if (msg) msg.classList.remove('hidden');
+      renderOrderSummary();
+    }
+
+    // Mobile Summary Collapsible
+    let isMobileSummaryOpen = false;
+    function toggleMobileSummary() {
+      isMobileSummaryOpen = !isMobileSummaryOpen;
+      const container = document.getElementById('mobileSummaryContainer');
+      const chevron = document.getElementById('mobileSummaryChevron');
+      const text = document.getElementById('mobileSummaryToggleText');
+
+      if (isMobileSummaryOpen) {
+        container.classList.remove('hidden');
+        chevron.classList.add('rotate-180');
+        text.innerText = 'Hide order summary';
+      } else {
+        container.classList.add('hidden');
+        chevron.classList.remove('rotate-180');
+        text.innerText = 'Show order summary';
+      }
+    }
+
+    // Render Order Summary (Desktop & Mobile)
+    function renderOrderSummary() {
+      const desktopList = document.getElementById('desktopCartItemsList');
+      const mobileList = document.getElementById('mobileCartItemsList');
+      const badgeEl = document.getElementById('mobileCartCountBadge');
+
+      const totalItems = cart.reduce((sum, i) => sum + i.qty, 0);
+      if (badgeEl) badgeEl.innerText = totalItems;
+
+      // Calculate totals in base GBP
+      let baseSubtotalGbp = 0;
+      cart.forEach(item => {
+        const price = item.price_gbp || (item.price_usd ? item.price_usd * 0.79 : 29.00);
+        baseSubtotalGbp += price * item.qty;
+      });
+
+      const convertedSubtotal = baseSubtotalGbp * checkoutRate;
+      const discountAmount = convertedSubtotal * (discountRate / 100);
+      const convertedSubtotalAfterDiscount = convertedSubtotal - discountAmount;
+      const convertedShipping = shippingCost;
+      const grandTotal = convertedSubtotalAfterDiscount + convertedShipping;
+
+      const isPKR = (checkoutCurrency === 'PKR');
+      const fmtSubtotal = `${checkoutCurrencySymbol}${convertedSubtotal.toFixed(isPKR ? 0 : 2)}`;
+      const fmtTotal = `${checkoutCurrencySymbol}${grandTotal.toFixed(isPKR ? 0 : 2)}`;
+      const fmtShipping = convertedShipping === 0 ? 'FREE' : `${checkoutCurrencySymbol}${convertedShipping.toFixed(isPKR ? 0 : 2)}`;
+
+      // Update Desktop
+      if (document.getElementById('desktopSummarySubtotal')) document.getElementById('desktopSummarySubtotal').innerText = fmtSubtotal;
+      if (document.getElementById('desktopSummaryShipping')) document.getElementById('desktopSummaryShipping').innerText = fmtShipping;
+      if (document.getElementById('desktopSummaryFinalTotal')) document.getElementById('desktopSummaryFinalTotal').innerText = fmtTotal;
+      if (document.getElementById('desktopSummaryCurrencyCode')) document.getElementById('desktopSummaryCurrencyCode').innerText = checkoutCurrency;
+
+      // Update Mobile
+      if (document.getElementById('mobileSummaryTotalTop')) document.getElementById('mobileSummaryTotalTop').innerText = fmtTotal;
+      if (document.getElementById('mobileSummarySubtotal')) document.getElementById('mobileSummarySubtotal').innerText = fmtSubtotal;
+      if (document.getElementById('mobileSummaryShipping')) document.getElementById('mobileSummaryShipping').innerText = fmtShipping;
+      if (document.getElementById('mobileSummaryFinalTotal')) document.getElementById('mobileSummaryFinalTotal').innerText = fmtTotal;
+      if (document.getElementById('mobileSummaryCurrencyCode')) document.getElementById('mobileSummaryCurrencyCode').innerText = checkoutCurrency;
+
+      // Update Pay Button
+      const btnText = document.getElementById('btnPayNowText');
+      if (btnText) {
+        const checkedOpt = document.querySelector('input[name="paymentOption"]:checked')?.value || 'card';
+        if (checkedOpt === 'afterpay') btnText.innerText = `Pay with Afterpay • ${fmtTotal}`;
+        else if (checkedOpt === 'crypto') btnText.innerText = `Transfer USDT • ${fmtTotal}`;
+        else btnText.innerText = `Pay now • ${fmtTotal}`;
+      }
+
+      // Update Afterpay installments
+      const installmentEl = document.getElementById('afterpayInstallmentAmount');
+      if (installmentEl) installmentEl.innerText = `${checkoutCurrencySymbol}${(grandTotal / 4).toFixed(isPKR ? 0 : 2)}`;
+
+      // Render Item rows HTML (Exact Shopify style)
+      const itemsHtml = cart.map(item => {
+        const itemPrice = (item.price_gbp || (item.price_usd ? item.price_usd * 0.79 : 29.00)) * checkoutRate * item.qty;
+        const fmtItemPrice = `${checkoutCurrencySymbol}${itemPrice.toFixed(isPKR ? 0 : 2)}`;
+
+        return `
+          <div class="flex items-center justify-between gap-3 text-xs">
+            <div class="flex items-center gap-3 min-w-0">
+              <!-- Thumbnail with Shopify Count Badge -->
+              <div class="relative w-16 h-16 rounded-lg border border-slate-200 bg-white flex-shrink-0">
+                <img src="${item.image}" alt="${escapeHtml(item.title)}" class="w-full h-full object-cover rounded-lg" onerror="this.src='favicon.svg'">
+                <span class="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-slate-600 text-white font-bold text-[10px] flex items-center justify-center shadow">
+                  ${item.qty}
+                </span>
+              </div>
+              <div class="min-w-0">
+                <h4 class="font-bold text-slate-900 truncate" title="${escapeHtml(item.title)}">${escapeHtml(item.title)}</h4>
+                <div class="text-[11px] text-slate-500">${escapeHtml(item.category || 'Luxury Collection')}</div>
+              </div>
+            </div>
+            <div class="font-bold text-slate-900 font-mono text-xs whitespace-nowrap pl-2">
+              ${fmtItemPrice}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (desktopList) desktopList.innerHTML = itemsHtml;
+      if (mobileList) mobileList.innerHTML = itemsHtml;
+    }
+
+    // Handle Form Submission
+    function handleFormSubmission(e) {
+      e.preventDefault();
+
+      if (!cart || cart.length === 0) {
+        alert('Your cart is empty! Please add products before checking out.');
+        return;
+      }
+
+      const emailOrPhone = document.getElementById('custEmailOrPhone').value.trim();
+      const firstName = document.getElementById('custFirstName').value.trim();
+      const lastName = document.getElementById('custLastName').value.trim();
+      const address = document.getElementById('custAddress').value.trim();
+      const apartment = document.getElementById('custApartment').value.trim();
+      const city = document.getElementById('custCity').value.trim();
+      const state = document.getElementById('custState').value.trim();
+      const postcode = document.getElementById('custPostcode').value.trim();
+      const phone = document.getElementById('custPhone').value.trim();
+      const countryCode = document.getElementById('destCountry').value;
+      const countryName = document.getElementById('destCountry').options[document.getElementById('destCountry').selectedIndex].text;
+
+      // Billing info
+      const isDifferentBilling = document.getElementById('billingChoiceDifferent')?.checked;
+      let billingAddress = `${address}, ${city}, ${countryName}`;
+      if (isDifferentBilling) {
+        const bAddress = document.getElementById('billAddress')?.value.trim();
+        const bCity = document.getElementById('billCity')?.value.trim();
+        const bCountry = document.getElementById('billCountry')?.value;
+        billingAddress = `${bAddress}, ${bCity}, ${bCountry}`;
+      }
+
+      const paymentMethod = document.querySelector('input[name="paymentOption"]:checked')?.value || 'card';
+      const grandTotalStr = document.getElementById('desktopSummaryFinalTotal')?.innerText || '£0.00';
+
+      // Submit Pay Button animation
+      const btn = document.getElementById('btnShopifyPayNow');
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Processing Secure Payment...`;
+
+      setTimeout(() => {
+        // Create Real Order Object
+        const orderId = '#SHP-' + Math.floor(100000 + Math.random() * 900000);
+        const trackingNum = (countryCode === 'GB' ? 'GB' : 'TRK') + Math.floor(100000000 + Math.random() * 900000000) + 'X';
+
+        const newOrder = {
+          id: orderId,
+          date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+          customer: `${firstName} ${lastName}`,
+          email: emailOrPhone.includes('@') ? emailOrPhone : 'customer@shoppaza.com',
+          phone: phone || emailOrPhone,
+          address: `${address} ${apartment ? '(' + apartment + ')' : ''}, ${city}, ${state} ${postcode}`,
+          country: countryName,
+          billingAddress: billingAddress,
+          items: cart.length,
+          total: grandTotalStr,
+          channel: 'Online Store (Shopify Full-Page Checkout)',
+          payment: paymentMethod === 'crypto' ? 'USDT TRC20' : (paymentMethod === 'afterpay' ? 'Afterpay Installments' : 'Stripe 256-Bit SSL'),
+          fulfillment: 'Unfulfilled',
+          tracking: trackingNum,
+          courier: selectedShippingMethod === 'express' ? 'Express Worldwide Guaranteed' : 'Royal Mail Tracked 24'
+        };
+
+        // Save into Live Orders Database (connected with Admin Panel)
+        const existingOrders = JSON.parse(localStorage.getItem('shoppaza_live_orders') || '[]');
+        existingOrders.unshift(newOrder);
+        localStorage.setItem('shoppaza_live_orders', JSON.stringify(existingOrders));
+
+        // Clear cart
+        localStorage.removeItem('shoppaza_cart');
+
+        // Render Shopify Confirmation Page
+        renderConfirmationPage(newOrder);
+      }, 1400);
+    }
+
+    function renderConfirmationPage(order) {
+      document.body.innerHTML = `
+        <div class="min-h-screen bg-slate-50 flex items-center justify-center p-4 sm:p-8">
+          <div class="max-w-xl w-full bg-white rounded-2xl border border-slate-200 shadow-xl p-6 sm:p-10 space-y-6 text-center">
+            
+            <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl mx-auto shadow-inner">
+              <i class="fa-solid fa-circle-check"></i>
+            </div>
+
+            <div>
+              <span class="text-xs uppercase font-bold text-emerald-600 tracking-wider">Payment Confirmed • SAJID SERVICES LTD</span>
+              <h1 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">Thank you, ${escapeHtml(order.customer)}!</h1>
+              <p class="text-xs text-slate-500 mt-2">Your order <strong class="text-slate-900 font-mono">${order.id}</strong> has been placed and confirmed.</p>
+              <p class="text-[11px] text-slate-400 mt-0.5">An official dispatch confirmation has been sent to <strong>${escapeHtml(order.email)}</strong>.</p>
+            </div>
+
+            <div class="p-5 rounded-xl bg-slate-50 border border-slate-200 text-left text-xs space-y-3.5">
+              <div class="flex justify-between items-center pb-2.5 border-b border-slate-200">
+                <span class="text-slate-500">Order Number:</span>
+                <span class="font-mono font-bold text-slate-900">${order.id}</span>
+              </div>
+              <div class="flex justify-between items-center pb-2.5 border-b border-slate-200">
+                <span class="text-slate-500">Total Paid:</span>
+                <span class="font-mono font-black text-slate-900 text-base">${order.total}</span>
+              </div>
+              <div class="flex justify-between items-center pb-2.5 border-b border-slate-200">
+                <span class="text-slate-500">Payment Method:</span>
+                <span class="font-bold text-emerald-700">${order.payment}</span>
+              </div>
+              <div class="flex justify-between items-center pb-2.5 border-b border-slate-200">
+                <span class="text-slate-500">Shipping Service:</span>
+                <span class="font-bold text-slate-900">${order.courier}</span>
+              </div>
+              <div class="flex justify-between items-center pb-2.5 border-b border-slate-200">
+                <span class="text-slate-500">Tracking Code:</span>
+                <span class="font-mono font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">${order.tracking}</span>
+              </div>
+              <div class="flex justify-between items-start pt-1">
+                <span class="text-slate-500">Delivery Address:</span>
+                <span class="text-slate-800 text-right max-w-xs font-medium">${escapeHtml(order.address)}</span>
+              </div>
+            </div>
+
+            <div class="pt-2 flex flex-col sm:flex-row gap-3">
+              <a href="index.html" class="flex-1 py-3.5 bg-slate-900 hover:bg-black text-white text-xs font-bold uppercase tracking-wider rounded-lg transition shadow">
+                Continue Shopping
+              </a>
+              <button onclick="window.print()" class="px-5 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg border border-slate-300 transition">
+                <i class="fa-solid fa-print mr-1"></i> Print Receipt
+              </button>
+            </div>
+
+            <!-- Merchant Trust Footer -->
+            <div class="pt-4 border-t border-slate-100 text-[11px] text-slate-400 space-y-1">
+              <div>SAJID SERVICES LTD • Registered in Edinburgh, Scotland (SC874640)</div>
+              <div>Office 146 18 Young St, Unit Lge, Edinburgh, EH2 4JB, UK • admin@shoppaza.com</div>
+            </div>
+
+          </div>
+        </div>
+      `;
+    }
+
+    function escapeHtml(str) {
+      if (typeof str !== 'string') return str;
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+  </script>
+</body>
+</html>

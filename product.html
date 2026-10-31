@@ -1376,12 +1376,11 @@
     }
 
     function openCheckoutModal() {
-      if (cart.length === 0) {
+      if (!cart || cart.length === 0) {
         alert('Your shopping bag is empty.');
         return;
       }
-      toggleCartDrawer(false);
-      document.getElementById('checkoutModal').classList.remove('hidden');
+      window.location.href = 'checkout.html';
     }
 
     function closeCheckoutModal() {

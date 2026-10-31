@@ -2428,12 +2428,11 @@
 
     // Checkout
     function openCheckoutModal() {
-      if (cart.length === 0) {
+      if (!cart || cart.length === 0) {
         alert('Your cart is empty! Please add products.');
         return;
       }
-      toggleCartDrawer(false);
-      document.getElementById('checkoutModal').classList.remove('hidden');
+      window.location.href = 'checkout.html';
     }
 
     function closeCheckoutModal() {

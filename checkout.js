@@ -121,38 +121,33 @@ function renderShopifyCheckoutSummary() {
     return (item.category === 'Luxury Watches') || (item.title && (item.title.toLowerCase().includes('watch')));
   }
 
-  if (drawerAppliedCoupon && drawerAppliedCoupon.type === 'wig_tiered') {
+  let isFreeShippingPromo = false;
+  let promoShippingFeeUsd = 0;
+  let promoProductDiscountGbp = 0;
+
+  if (drawerAppliedCoupon && (drawerAppliedCoupon.type === 'free_shipping_promo' || drawerAppliedCoupon.code === 'AG100' || drawerAppliedCoupon.type === 'wig_tiered' || drawerAppliedCoupon.type === 'jewelry_fixed' || drawerAppliedCoupon.type === 'watch_fixed')) {
+    isFreeShippingPromo = true;
     cart.forEach(item => {
+      const qty = parseInt(item.qty, 10) || 1;
+      const unitPriceGbp = item.price_gbp || (item.price_usd ? item.price_usd / 1.27 : 29.00);
+
       if (isWigItem(item)) {
-        const qty = parseInt(item.qty, 10) || 1;
-        const unitPriceGbp = item.price_gbp || (item.price_usd ? item.price_usd * 0.79 : 29.00);
         const isTierB = (item.price_usd && item.price_usd > 200);
-        const targetUsd = isTierB ? (drawerAppliedCoupon.tierB_usd || 41.99) : (drawerAppliedCoupon.tierA_usd || 35.99);
-        const targetGbp = targetUsd * 0.79;
-        totalSavingsGbp += Math.max(0, unitPriceGbp - targetGbp) * qty;
+        const shipPerUnit = isTierB ? 41.99 : 35.99;
+        promoShippingFeeUsd += shipPerUnit * qty;
+        promoProductDiscountGbp += unitPriceGbp * qty;
+      } else if (isJewelryItem(item)) {
+        promoShippingFeeUsd += 15.80 * qty;
+        promoProductDiscountGbp += unitPriceGbp * qty;
+      } else if (isWatchItem(item)) {
+        promoShippingFeeUsd += 22.00 * qty;
+        promoProductDiscountGbp += unitPriceGbp * qty;
       }
     });
-    discountedTotalGbp = Math.max(0, baseGbpTotal - totalSavingsGbp);
-  } else if (drawerAppliedCoupon && drawerAppliedCoupon.type === 'jewelry_fixed') {
-    cart.forEach(item => {
-      if (isJewelryItem(item)) {
-        const qty = parseInt(item.qty, 10) || 1;
-        const unitPriceGbp = item.price_gbp || (item.price_usd ? item.price_usd * 0.79 : 29.00);
-        const targetGbp = (drawerAppliedCoupon.target_usd || 15.80) * 0.79;
-        totalSavingsGbp += Math.max(0, unitPriceGbp - targetGbp) * qty;
-      }
-    });
-    discountedTotalGbp = Math.max(0, baseGbpTotal - totalSavingsGbp);
-  } else if (drawerAppliedCoupon && drawerAppliedCoupon.type === 'watch_fixed') {
-    cart.forEach(item => {
-      if (isWatchItem(item)) {
-        const qty = parseInt(item.qty, 10) || 1;
-        const unitPriceGbp = item.price_gbp || (item.price_usd ? item.price_usd * 0.79 : 29.00);
-        const targetGbp = (drawerAppliedCoupon.target_usd || 22.00) * 0.79;
-        totalSavingsGbp += Math.max(0, unitPriceGbp - targetGbp) * qty;
-      }
-    });
-    discountedTotalGbp = Math.max(0, baseGbpTotal - totalSavingsGbp);
+
+    // Payable amount is just the shipping fee converted to base GBP
+    const promoShippingGbp = promoShippingFeeUsd / 1.27;
+    discountedTotalGbp = promoShippingGbp;
   } else if (checkoutDiscountRate > 0) {
     discountedTotalGbp = baseGbpTotal * (1 - (checkoutDiscountRate / 100));
   }

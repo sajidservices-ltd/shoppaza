@@ -1504,12 +1504,10 @@
           }
         });
 
-        // Convert promo shipping into current checkout currency
-        let convertedPromoShip = promoShippingFeeUsd;
-        if (checkoutCurrency === 'GBP') convertedPromoShip = promoShippingFeeUsd * 0.79;
-        else if (checkoutCurrency === 'EUR') convertedPromoShip = promoShippingFeeUsd * 0.92;
-        else if (checkoutCurrency === 'PKR') convertedPromoShip = promoShippingFeeUsd * 278;
-        else convertedPromoShip = promoShippingFeeUsd;
+        // Convert promo shipping USD into current checkout currency via base GBP exchange rate
+        // (1 GBP = 1.27 USD; 1 GBP = checkoutRate in current currency)
+        const promoShippingGbp = promoShippingFeeUsd / 1.27;
+        const convertedPromoShip = promoShippingGbp * checkoutRate;
 
         // 100% of product price is discounted (Free Product Promo)
         discountAmount = promoItemsDiscountGbp * checkoutRate;

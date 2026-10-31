@@ -1786,7 +1786,7 @@
 
     function recordStoreVisitorTelemetry(pageName = 'Storefront Home') {
       try {
-        const rawData = localStorage.getItem('shoppaza_traffic_analytics');
+        const rawData = localStorage.getItem('shoppaza_traffic_analytics_v2');
         let traffic = null;
         if (rawData) {
           try { traffic = JSON.parse(rawData); } catch(e) {}
@@ -1856,7 +1856,7 @@
 
         if (traffic.visitorsList.length > 100) traffic.visitorsList = traffic.visitorsList.slice(0, 100);
         traffic.lastUpdated = Date.now();
-        localStorage.setItem('shoppaza_traffic_analytics', JSON.stringify(traffic));
+        localStorage.setItem('shoppaza_traffic_analytics_v2', JSON.stringify(traffic));
 
         // Real-Time Global Edge Sync to Cloudflare KV
         try {

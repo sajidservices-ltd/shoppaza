@@ -299,6 +299,9 @@
               </div>
             </div>
 
+            <!-- Dynamic Variants & Options Selector (Length, Density, Color) -->
+            <div id="productOptionsContainer" class="space-y-3 pt-1"></div>
+
             <!-- Quantity Selector -->
             <div class="pt-2">
               <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Quantity</label>
@@ -1387,6 +1390,48 @@
       if (p.description) {
         document.getElementById('productLongDescription').innerText = p.description;
       }
+
+      // Render Dynamic Variants & Options (Length, Density, Color)
+      const optionsBox = document.getElementById('productOptionsContainer');
+      if (optionsBox) {
+        optionsBox.innerHTML = '';
+        if (p.options && Array.isArray(p.options) && p.options.length > 0) {
+          p.selectedOptions = p.selectedOptions || {};
+          p.options.forEach(opt => {
+            const wrap = document.createElement('div');
+            wrap.className = 'pt-2';
+            const defaultVal = p.selectedOptions[opt.name] || (opt.values && opt.values[0]) || '';
+            p.selectedOptions[opt.name] = defaultVal;
+
+            wrap.innerHTML = `
+              <div class="flex items-center justify-between text-xs font-bold text-slate-700 uppercase mb-2">
+                <span>Select ${opt.name}:</span>
+                <span id="label-${opt.name}" class="text-daraz-orange font-extrabold normal-case text-xs">${defaultVal}</span>
+              </div>
+              <div class="flex flex-wrap gap-2" id="options-group-${opt.name}"></div>
+            `;
+            const group = wrap.querySelector(`#options-group-${opt.name}`);
+            opt.values.forEach(val => {
+              const chip = document.createElement('button');
+              chip.type = 'button';
+              const isSelected = (val === p.selectedOptions[opt.name]);
+              chip.className = `px-3 py-1.5 rounded-lg text-xs font-semibold border transition ${isSelected ? 'bg-slate-900 text-white border-slate-900 shadow-sm' : 'bg-white text-slate-700 border-slate-200 hover:border-slate-400'}`;
+              chip.innerText = val;
+              chip.onclick = () => {
+                p.selectedOptions[opt.name] = val;
+                wrap.querySelector(`#label-${opt.name}`).innerText = val;
+                group.querySelectorAll('button').forEach(b => {
+                  b.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold border transition bg-white text-slate-700 border-slate-200 hover:border-slate-400';
+                });
+                chip.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold border transition bg-slate-900 text-white border-slate-900 shadow-sm';
+              };
+              group.appendChild(chip);
+            });
+            optionsBox.appendChild(wrap);
+          });
+        }
+      }
+
     }
 
     function updatePriceDisplay() {

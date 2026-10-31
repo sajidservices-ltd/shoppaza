@@ -9,4 +9,5 @@ vault.json
 .DS_Store
 Thumbs.db
 New folder/
+*.backup.json
 

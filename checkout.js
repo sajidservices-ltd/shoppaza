@@ -1,5 +1,5 @@
 // Shoppaza Shopify-Grade Luxury Checkout Engine (v1.0)
-// Powered by Stripe PCI-DSS Level 1 & SAJID SERVICES LTD (SC874640)
+// Powered by Stripe PCI-DSS Level 1 & Shoppaza Worldwide
 
 let checkoutDiscountRate = 0; // percentage
 let checkoutCurrency = 'GBP';
@@ -323,7 +323,7 @@ function renderShopifyOrderConfirmation(order) {
         <i class="fa-solid fa-circle-check"></i>
       </div>
       <div>
-        <span class="text-xs uppercase font-bold text-emerald-600 tracking-wider">Payment Confirmed • SAJID SERVICES LTD</span>
+        <span class="text-xs uppercase font-bold text-emerald-600 tracking-wider">Payment Confirmed • Shoppaza Official</span>
         <h2 class="text-2xl sm:text-3xl font-black text-slate-950 mt-1">Thank you, ${escapeHtml(order.customer)}!</h2>
         <p class="text-xs text-slate-500 mt-2">Your order <strong class="text-slate-900">${order.id}</strong> has been confirmed and registered.</p>
         <p class="text-[11px] text-slate-400 mt-0.5">An official VAT invoice has been queued to <strong>${escapeHtml(order.email)}</strong> from <strong>admin@shoppaza.com</strong>.</p>

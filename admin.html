@@ -2794,60 +2794,28 @@
     };
 
     const DEFAULT_TRAFFIC_BASELINE = {
-      totalVisits: 318,
-      uniqueVisitors: 298,
-      facebookVisits: 304,
-      countryCounts: {
-        PK: 195,
-        US: 78,
-        GB: 32,
-        AE: 9,
-        SA: 4
-      },
-      sourceCounts: {
-        'Facebook Ads / Social': 304,
-        'Direct / Storefront': 10,
-        'Google Organic': 4
-      },
-      deviceCounts: {
-        Mobile: 302,
-        Desktop: 16
-      },
-      visitorsList: [
-        { id: 'v_fb_1', timestamp: Date.now() - 35000, country: 'PK', page: 'Home Storefront', source: 'Facebook Ads / Social', device: 'Mobile', status: 'Browsing Store' },
-        { id: 'v_fb_2', timestamp: Date.now() - 75000, country: 'PK', page: 'Women Designer Dresses', source: 'Facebook Ads / Social', device: 'Mobile', status: 'Browsing Store' },
-        { id: 'v_fb_3', timestamp: Date.now() - 140000, country: 'US', page: 'Fine Gold & Diamond Jewelry', source: 'Facebook Ads / Social', device: 'Mobile', status: 'Added to Cart' },
-        { id: 'v_fb_4', timestamp: Date.now() - 260000, country: 'GB', page: 'Luxury Watches & Chronographs', source: 'Facebook Ads / Social', device: 'Mobile', status: 'Browsing Store' },
-        { id: 'v_fb_5', timestamp: Date.now() - 410000, country: 'PK', page: 'Luxury Handbags & Clutches', source: 'Facebook Ads / Social', device: 'Mobile', status: 'Browsing Store' },
-        { id: 'v_fb_6', timestamp: Date.now() - 590000, country: 'US', page: 'Checkout Page', source: 'Facebook Ads / Social', device: 'Mobile', status: 'In Checkout' },
-        { id: 'v_fb_7', timestamp: Date.now() - 820000, country: 'PK', page: 'Designer Silk Scarves', source: 'Facebook Ads / Social', device: 'Mobile', status: 'Browsing Store' },
-        { id: 'v_fb_8', timestamp: Date.now() - 1100000, country: 'AE', page: 'Gold Plated Jewelry Sets', source: 'Facebook Ads / Social', device: 'Mobile', status: 'Browsing Store' },
-        { id: 'v_fb_9', timestamp: Date.now() - 1450000, country: 'PK', page: 'Home Storefront', source: 'Facebook Ads / Social', device: 'Mobile', status: 'Browsing Store' },
-        { id: 'v_fb_10', timestamp: Date.now() - 1900000, country: 'US', page: 'Fine Diamond Rings', source: 'Facebook Ads / Social', device: 'Mobile', status: 'Browsing Store' }
-      ]
+      totalVisits: 0,
+      uniqueVisitors: 0,
+      countryCounts: {},
+      sourceCounts: {},
+      deviceCounts: { Mobile: 0, Desktop: 0 },
+      visitorsList: []
     };
 
     function getStoreTrafficData() {
       try {
-        // Auto-purge legacy demo cache
-        try { localStorage.removeItem('shoppaza_traffic_analytics'); localStorage.removeItem('shoppaza_traffic_analytics_v2'); } catch(e) {}
-        const raw = localStorage.getItem('shoppaza_traffic_analytics_v3');
+        // Auto-purge ALL legacy dummy baseline caches
+        try {
+          localStorage.removeItem('shoppaza_traffic_analytics');
+          localStorage.removeItem('shoppaza_traffic_analytics_v2');
+          localStorage.removeItem('shoppaza_traffic_analytics_v3');
+        } catch(e) {}
+        const raw = localStorage.getItem('shoppaza_traffic_analytics_real');
         if (!raw) {
-          localStorage.setItem('shoppaza_traffic_analytics_v3', JSON.stringify(DEFAULT_TRAFFIC_BASELINE));
+          localStorage.setItem('shoppaza_traffic_analytics_real', JSON.stringify(DEFAULT_TRAFFIC_BASELINE));
           return JSON.parse(JSON.stringify(DEFAULT_TRAFFIC_BASELINE));
         }
-        const parsed = JSON.parse(raw);
-        if (!parsed.totalVisits || parsed.totalVisits < DEFAULT_TRAFFIC_BASELINE.totalVisits) {
-          parsed.totalVisits = (parsed.totalVisits || 0) + DEFAULT_TRAFFIC_BASELINE.totalVisits;
-          parsed.uniqueVisitors = (parsed.uniqueVisitors || 0) + DEFAULT_TRAFFIC_BASELINE.uniqueVisitors;
-        }
-        if (!parsed.countryCounts) parsed.countryCounts = { ...DEFAULT_TRAFFIC_BASELINE.countryCounts };
-        if (!parsed.sourceCounts) parsed.sourceCounts = { ...DEFAULT_TRAFFIC_BASELINE.sourceCounts };
-        if (!parsed.deviceCounts) parsed.deviceCounts = { ...DEFAULT_TRAFFIC_BASELINE.deviceCounts };
-        if (!Array.isArray(parsed.visitorsList) || parsed.visitorsList.length === 0) {
-          parsed.visitorsList = [...DEFAULT_TRAFFIC_BASELINE.visitorsList];
-        }
-        return parsed;
+        return JSON.parse(raw);
       } catch(e) {
         return JSON.parse(JSON.stringify(DEFAULT_TRAFFIC_BASELINE));
       }
@@ -2877,9 +2845,11 @@
       // Update Home Screen KPI Card
       const kpiTraffic = document.getElementById('kpiTotalTraffic');
       const kpiTrafficSub = document.getElementById('kpiTrafficSubtext');
-      if (kpiTraffic) kpiTraffic.innerText = `${total.toLocaleString()} Visits`;
+      if (kpiTraffic) kpiTraffic.innerText = total > 0 ? `${total.toLocaleString()} Visits` : '0 Visits';
       if (kpiTrafficSub) {
-        kpiTrafficSub.innerHTML = `<i class="fa-solid fa-users text-emerald-400"></i> ${unique.toLocaleString()} unique shoppers`;
+        kpiTrafficSub.innerHTML = total > 0 
+          ? `<i class="fa-solid fa-users text-emerald-400"></i> ${unique.toLocaleString()} unique shoppers`
+          : '<i class="fa-solid fa-signal text-slate-500"></i> Waiting for real visitors...';
       }
 
       // Update Analytics 4 KPI Cards
@@ -2895,8 +2865,7 @@
       // Estimate live now (active in last 10 minutes)
       const tenMinsAgo = Date.now() - (10 * 60 * 1000);
       const recentActive = (data.visitorsList || []).filter(v => v.timestamp >= tenMinsAgo).length;
-      const liveCount = Math.max(2, recentActive);
-      if (cardLive) cardLive.innerText = `${liveCount} Online`;
+      if (cardLive) cardLive.innerText = `${recentActive} Online`;
 
       // Determine top country
       const countryEntries = Object.entries(data.countryCounts || {}).sort((a,b) => b[1] - a[1]);
@@ -2908,6 +2877,9 @@
         if (cardTopCountryMeta) {
           cardTopCountryMeta.innerHTML = `<i class="fa-solid fa-bullseye"></i> ${meta.name} leads traffic`;
         }
+      } else if (cardTopCountry) {
+        cardTopCountry.innerText = 'No Data';
+        if (cardTopCountryMeta) cardTopCountryMeta.innerText = 'Awaiting real visitor traffic';
       }
 
       // Render Global Visitors by Country Table / Bars
@@ -3101,7 +3073,7 @@
       data.visitorsList.unshift(newEntry);
       if (data.visitorsList.length > 100) data.visitorsList = data.visitorsList.slice(0, 100);
 
-      localStorage.setItem('shoppaza_traffic_analytics_v3', JSON.stringify(data));
+      localStorage.setItem('shoppaza_traffic_analytics_real', JSON.stringify(data));
       renderTrafficAnalytics();
       const meta = COUNTRY_METADATA[randomCountry] || { name: randomCountry, flag: '🌐' };
       showToast(`Live visitor simulated from ${meta.flag} ${meta.name} (${randomPage})`, 'success');
@@ -3109,7 +3081,7 @@
 
     function resetTrafficTelemetry() {
       if (!confirm('Reset traffic telemetry to default baseline?')) return;
-      localStorage.removeItem('shoppaza_traffic_analytics_v3');
+      localStorage.removeItem('shoppaza_traffic_analytics_real');
       renderTrafficAnalytics();
       showToast('Traffic telemetry reset to baseline metrics.', 'success');
     }

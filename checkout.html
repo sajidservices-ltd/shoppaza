@@ -1001,18 +1001,18 @@
 
     function recordStoreVisitorTelemetry(pageName = 'Storefront Home') {
       try {
-        const rawData = localStorage.getItem('shoppaza_traffic_analytics_v3');
+        const rawData = localStorage.getItem('shoppaza_traffic_analytics_real');
         let traffic = null;
         if (rawData) {
           try { traffic = JSON.parse(rawData); } catch(e) {}
         }
         if (!traffic) {
           traffic = {
-            totalVisits: 1420,
-            uniqueVisitors: 896,
-            countryCounts: { US: 596, GB: 398, PK: 198, AU: 128, CA: 45, DE: 35, SA: 20 },
-            sourceCounts: { 'Google Organic': 766, 'Direct / Storefront': 369, 'Social Media': 198, 'WhatsApp Share': 58, 'Referral / Search': 29 },
-            deviceCounts: { Mobile: 1008, Desktop: 412 },
+            totalVisits: 0,
+            uniqueVisitors: 0,
+            countryCounts: {},
+            sourceCounts: {},
+            deviceCounts: { Mobile: 0, Desktop: 0 },
             visitorsList: []
           };
         }
@@ -1071,7 +1071,7 @@
 
         if (traffic.visitorsList.length > 100) traffic.visitorsList = traffic.visitorsList.slice(0, 100);
         traffic.lastUpdated = Date.now();
-        localStorage.setItem('shoppaza_traffic_analytics_v3', JSON.stringify(traffic));
+        localStorage.setItem('shoppaza_traffic_analytics_real', JSON.stringify(traffic));
 
 
       } catch(err) {

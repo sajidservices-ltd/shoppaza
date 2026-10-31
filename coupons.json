@@ -1,82 +1,9 @@
 [
   {
-    "code": "VIPWIG",
-    "type": "wig_tiered",
-    "tierA_usd": 35.99,
-    "tierB_usd": 41.99,
-    "worker": "Official VIP Campaign",
-    "commission_usd": 5.00,
-    "desc": "Wigs Only: $35.99 short / $41.99 long (32 Inch 250% density)",
+    "code": "AG100",
+    "type": "free_shipping_promo",
+    "desc": "100% Free Items Promo - Customer pays only Shipping (Wigs $35.99/$41.99, Jewelry $15.80, Watches $22.00 per item)",
     "status": "Active",
-    "uses": "128 Used"
-  },
-  {
-    "code": "JEWELRY15",
-    "type": "jewelry_fixed",
-    "target_usd": 15.80,
-    "worker": "Official Jewelry Promo",
-    "commission_usd": 3.00,
-    "desc": "Jewelry Only: $15.80 flat on Necklaces, Pendants, Bracelets & Bangles",
-    "status": "Active",
-    "uses": "36 Used"
-  },
-  {
-    "code": "WATCH22",
-    "type": "watch_fixed",
-    "target_usd": 22.00,
-    "worker": "Official Watch Promo",
-    "commission_usd": 4.00,
-    "desc": "Luxury Watches Only (15 products): $22.00 flat rate",
-    "status": "Active",
-    "uses": "29 Used"
-  },
-  {
-    "code": "AFFILIATE1",
-    "type": "wig_tiered",
-    "tierA_usd": 35.99,
-    "tierB_usd": 41.99,
-    "worker": "Partner Team 1",
-    "commission_usd": 5.00,
-    "desc": "Wigs Affiliate Team 1 ($5.00 commission per wig)",
-    "status": "Active",
-    "uses": "42 Used"
-  },
-  {
-    "code": "AMANDA",
-    "type": "wig_tiered",
-    "tierA_usd": 35.99,
-    "tierB_usd": 41.99,
-    "worker": "Amanda S.",
-    "commission_usd": 4.50,
-    "desc": "Wigs Closer Amanda ($4.50 commission per wig)",
-    "status": "Active",
-    "uses": "19 Used"
-  },
-  {
-    "code": "WELCOME10",
-    "type": "percent",
-    "value": 10,
-    "worker": "Storewide",
-    "desc": "10% Welcome Discount for New Visitors",
-    "status": "Active",
-    "uses": "215 Used"
-  },
-  {
-    "code": "DARAZMEGA30",
-    "type": "percent",
-    "value": 30,
-    "worker": "Storewide",
-    "desc": "30% Mega Sale Discount",
-    "status": "Active",
-    "uses": "84 Used"
-  },
-  {
-    "code": "CRYPTO5",
-    "type": "percent",
-    "value": 5,
-    "worker": "Storewide",
-    "desc": "5% Extra Discount on USDT Payments",
-    "status": "Active",
-    "uses": "32 Used"
+    "uses": "0 Used"
   }
 ]

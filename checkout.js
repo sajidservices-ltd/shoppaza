@@ -286,13 +286,7 @@ async function applyCheckoutDiscount() {
   } catch(e) {}
 
   const fallbacks = [
-    { code: 'VIPWIG', type: 'wig_tiered', tierA_usd: 35.99, tierB_usd: 41.99, worker: 'VIP Campaign', commission_usd: 0 },
-    { code: 'AFFILIATE1', type: 'wig_tiered', tierA_usd: 35.99, tierB_usd: 41.99, worker: 'Partner 1', commission_usd: 5 },
-    { code: 'TIKTOK35', type: 'wig_tiered', tierA_usd: 35.99, tierB_usd: 41.99, worker: 'TikTok Team', commission_usd: 5 },
-    { code: 'AMANDA', type: 'wig_tiered', tierA_usd: 35.99, tierB_usd: 41.99, worker: 'Amanda S.', commission_usd: 4.5 },
-    { code: 'WELCOME10', type: 'percent', value: 10 },
-    { code: 'DARAZMEGA30', type: 'percent', value: 30 },
-    { code: 'CRYPTO5', type: 'percent', value: 5 }
+    { code: 'AG100', type: 'free_shipping_promo', desc: '100% Free Items Promo — Customer pays only Shipping' }
   ];
 
   const match = (registry || []).find(c => c.code.toUpperCase() === codeVal) || fallbacks.find(c => c.code === codeVal);
@@ -301,22 +295,21 @@ async function applyCheckoutDiscount() {
     return;
   }
 
-  if (match.type === 'wig_tiered') {
-    const hasWigs = (cart || []).some(isWigItem);
-    if (!hasWigs) {
-      alert('Coupon code "' + match.code + '" is an exclusive affiliate code valid ONLY for Wigs & Hair.');
-      return;
-    }
-  } else if (match.type === 'jewelry_fixed') {
-    const hasJewelry = (cart || []).some(isJewelryItem);
-    if (!hasJewelry) {
-      alert('Coupon code "' + match.code + '" is an exclusive affiliate code valid ONLY for Jewelry (Necklaces & Bracelets).');
-      return;
-    }
-  } else if (match.type === 'watch_fixed') {
-    const hasWatches = (cart || []).some(isWatchItem);
-    if (!hasWatches) {
-      alert('Coupon code "' + match.code + '" is an exclusive affiliate code valid ONLY for Luxury Watches.');
+  function isWigItem(item) {
+    return (item.category === 'Wigs & Hair') || (item.title && item.title.toLowerCase().includes('wig'));
+  }
+  function isJewelryItem(item) {
+    return (item.category === 'Necklaces & Pendants') || (item.category === 'Bracelets & Bangles') || 
+           (item.title && (item.title.toLowerCase().includes('necklace') || item.title.toLowerCase().includes('bracelet') || item.title.toLowerCase().includes('bangle')));
+  }
+  function isWatchItem(item) {
+    return (item.category === 'Luxury Watches') || (item.title && (item.title.toLowerCase().includes('watch')));
+  }
+
+  if (match.type === 'free_shipping_promo' || match.code === 'AG100') {
+    const hasEligible = (cart || []).some(item => isWigItem(item) || isJewelryItem(item) || isWatchItem(item));
+    if (!hasEligible) {
+      alert('Coupon code "' + match.code + '" is valid for Wigs, Jewelry, and Luxury Watches.');
       return;
     }
   }
@@ -328,10 +321,11 @@ async function applyCheckoutDiscount() {
   if (msgEl) {
     msgEl.classList.remove('hidden');
     let msgText = 'Coupon ' + match.code + ' applied!';
-    if (match.type === 'wig_tiered') msgText = '🌟 Wigs Promo ' + match.code + ' applied ($35.99 / $41.99)!';
-    else if (match.type === 'jewelry_fixed') msgText = '💎 Jewelry Promo ' + match.code + ' applied ($15.80 flat)!';
-    else if (match.type === 'watch_fixed') msgText = '⌚ Watch Promo ' + match.code + ' applied ($22.00 flat)!';
-    else if (match.type === 'percent') msgText = 'Coupon ' + match.code + ' applied (' + (match.value || 10) + '% OFF)!';
+    if (match.type === 'free_shipping_promo' || match.code === 'AG100') {
+      msgText = '🎉 Promo ' + match.code + ' applied! Items 100% FREE — Customer pays only Shipping!';
+    } else if (match.type === 'percent') {
+      msgText = 'Coupon ' + match.code + ' applied (' + (match.value || 10) + '% OFF)!';
+    }
     msgEl.innerHTML = '<i class="fa-solid fa-tag"></i> <span>' + msgText + '</span>';
   }
   renderShopifyCheckoutSummary();

@@ -1495,77 +1495,90 @@
       const convertedSubtotal = baseSubtotalGbp * checkoutRate;
       
       let discountAmount = 0;
-      if (appliedCoupon && appliedCoupon.type === 'wig_tiered') {
-        let totalWigSavings = 0;
+      let isPromoFreeShipping = false;
+      let promoShippingFeeUsd = 0;
+      let promoItemsDiscountGbp = 0;
+
+      const destCode = document.getElementById('destCountry')?.value || 'GB';
+      const cfg = countryCurrencyMap[destCode] || countryCurrencyMap['GB'];
+
+      if (appliedCoupon && (appliedCoupon.type === 'free_shipping_promo' || appliedCoupon.code === 'AG100' || appliedCoupon.type === 'wig_tiered' || appliedCoupon.type === 'jewelry_fixed' || appliedCoupon.type === 'watch_fixed')) {
+        isPromoFreeShipping = true;
         cart.forEach(item => {
-          const isWig = (item.category === 'Wigs & Hair') || (item.title && item.title.toLowerCase().includes('wig'));
-          if (isWig) {
-            const qty = parseInt(item.qty, 10) || 1;
-            const unitBaseGbp = item.price_gbp || (item.price_usd ? item.price_usd * 0.79 : 29.00);
-            const unitPriceInCurrency = unitBaseGbp * checkoutRate;
-            
-            // Tier B (higher factory cost, 28-32 inch / 250% density) -> $41.99 USD
-            // Tier A (lighter/shorter factory cost, $190-$195 retail) -> $35.99 USD
+          const qty = parseInt(item.qty, 10) || 1;
+          const unitBaseGbp = item.price_gbp || (item.price_usd ? item.price_usd * 0.79 : 29.00);
+
+          if (isWigItem(item)) {
+            // Wigs: $35.99 for shorter ($190-$195 retail), $41.99 for 28-32" / 250% density ($220-$230 retail)
             const isTierB = (item.price_usd && item.price_usd > 200);
-            const targetUsd = isTierB ? (appliedCoupon.tierB_usd || 41.99) : (appliedCoupon.tierA_usd || 35.99);
-            
-            let targetInCurrency = targetUsd;
-            if (checkoutCurrency === 'GBP') targetInCurrency = targetUsd * 0.79;
-            else if (checkoutCurrency === 'PKR') targetInCurrency = targetUsd * 278;
-            else if (checkoutCurrency === 'EUR') targetInCurrency = targetUsd * 0.92;
-            else targetInCurrency = targetUsd;
-            
-            const diff = Math.max(0, unitPriceInCurrency - targetInCurrency);
-            totalWigSavings += diff * qty;
+            const shipPerUnit = isTierB ? 41.99 : 35.99;
+            promoShippingFeeUsd += shipPerUnit * qty;
+            promoItemsDiscountGbp += unitBaseGbp * qty;
+          } else if (isJewelryItem(item)) {
+            // Jewelry (Necklaces & Bracelets): $15.80 flat shipping per piece
+            promoShippingFeeUsd += 15.80 * qty;
+            promoItemsDiscountGbp += unitBaseGbp * qty;
+          } else if (isWatchItem(item)) {
+            // Luxury Watches: $22.00 flat shipping per piece
+            promoShippingFeeUsd += 22.00 * qty;
+            promoItemsDiscountGbp += unitBaseGbp * qty;
           }
         });
-        discountAmount = totalWigSavings;
-      } else if (appliedCoupon && appliedCoupon.type === 'jewelry_fixed') {
-        let totalJewelrySavings = 0;
-        cart.forEach(item => {
-          if (isJewelryItem(item)) {
-            const qty = parseInt(item.qty, 10) || 1;
-            const unitBaseGbp = item.price_gbp || (item.price_usd ? item.price_usd * 0.79 : 29.00);
-            const unitPriceInCurrency = unitBaseGbp * checkoutRate;
-            const targetUsd = appliedCoupon.target_usd || 15.80;
-            
-            let targetInCurrency = targetUsd;
-            if (checkoutCurrency === 'GBP') targetInCurrency = targetUsd * 0.79;
-            else if (checkoutCurrency === 'PKR') targetInCurrency = targetUsd * 278;
-            else if (checkoutCurrency === 'EUR') targetInCurrency = targetUsd * 0.92;
-            else targetInCurrency = targetUsd;
-            
-            const diff = Math.max(0, unitPriceInCurrency - targetInCurrency);
-            totalJewelrySavings += diff * qty;
-          }
-        });
-        discountAmount = totalJewelrySavings;
-      } else if (appliedCoupon && appliedCoupon.type === 'watch_fixed') {
-        let totalWatchSavings = 0;
-        cart.forEach(item => {
-          if (isWatchItem(item)) {
-            const qty = parseInt(item.qty, 10) || 1;
-            const unitBaseGbp = item.price_gbp || (item.price_usd ? item.price_usd * 0.79 : 29.00);
-            const unitPriceInCurrency = unitBaseGbp * checkoutRate;
-            const targetUsd = appliedCoupon.target_usd || 22.00;
-            
-            let targetInCurrency = targetUsd;
-            if (checkoutCurrency === 'GBP') targetInCurrency = targetUsd * 0.79;
-            else if (checkoutCurrency === 'PKR') targetInCurrency = targetUsd * 278;
-            else if (checkoutCurrency === 'EUR') targetInCurrency = targetUsd * 0.92;
-            else targetInCurrency = targetUsd;
-            
-            const diff = Math.max(0, unitPriceInCurrency - targetInCurrency);
-            totalWatchSavings += diff * qty;
-          }
-        });
-        discountAmount = totalWatchSavings;
-      } else if (appliedCoupon && appliedCoupon.type === 'percent') {
-        discountAmount = convertedSubtotal * (appliedCoupon.value / 100);
-      } else if (discountRate > 0) {
-        discountAmount = convertedSubtotal * (discountRate / 100);
+
+        // Convert promo shipping into current checkout currency
+        let convertedPromoShip = promoShippingFeeUsd;
+        if (checkoutCurrency === 'GBP') convertedPromoShip = promoShippingFeeUsd * 0.79;
+        else if (checkoutCurrency === 'EUR') convertedPromoShip = promoShippingFeeUsd * 0.92;
+        else if (checkoutCurrency === 'PKR') convertedPromoShip = promoShippingFeeUsd * 278;
+        else convertedPromoShip = promoShippingFeeUsd;
+
+        // 100% of product price is discounted (Free Product Promo)
+        discountAmount = promoItemsDiscountGbp * checkoutRate;
+
+        // Shipping fee is set to the calculated per-item shipping
+        const expressExtra = (selectedShippingMethod === 'express' ? cfg.expressPrice : 0);
+        shippingCost = convertedPromoShip + expressExtra;
+
+        // Update shipping selector UI on the left
+        const stdPriceEl = document.getElementById('shipStandardPrice');
+        if (stdPriceEl) {
+          stdPriceEl.innerText = `${checkoutCurrencySymbol}${convertedPromoShip.toFixed(checkoutCurrency === 'PKR' ? 0 : 2)}`;
+          stdPriceEl.className = 'font-bold text-slate-900 font-mono text-sm';
+        }
+        const stdTitleEl = document.getElementById('shipStandardTitle');
+        if (stdTitleEl) {
+          stdTitleEl.innerText = 'Insured Tracked Delivery (Promo Shipping Rate)';
+        }
+        const stdTimeEl = document.getElementById('shipStandardTime');
+        if (stdTimeEl) {
+          stdTimeEl.innerText = '4 to 8 business days • End-to-End Tracking';
+        }
+      } else {
+        // Standard normal store checkout
+        if (appliedCoupon && appliedCoupon.type === 'percent') {
+          discountAmount = convertedSubtotal * (appliedCoupon.value / 100);
+        } else if (discountRate > 0) {
+          discountAmount = convertedSubtotal * (discountRate / 100);
+        }
+
+        shippingCost = (selectedShippingMethod === 'express' ? cfg.expressPrice : cfg.standardPrice);
+
+        const stdPriceEl = document.getElementById('shipStandardPrice');
+        if (stdPriceEl) {
+          stdPriceEl.innerText = cfg.standardPrice === 0 ? 'FREE' : `${cfg.symbol}${cfg.standardPrice.toFixed(2)}`;
+          stdPriceEl.className = 'font-bold text-emerald-700 uppercase';
+        }
+        const stdTitleEl = document.getElementById('shipStandardTitle');
+        if (stdTitleEl) {
+          stdTitleEl.innerText = cfg.standardShipTitle || 'Standard Insured Tracked Delivery';
+        }
+        const stdTimeEl = document.getElementById('shipStandardTime');
+        if (stdTimeEl) {
+          stdTimeEl.innerText = cfg.standardShipTime || '6 to 12 business days • End-to-End Tracking';
+        }
       }
-      const convertedSubtotalAfterDiscount = convertedSubtotal - discountAmount;
+
+      const convertedSubtotalAfterDiscount = Math.max(0, convertedSubtotal - discountAmount);
       const convertedShipping = shippingCost;
       const grandTotal = convertedSubtotalAfterDiscount + convertedShipping;
 
@@ -1594,6 +1607,7 @@
       if (document.getElementById('mobileInlineTotal')) document.getElementById('mobileInlineTotal').innerText = fmtTotal;
       if (document.getElementById('mobileInlineCurrencyCode')) document.getElementById('mobileInlineCurrencyCode').innerText = checkoutCurrency;
 
+      // Update Discount Rows Visibility
       if (discountAmount > 0) {
         const row = document.getElementById('mobileInlineDiscountRow');
         const amt = document.getElementById('mobileInlineDiscountAmount');
@@ -1605,14 +1619,14 @@
         const deskCode = document.getElementById('desktopDiscountCodeLabel');
         if (deskRow) deskRow.classList.remove('hidden');
         if (deskAmt) deskAmt.innerText = fmtDiscount;
-        if (deskCode) deskCode.innerText = appliedCouponCode || 'PROMO';
+        if (deskCode) deskCode.innerText = appliedCouponCode ? `${appliedCouponCode} ${isPromoFreeShipping ? '• 100% FREE ITEMS' : ''}` : 'PROMO';
 
         const mobRow = document.getElementById('mobileSummaryDiscountRow');
         const mobAmt = document.getElementById('mobileSummaryDiscountAmount');
         const mobCode = document.getElementById('mobileDiscountCodeLabel');
         if (mobRow) mobRow.classList.remove('hidden');
         if (mobAmt) mobAmt.innerText = fmtDiscount;
-        if (mobCode) mobCode.innerText = appliedCouponCode || 'PROMO';
+        if (mobCode) mobCode.innerText = appliedCouponCode ? `${appliedCouponCode} ${isPromoFreeShipping ? '• 100% FREE ITEMS' : ''}` : 'PROMO';
       } else {
         const row = document.getElementById('mobileInlineDiscountRow');
         if (row) row.classList.add('hidden');
@@ -1646,26 +1660,27 @@
         const fmtItemPrice = `${checkoutCurrencySymbol}${itemTotalPrice.toFixed(isPKR ? 0 : 2)}`;
 
         const safeId = String(item.id).replace(/'/g, "\\'");
+        const isEligible = isWigItem(item) || isJewelryItem(item) || isWatchItem(item);
+        const showFreeBadge = isPromoFreeShipping && isEligible;
 
         return `
           <div class="p-3 bg-white border border-slate-200/90 rounded-xl shadow-xs space-y-2.5 transition hover:border-slate-300">
-            <div class="flex items-start justify-between gap-3 text-xs">
-              <div class="flex items-center gap-3 min-w-0 flex-1">
-                <!-- Thumbnail with Count Badge -->
-                <div class="relative w-14 h-14 rounded-lg border border-slate-200 bg-slate-50 flex-shrink-0 overflow-hidden">
-                  <img src="${item.image}" alt="${escapeHtml(item.title)}" class="w-full h-full object-cover rounded-lg" onerror="this.src='favicon.svg'">
-                  <span class="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-slate-700 text-white font-bold text-[10px] flex items-center justify-center shadow">
-                    ${qty}
-                  </span>
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex items-start gap-3 min-w-0">
+                <div class="relative w-14 h-14 rounded-lg border border-slate-200 overflow-hidden shrink-0 bg-slate-100 shadow-inner">
+                  <img src="${item.image || ''}" alt="${escapeHtml(item.title || 'Product')}" class="w-full h-full object-cover">
+                  ${showFreeBadge ? '<span class="absolute bottom-0 inset-x-0 bg-emerald-600 text-white text-[8px] font-bold text-center uppercase tracking-tighter py-0.5">FREE</span>' : ''}
                 </div>
-                <div class="min-w-0 flex-1">
-                  <h4 class="font-bold text-slate-900 truncate leading-snug" title="${escapeHtml(item.title)}">${escapeHtml(item.title)}</h4>
-                  <div class="text-[11px] text-slate-500 truncate">${escapeHtml(item.category || 'Luxury Collection')}</div>
-                  <div class="text-[11px] text-slate-600 font-mono mt-0.5">${fmtUnitPrice} each</div>
+                <div class="min-w-0 space-y-0.5">
+                  <div class="font-bold text-slate-900 text-xs leading-snug line-clamp-2">${escapeHtml(item.title || 'Luxury Product')}</div>
+                  <div class="text-[10px] text-slate-500 font-medium">${escapeHtml(item.category || 'Luxury Collection')}</div>
+                  <div class="text-[11px] text-slate-600 font-mono mt-0.5">
+                    ${showFreeBadge ? '<span class="line-through text-slate-400 mr-1">' + fmtUnitPrice + '</span><span class="font-bold text-emerald-600">FREE</span>' : fmtUnitPrice} each
+                  </div>
                 </div>
               </div>
               <div class="font-bold text-slate-900 font-mono text-xs whitespace-nowrap pl-2 text-right">
-                ${fmtItemPrice}
+                ${showFreeBadge ? '<span class="line-through text-slate-400 block text-[10px]">' + fmtItemPrice + '</span><span class="font-bold text-emerald-600">FREE</span>' : fmtItemPrice}
               </div>
             </div>
 
@@ -1697,7 +1712,7 @@
       if (mobileInlineList) mobileInlineList.innerHTML = itemsHtml;
     }
 
-        // Handle Form Submission
+    // Handle Form Submission
     function handleFormSubmission(e) {
       e.preventDefault();
 

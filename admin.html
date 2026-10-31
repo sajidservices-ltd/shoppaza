@@ -2830,10 +2830,10 @@
     function getStoreTrafficData() {
       try {
         // Auto-purge legacy demo cache
-        try { localStorage.removeItem('shoppaza_traffic_analytics'); } catch(e) {}
-        const raw = localStorage.getItem('shoppaza_traffic_analytics_v2');
+        try { localStorage.removeItem('shoppaza_traffic_analytics'); localStorage.removeItem('shoppaza_traffic_analytics_v2'); } catch(e) {}
+        const raw = localStorage.getItem('shoppaza_traffic_analytics_v3');
         if (!raw) {
-          localStorage.setItem('shoppaza_traffic_analytics_v2', JSON.stringify(DEFAULT_TRAFFIC_BASELINE));
+          localStorage.setItem('shoppaza_traffic_analytics_v3', JSON.stringify(DEFAULT_TRAFFIC_BASELINE));
           return JSON.parse(JSON.stringify(DEFAULT_TRAFFIC_BASELINE));
         }
         const parsed = JSON.parse(raw);
@@ -3101,7 +3101,7 @@
       data.visitorsList.unshift(newEntry);
       if (data.visitorsList.length > 100) data.visitorsList = data.visitorsList.slice(0, 100);
 
-      localStorage.setItem('shoppaza_traffic_analytics_v2', JSON.stringify(data));
+      localStorage.setItem('shoppaza_traffic_analytics_v3', JSON.stringify(data));
       renderTrafficAnalytics();
       const meta = COUNTRY_METADATA[randomCountry] || { name: randomCountry, flag: '🌐' };
       showToast(`Live visitor simulated from ${meta.flag} ${meta.name} (${randomPage})`, 'success');
@@ -3109,7 +3109,7 @@
 
     function resetTrafficTelemetry() {
       if (!confirm('Reset traffic telemetry to default baseline?')) return;
-      localStorage.removeItem('shoppaza_traffic_analytics_v2');
+      localStorage.removeItem('shoppaza_traffic_analytics_v3');
       renderTrafficAnalytics();
       showToast('Traffic telemetry reset to baseline metrics.', 'success');
     }

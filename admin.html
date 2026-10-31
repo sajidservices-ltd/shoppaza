@@ -2866,17 +2866,8 @@
     }
 
     function renderTrafficAnalytics() {
-      // 1. Render immediately from local cache
-      const initialData = getStoreTrafficData();
-      updateTrafficUIWithData(initialData);
-
-      // 2. Fetch live global edge data from Cloudflare KV
-      fetch('/api/traffic').then(r => r.json()).then(edgeData => {
-        if (edgeData && edgeData.totalVisits) {
-          localStorage.setItem('shoppaza_traffic_analytics_v2', JSON.stringify(edgeData));
-          updateTrafficUIWithData(edgeData);
-        }
-      }).catch(function() {});
+      const data = getStoreTrafficData();
+      updateTrafficUIWithData(data);
     }
 
     function updateTrafficUIWithData(data) {

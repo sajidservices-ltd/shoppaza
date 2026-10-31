@@ -303,6 +303,7 @@
                   <tr>
                     <th class="p-3">Order ID</th>
                     <th class="p-3">Customer</th>
+                    <th class="p-3 text-amber-400">Promo Code</th>
                     <th class="p-3">Channel / Country</th>
                     <th class="p-3">Total</th>
                     <th class="p-3">Payment</th>
@@ -443,6 +444,7 @@
                     <th class="p-4">Order ID</th>
                     <th class="p-4">Date</th>
                     <th class="p-4">Customer</th>
+                    <th class="p-4 text-amber-400">Promo Code</th>
                     <th class="p-4">Destination</th>
                     <th class="p-4">Payment</th>
                     <th class="p-4">Fulfillment</th>
@@ -1260,7 +1262,7 @@
       </div>
 
       <!-- Customer & Shipping Summary -->
-      <div class="grid grid-cols-2 gap-4 p-4 rounded-2xl bg-slate-950 border border-slate-800 mb-5 text-xs">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 rounded-2xl bg-slate-950 border border-slate-800 mb-5 text-xs">
         <div>
           <div class="text-slate-400 font-semibold mb-1">Customer Information</div>
           <div class="font-bold text-white text-sm" id="modalCustomerName">Emma Watson</div>
@@ -1272,6 +1274,13 @@
           <div class="text-slate-200 font-medium" id="modalCustomerAddress">221B Baker Street, London, NW1 6XE</div>
           <div class="text-slate-400" id="modalCustomerCountry">United Kingdom</div>
           <div class="text-emerald-400 font-bold mt-1" id="modalOrderTotal">Total: £186.00</div>
+        </div>
+        <div>
+          <div class="text-slate-400 font-semibold mb-1">Promo & Promoter</div>
+          <div class="font-bold text-amber-400 font-mono text-sm flex items-center gap-1.5" id="modalCustomerPromo">
+            <i class="fa-solid fa-gift"></i> <span>None</span>
+          </div>
+          <div class="text-slate-300 text-[11px] mt-1" id="modalCustomerChannel">Direct Customer</div>
         </div>
       </div>
 
@@ -1327,7 +1336,10 @@
           </div>
         </div>
 
-        <button type="submit" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold transition shadow-lg shadow-emerald-600/20">
+        <div id="modalOrderReadOnlyNotice" class="p-3.5 bg-amber-500/10 border border-amber-500/30 rounded-xl text-amber-300 text-xs font-medium text-center hidden">
+          <i class="fa-solid fa-lock mr-1.5 text-amber-400"></i> Read-Only Mode: You are viewing this order in promoter mode. Modifying tracking or status is restricted to Super Admin.
+        </div>
+        <button type="submit" id="modalOrderSubmitBtn" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold transition shadow-lg shadow-emerald-600/20">
           Save Tracking & Update Order Status
         </button>
       </form>
@@ -1433,29 +1445,34 @@
       localStorage.setItem('shoppaza_zero_orders_v1', 'clean');
     }
 
-    // Staff Accounts Preconfiguration
-    const DEFAULT_STAFF_KEY = 'STAFF-2026';
+    // Staff & Limited Promoter Accounts Management
+    const DEFAULT_STAFF_KEY = 'AG100-USER';
 
     function getStaffAccounts() {
       const saved = localStorage.getItem('shoppaza_staff_accounts');
+      let accounts = [];
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
-          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+          if (Array.isArray(parsed) && parsed.length > 0) accounts = parsed;
         } catch(e) {}
       }
-      const initial = [
-        {
-          id: 'staff_1',
-          name: 'Social Media Promoter',
-          passcode: DEFAULT_STAFF_KEY,
-          role: 'viewer',
-          channel: 'TikTok / Telegram / Instagram',
+      
+      // Ensure the AG100 promoter team account is always initialized and available
+      const hasAg100 = accounts.some(a => (a.assigned_promo || '').toUpperCase() === 'AG100' || a.passcode === 'AG100-USER');
+      if (!hasAg100) {
+        accounts.unshift({
+          id: 'user_ag100',
+          name: 'Promoter Team (AG100)',
+          passcode: 'AG100-USER',
+          assigned_promo: 'AG100',
+          role: 'limited_promoter',
+          channel: 'Direct Sales & TikTok Campaign',
           created: 'Active'
-        }
-      ];
-      localStorage.setItem('shoppaza_staff_accounts', JSON.stringify(initial));
-      return initial;
+        });
+        localStorage.setItem('shoppaza_staff_accounts', JSON.stringify(accounts));
+      }
+      return accounts;
     }
 
     function saveStaffAccounts(accounts) {
@@ -1471,45 +1488,59 @@
       if (accounts.length === 0) {
         container.innerHTML = `
           <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 text-center text-slate-500 text-xs">
-            No staff accounts configured. Click "+ Add Staff Account" to create a read-only passcode for your team.
+            No staff accounts configured. Click "+ Add Staff Account" to create a restricted user for your team or promoters.
           </div>
         `;
         return;
       }
 
-      container.innerHTML = accounts.map(a => `
-        <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-full bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 flex items-center justify-center font-bold text-xs flex-shrink-0">
-              ${(a.name || 'ST').slice(0, 2).toUpperCase()}
-            </div>
-            <div>
-              <div class="font-bold text-white text-xs flex items-center gap-2">
-                <span>${escapeHtml(a.name)}</span>
-                <span class="px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-semibold text-[10px] border border-indigo-500/30">
-                  <i class="fa-solid fa-eye text-[9px]"></i> Read-Only (View Only)
-                </span>
+      container.innerHTML = accounts.map(a => {
+        const isLimited = (a.role === 'limited_promoter');
+        const promoCode = (a.assigned_promo || 'AG100').toUpperCase();
+        return `
+          <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-full ${isLimited ? 'bg-amber-600/30 text-amber-300 border-amber-500/30' : 'bg-indigo-600/30 text-indigo-300 border-indigo-500/30'} border flex items-center justify-center font-bold text-xs flex-shrink-0">
+                ${escapeHtml((a.name || 'ST').slice(0, 2).toUpperCase())}
               </div>
-              <div class="text-[11px] text-slate-400 mt-0.5">
-                Channel / Notes: <strong class="text-slate-300">${escapeHtml(a.channel || 'Promoter Desk')}</strong>
+              <div>
+                <div class="font-bold text-white text-xs flex flex-wrap items-center gap-2">
+                  <span>${escapeHtml(a.name)}</span>
+                  ${isLimited ? `
+                    <span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold text-[10px] border border-amber-500/30 flex items-center gap-1">
+                      <i class="fa-solid fa-gift text-[9px]"></i> Promo: ${escapeHtml(promoCode)}
+                    </span>
+                    <span class="px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 font-semibold text-[10px] border border-rose-500/30">
+                      <i class="fa-solid fa-lock text-[9px]"></i> Limited Read-Only
+                    </span>
+                  ` : `
+                    <span class="px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-semibold text-[10px] border border-indigo-500/30">
+                      <i class="fa-solid fa-eye text-[9px]"></i> Store Viewer
+                    </span>
+                  `}
+                </div>
+                <div class="text-[11px] text-slate-400 mt-1 flex flex-wrap items-center gap-2">
+                  <span>Channel: <strong class="text-slate-300">${escapeHtml(a.channel || 'Promoter Desk')}</strong></span>
+                  ${isLimited ? `<span class="text-slate-600">•</span><span class="text-amber-400/90 font-medium">Restricted to Promo [${escapeHtml(promoCode)}] orders only</span>` : ''}
+                </div>
               </div>
             </div>
-          </div>
 
-          <div class="flex items-center gap-2">
-            <div class="p-2 rounded-lg bg-slate-950 border border-slate-800 font-mono text-xs text-emerald-400 font-bold flex items-center gap-2">
-              <i class="fa-solid fa-key text-[10px] text-slate-500"></i>
-              <span>${escapeHtml(a.passcode)}</span>
-              <button type="button" onclick="navigator.clipboard.writeText('${escapeHtml(a.passcode)}'); showToast('Passcode copied to clipboard!', 'success');" title="Copy Passcode" class="text-slate-400 hover:text-white ml-1">
-                <i class="fa-solid fa-copy"></i>
+            <div class="flex items-center gap-2">
+              <div class="p-2 rounded-lg bg-slate-950 border border-slate-800 font-mono text-xs text-emerald-400 font-bold flex items-center gap-2">
+                <i class="fa-solid fa-key text-[10px] text-slate-500"></i>
+                <span>${escapeHtml(a.passcode)}</span>
+                <button type="button" onclick="navigator.clipboard.writeText('${escapeHtml(a.passcode)}'); showToast('Passcode copied to clipboard!', 'success');" title="Copy Passcode" class="text-slate-400 hover:text-white ml-1">
+                  <i class="fa-solid fa-copy"></i>
+                </button>
+              </div>
+              <button type="button" onclick="deleteStaffAccount('${a.id}')" title="Delete Staff Account" class="p-2 text-slate-500 hover:text-red-400 rounded-lg hover:bg-red-500/10 transition">
+                <i class="fa-solid fa-trash-can"></i>
               </button>
             </div>
-            <button type="button" onclick="deleteStaffAccount('${a.id}')" title="Delete Staff Account" class="p-2 text-slate-500 hover:text-red-400 rounded-lg hover:bg-red-500/10 transition">
-              <i class="fa-solid fa-trash-can"></i>
-            </button>
           </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     function openAddStaffModal() {
@@ -1523,8 +1554,9 @@
     }
 
     function generateRandomStaffPasscode() {
-      const num = Math.floor(1000 + Math.random() * 9000);
-      const pass = 'PROMO-' + num;
+      const promo = (document.getElementById('staffNewPromoCode')?.value || 'USER').trim().toUpperCase();
+      const num = Math.floor(100 + Math.random() * 900);
+      const pass = (promo ? promo + '-' : 'USER-') + num;
       const inp = document.getElementById('staffNewPasscode');
       if (inp) inp.value = pass;
     }
@@ -1533,7 +1565,9 @@
       e.preventDefault();
       const name = (document.getElementById('staffNewName')?.value || '').trim();
       const passcode = (document.getElementById('staffNewPasscode')?.value || '').trim().toUpperCase();
-      const channel = (document.getElementById('staffNewNotes')?.value || '').trim() || 'Social Media Promoter';
+      const assigned_promo = (document.getElementById('staffNewPromoCode')?.value || 'AG100').trim().toUpperCase();
+      const role = document.getElementById('staffNewRole')?.value || 'limited_promoter';
+      const channel = (document.getElementById('staffNewNotes')?.value || '').trim() || 'Direct Promoter Campaign';
 
       if (!name || !passcode) {
         alert('Please provide staff name and passcode.');
@@ -1541,8 +1575,8 @@
       }
 
       const accounts = getStaffAccounts();
-      if (accounts.some(a => a.passcode === passcode)) {
-        alert('This passcode is already assigned to another staff member. Please use a unique passcode.');
+      if (accounts.some(a => a.passcode.toUpperCase() === passcode)) {
+        alert('This passcode is already assigned to another user. Please use a unique passcode.');
         return;
       }
 
@@ -1550,7 +1584,8 @@
         id: 'staff_' + Date.now(),
         name,
         passcode,
-        role: 'viewer',
+        assigned_promo,
+        role,
         channel,
         created: new Date().toLocaleDateString('en-GB')
       };
@@ -1558,7 +1593,7 @@
       accounts.push(newStaff);
       saveStaffAccounts(accounts);
       closeAddStaffModal();
-      showToast(`Staff account "${name}" created! Passcode: ${passcode}`, 'success');
+      showToast(`Account "${name}" created for promo [${assigned_promo}]! Passcode: ${passcode}`, 'success');
       
       // Clear inputs
       if (document.getElementById('staffNewName')) document.getElementById('staffNewName').value = '';
@@ -1567,11 +1602,11 @@
     }
 
     function deleteStaffAccount(id) {
-      if (!confirm('Are you sure you want to remove this staff account? They will no longer be able to log in.')) return;
+      if (!confirm('Are you sure you want to remove this user account? They will no longer be able to log in.')) return;
       let accounts = getStaffAccounts();
       accounts = accounts.filter(a => a.id !== id);
       saveStaffAccounts(accounts);
-      showToast('Staff account removed.', 'info');
+      showToast('Account removed.', 'info');
     }
 
     // Initialize
@@ -1634,29 +1669,37 @@
         sessionStorage.setItem('shoppaza_admin_role', 'admin');
         sessionStorage.setItem('shoppaza_admin_user_name', 'Sajid Mehmood');
         sessionStorage.setItem('shoppaza_admin_user_title', 'Owner & Director (SAJID SERVICES LTD)');
+        sessionStorage.removeItem('shoppaza_admin_assigned_promo');
         unlockDashboard('admin');
         showToast('Authenticated as Store Owner (Full Access)', 'success');
-      } 
-      // 2. Check Staff Passcode (Read-Only Viewer)
-      else if (matchedStaff) {
-        loginFailedAttempts = 0;
-        sessionStorage.setItem('shoppaza_admin_auth', 'true');
-        sessionStorage.setItem('shoppaza_admin_role', 'viewer');
-        sessionStorage.setItem('shoppaza_admin_user_name', matchedStaff.name);
-        sessionStorage.setItem('shoppaza_admin_user_title', 'Promoter / Chat Agent (Read-Only)');
-        unlockDashboard('viewer');
-        showToast(`Authenticated as ${matchedStaff.name} (View Only Mode)`, 'info');
-      } 
-      // 3. Failed
-      else {
-        loginFailedAttempts++;
-        const errorEl = document.getElementById('loginError');
-        errorEl.classList.remove('hidden');
+        return;
+      }
 
-        if (loginFailedAttempts >= 5) {
-          loginLockoutTime = Date.now() + 60000;
-          alert('Security Alert: 5 failed attempts detected. Terminal locked for 60 seconds.');
-        }
+      // 2. Check Staff / Promoter Passcode
+      if (matchedStaff) {
+        loginFailedAttempts = 0;
+        const isLimited = (matchedStaff.role === 'limited_promoter');
+        const assignedPromo = (matchedStaff.assigned_promo || 'AG100').toUpperCase();
+
+        sessionStorage.setItem('shoppaza_admin_auth', 'true');
+        sessionStorage.setItem('shoppaza_admin_role', matchedStaff.role || 'limited_promoter');
+        sessionStorage.setItem('shoppaza_admin_user_name', matchedStaff.name);
+        sessionStorage.setItem('shoppaza_admin_user_title', isLimited ? `Promoter (${assignedPromo})` : 'Store Staff');
+        sessionStorage.setItem('shoppaza_admin_assigned_promo', assignedPromo);
+
+        unlockDashboard(matchedStaff.role || 'limited_promoter');
+        showToast(`Welcome ${matchedStaff.name}! Authorized in ${isLimited ? `Limited Promoter [${assignedPromo}]` : 'Viewer'} mode.`, 'success');
+        return;
+      }
+
+      // 3. Failed
+      loginFailedAttempts++;
+      const errorEl = document.getElementById('loginError');
+      if (errorEl) errorEl.classList.remove('hidden');
+
+      if (loginFailedAttempts >= 5) {
+        loginLockoutTime = Date.now() + 60000;
+        alert('Security Alert: 5 failed attempts detected. Terminal locked for 60 seconds.');
       }
     }
 
@@ -1668,18 +1711,29 @@
     }
 
     function applyRolePermissions(role) {
+      const isLimited = (role === 'limited_promoter');
       const isViewer = (role === 'viewer');
+      const isStaff = isLimited || isViewer;
+
       const viewerBanner = document.getElementById('viewerRoleBanner');
+      const assignedPromo = (sessionStorage.getItem('shoppaza_admin_assigned_promo') || 'AG100').toUpperCase();
+
+      const tabProducts = document.getElementById('tabBtn-products');
+      const tabCustomizer = document.getElementById('tabBtn-customizer');
+      const tabCustomers = document.getElementById('tabBtn-customers');
+      const tabDiscounts = document.getElementById('tabBtn-discounts');
+      const tabAnalytics = document.getElementById('tabBtn-analytics');
       const tabPayments = document.getElementById('tabBtn-payments');
       const tabSettings = document.getElementById('tabBtn-settings');
+
       const quickActions = document.getElementById('quickManagementActions');
       const btnTopAddProduct = document.getElementById('btnTopAddProduct');
       const btnResetOrders = document.getElementById('btnResetOrders');
       const btnCreateManualOrder = document.getElementById('btnCreateManualOrder');
       const productActions = document.getElementById('productManagementActions');
 
-      const userName = sessionStorage.getItem('shoppaza_admin_user_name') || (isViewer ? 'Promoter / Staff' : 'Sajid Mehmood');
-      const userTitle = sessionStorage.getItem('shoppaza_admin_user_title') || (isViewer ? 'Promoter (Read-Only)' : 'Owner & Director');
+      const userName = sessionStorage.getItem('shoppaza_admin_user_name') || (isLimited ? `Promoter (${assignedPromo})` : (isViewer ? 'Store Staff' : 'Sajid Mehmood'));
+      const userTitle = sessionStorage.getItem('shoppaza_admin_user_title') || (isLimited ? `Promoter [${assignedPromo}] (Read-Only)` : (isViewer ? 'Promoter (Read-Only)' : 'Owner & Director'));
 
       const bannerName = document.getElementById('bannerStaffUserName');
       if (bannerName) bannerName.innerText = userName;
@@ -1689,21 +1743,70 @@
       const avatarEl = document.getElementById('sidebarUserAvatar');
       if (nameEl) nameEl.innerText = userName;
       if (roleEl) roleEl.innerText = userTitle;
-      if (avatarEl) avatarEl.innerText = isViewer ? 'ST' : 'SM';
+      if (avatarEl) avatarEl.innerText = isLimited ? 'PR' : (isViewer ? 'ST' : 'SM');
 
-      if (isViewer) {
-        if (viewerBanner) viewerBanner.classList.remove('hidden');
+      if (isLimited) {
+        if (viewerBanner) {
+          viewerBanner.classList.remove('hidden');
+          viewerBanner.className = 'bg-amber-950/90 border-b border-amber-800 px-6 py-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-amber-200';
+          viewerBanner.innerHTML = `
+            <div class="flex items-center gap-2.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse flex-shrink-0"></span>
+              <span>Logged in as: <strong class="text-white font-bold">${escapeHtml(userName)}</strong> • Active Filter: <strong class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/40">🎁 Promo Code: ${escapeHtml(assignedPromo)}</strong> • <span class="text-amber-300/80">Read-Only Mode (All other tabs locked)</span></span>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full bg-amber-900 border border-amber-700 font-bold text-[10px] text-amber-300 w-max">Promoter Portal</span>
+          `;
+        }
+        // Strict Hide Unauthorized Tabs
+        if (tabProducts) tabProducts.classList.add('hidden');
+        if (tabCustomizer) tabCustomizer.classList.add('hidden');
+        if (tabCustomers) tabCustomers.classList.add('hidden');
+        if (tabDiscounts) tabDiscounts.classList.add('hidden');
+        if (tabAnalytics) tabAnalytics.classList.add('hidden');
         if (tabPayments) tabPayments.classList.add('hidden');
         if (tabSettings) tabSettings.classList.add('hidden');
+
+        if (quickActions) quickActions.classList.add('hidden');
+        if (btnTopAddProduct) btnTopAddProduct.classList.add('hidden');
+        if (btnResetOrders) btnResetOrders.classList.add('hidden');
+        if (btnCreateManualOrder) btnCreateManualOrder.classList.add('hidden');
+        if (productActions) productActions.classList.add('hidden');
+      } else if (isViewer) {
+        if (viewerBanner) {
+          viewerBanner.classList.remove('hidden');
+          viewerBanner.className = 'bg-indigo-950 border-b border-indigo-800 px-6 py-2.5 flex items-center justify-between text-xs text-indigo-200';
+          viewerBanner.innerHTML = `
+            <div class="flex items-center gap-2.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-indigo-400 animate-pulse"></span>
+              <span>Logged in as: <strong class="text-white font-semibold">${escapeHtml(userName)}</strong> • <span class="text-indigo-300">Read-Only View Mode (Administrative settings locked)</span></span>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full bg-indigo-900 border border-indigo-700 font-bold text-[10px] text-indigo-300">Staff Account</span>
+          `;
+        }
+        if (tabProducts) tabProducts.classList.remove('hidden');
+        if (tabCustomizer) tabCustomizer.classList.add('hidden');
+        if (tabCustomers) tabCustomers.classList.remove('hidden');
+        if (tabDiscounts) tabDiscounts.classList.add('hidden');
+        if (tabAnalytics) tabAnalytics.classList.remove('hidden');
+        if (tabPayments) tabPayments.classList.add('hidden');
+        if (tabSettings) tabSettings.classList.add('hidden');
+
         if (quickActions) quickActions.classList.add('hidden');
         if (btnTopAddProduct) btnTopAddProduct.classList.add('hidden');
         if (btnResetOrders) btnResetOrders.classList.add('hidden');
         if (btnCreateManualOrder) btnCreateManualOrder.classList.add('hidden');
         if (productActions) productActions.classList.add('hidden');
       } else {
+        // Master Super Admin (Owner)
         if (viewerBanner) viewerBanner.classList.add('hidden');
+        if (tabProducts) tabProducts.classList.remove('hidden');
+        if (tabCustomizer) tabCustomizer.classList.remove('hidden');
+        if (tabCustomers) tabCustomers.classList.remove('hidden');
+        if (tabDiscounts) tabDiscounts.classList.remove('hidden');
+        if (tabAnalytics) tabAnalytics.classList.remove('hidden');
         if (tabPayments) tabPayments.classList.remove('hidden');
         if (tabSettings) tabSettings.classList.remove('hidden');
+
         if (quickActions) quickActions.classList.remove('hidden');
         if (btnTopAddProduct) btnTopAddProduct.classList.remove('hidden');
         if (btnResetOrders) btnResetOrders.classList.remove('hidden');
@@ -1714,12 +1817,26 @@
 
     function logoutAdmin() {
       sessionStorage.removeItem('shoppaza_admin_auth');
+      sessionStorage.removeItem('shoppaza_admin_role');
+      sessionStorage.removeItem('shoppaza_admin_user_name');
+      sessionStorage.removeItem('shoppaza_admin_user_title');
+      sessionStorage.removeItem('shoppaza_admin_assigned_promo');
       location.reload();
     }
 
     // ---------------- TAB NAVIGATION ----------------
     function switchTab(tabName) {
       const tabs = ['home', 'orders', 'products', 'customizer', 'customers', 'discounts', 'analytics', 'settings', 'payments'];
+      
+      const role = sessionStorage.getItem('shoppaza_admin_role') || 'admin';
+      if (role === 'limited_promoter' && tabName !== 'home' && tabName !== 'orders') {
+        alert('Access Denied: You are in Limited Promoter mode and only authorized to view Home Overview and Orders.');
+        tabName = 'orders';
+      } else if (role === 'viewer' && (tabName === 'payments' || tabName === 'settings' || tabName === 'customizer' || tabName === 'discounts')) {
+        alert('Access Restricted: Only the store owner can access settings or payment configurations.');
+        return;
+      }
+
       tabs.forEach(t => {
         const panel = document.getElementById('panel-' + t);
         const btn = document.getElementById('tabBtn-' + t);
@@ -1727,17 +1844,17 @@
         if (btn) btn.classList.remove('sidebar-active');
       });
 
-      const role = sessionStorage.getItem('shoppaza_admin_role') || 'admin';
-      if (role === 'viewer' && (tabName === 'payments' || tabName === 'settings')) {
-        alert('Access Restricted: Only the store owner can access settings or payment gateways.');
-        return;
-      }
-
       const activePanel = document.getElementById('panel-' + tabName);
       const activeBtn = document.getElementById('tabBtn-' + tabName);
       if (activePanel) activePanel.classList.remove('hidden');
       if (activeBtn) activeBtn.classList.add('sidebar-active');
 
+      if (tabName === 'orders') renderOrders();
+      if (tabName === 'products') renderProducts();
+      if (tabName === 'customers') renderCustomers();
+      if (tabName === 'discounts') {
+        if (typeof renderDiscountsTable === 'function') renderDiscountsTable();
+      }
       if (tabName === 'analytics') {
         try { renderTrafficAnalytics(); } catch(e) {}
         try { renderCategoryAnalytics(); } catch(e) {}
@@ -2259,8 +2376,21 @@
       if (recentTbody) recentTbody.innerHTML = '';
       if (fullTbody) fullTbody.innerHTML = '';
 
+      const role = sessionStorage.getItem('shoppaza_admin_role') || 'admin';
+      const isLimited = (role === 'limited_promoter');
+      const isViewer = (role === 'viewer');
+      const assignedPromo = (sessionStorage.getItem('shoppaza_admin_assigned_promo') || 'AG100').toUpperCase();
+
       const liveOrders = JSON.parse(localStorage.getItem('shoppaza_live_orders') || '[]');
-      const allOrders = [...liveOrders, ...defaultOrders];
+      let allOrders = [...liveOrders, ...defaultOrders];
+
+      // Strict filter for Limited Promoter: only their assigned promo code!
+      if (isLimited) {
+        allOrders = allOrders.filter(o => {
+          const code = (o.discount_code || '').trim().toUpperCase();
+          return code === assignedPromo;
+        });
+      }
 
       // Calculate Real Revenue
       let totalSalesGbp = 0;
@@ -2283,12 +2413,15 @@
       if (badge) badge.innerText = allOrders.length;
 
       if (allOrders.length === 0) {
+        const emptyNotice = isLimited
+          ? `<i class="fa-solid fa-gift text-3xl mb-2 text-amber-500/50 block"></i> No orders received for promo code "${escapeHtml(assignedPromo)}" yet. As soon as a customer completes checkout using this code, their order details will appear here automatically.`
+          : `<i class="fa-solid fa-receipt text-3xl mb-2 text-slate-600 block"></i> No orders received yet. Live customer orders will appear here automatically in real time.`;
+
         if (recentTbody) {
           recentTbody.innerHTML = `
             <tr>
-              <td colspan="8" class="p-8 text-center text-slate-500 text-xs">
-                <i class="fa-solid fa-receipt text-3xl mb-2 text-slate-600 block"></i>
-                No orders received yet. Live customer orders will appear here automatically in real time.
+              <td colspan="9" class="p-8 text-center text-slate-500 text-xs">
+                ${emptyNotice}
               </td>
             </tr>
           `;
@@ -2296,9 +2429,8 @@
         if (fullTbody) {
           fullTbody.innerHTML = `
             <tr>
-              <td colspan="9" class="p-8 text-center text-slate-500 text-xs">
-                <i class="fa-solid fa-receipt text-3xl mb-2 text-slate-600 block"></i>
-                No live orders found. Orders placed by shoppers will appear here with fulfillment and tracking controls.
+              <td colspan="10" class="p-8 text-center text-slate-500 text-xs">
+                ${emptyNotice}
               </td>
             </tr>
           `;
@@ -2306,13 +2438,15 @@
         return;
       }
 
-      const role = sessionStorage.getItem('shoppaza_admin_role') || 'admin';
-      const isViewer = (role === 'viewer');
-
       allOrders.forEach(o => {
         const fulfillColor = o.fulfillment === 'Fulfilled' || o.fulfillment === 'Shipped'
           ? 'bg-emerald-500/20 text-emerald-300'
           : (o.fulfillment === 'Processing' ? 'bg-indigo-500/20 text-indigo-300' : 'bg-amber-500/20 text-amber-300');
+
+        const promoCode = (o.discount_code && o.discount_code !== 'NONE') ? o.discount_code : '';
+        const promoBadge = promoCode 
+          ? `<span class="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 font-mono font-bold text-[11px] border border-amber-500/30 flex items-center gap-1 w-max"><i class="fa-solid fa-gift text-[10px]"></i> ${escapeHtml(promoCode)}</span>`
+          : `<span class="text-slate-600 text-[11px]">—</span>`;
 
         // Recent table
         if (recentTbody) {
@@ -2321,6 +2455,7 @@
           trRecent.innerHTML = `
             <td class="p-3 font-bold text-white cursor-pointer hover:text-emerald-400" onclick="openOrderModal('${o.id}')">${o.id}</td>
             <td class="p-3 text-slate-300">${escapeHtml(o.customer)}</td>
+            <td class="p-3">${promoBadge}</td>
             <td class="p-3 text-slate-400">
               <div>${escapeHtml(o.country || 'United Kingdom')}</div>
               ${o.fraud_risk_level === 'HIGH_RISK_PROXY' ? '<span class="inline-flex items-center gap-1 text-[10px] text-rose-400 font-bold"><i class="fa-solid fa-triangle-exclamation"></i> Proxy Risk</span>' : (o.fraud_risk_level === 'VERIFIED_LOW_RISK' ? '<span class="inline-flex items-center gap-1 text-[10px] text-emerald-400 font-semibold"><i class="fa-solid fa-shield-check"></i> IP Match</span>' : '')}
@@ -2331,7 +2466,7 @@
             <td class="p-3 font-mono text-[11px] text-slate-300">${o.tracking || '<span class="text-slate-500">Unassigned</span>'}</td>
             <td class="p-3 text-right">
               <button onclick="openOrderModal('${o.id}')" class="px-2.5 py-1 bg-shopify-surface hover:bg-slate-800 text-slate-200 rounded border border-shopify-border text-xs">
-                ${isViewer ? 'View' : 'Manage'}
+                ${isLimited || isViewer ? 'View' : 'Manage'}
               </button>
             </td>
           `;
@@ -2346,16 +2481,17 @@
             <td class="p-4 font-bold text-white cursor-pointer hover:text-emerald-400" onclick="openOrderModal('${o.id}')">${o.id}</td>
             <td class="p-4 text-slate-400">${o.date || 'Today'}</td>
             <td class="p-4 text-slate-200 font-medium">${escapeHtml(o.customer)}</td>
+            <td class="p-4">${promoBadge}</td>
             <td class="p-4 text-slate-400">${escapeHtml(o.country || 'UK')}</td>
             <td class="p-4"><span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-[10px]">${o.payment}</span></td>
             <td class="p-4"><span class="px-2.5 py-0.5 rounded-full ${fulfillColor} font-bold text-[10px]">${o.fulfillment}</span></td>
             <td class="p-4 font-mono text-slate-300 text-xs">
-              ${o.tracking ? `<span class="text-indigo-400 font-semibold">${o.courier || 'Carrier'}:</span> ${o.tracking}` : '<span class="text-slate-500">No Tracking</span>'}
+              ${o.tracking ? `<span class="text-indigo-400 font-semibold">${escapeHtml(o.courier || 'Carrier')}:</span> ${escapeHtml(o.tracking)}` : '<span class="text-slate-500">No Tracking</span>'}
             </td>
             <td class="p-4 font-bold font-mono text-emerald-400">${o.total}</td>
             <td class="p-4 text-right">
               <button onclick="openOrderModal('${o.id}')" class="px-3 py-1.5 bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-300 border border-emerald-500/30 rounded-lg text-xs font-semibold transition">
-                <i class="fa-solid fa-truck mr-1"></i> ${isViewer ? 'View Status' : 'Edit / Track'}
+                <i class="fa-solid ${isLimited || isViewer ? 'fa-eye' : 'fa-truck'} mr-1"></i> ${isLimited || isViewer ? 'View Order' : 'Edit / Track'}
               </button>
             </td>
           `;
@@ -2371,9 +2507,12 @@
 
       rows.forEach(r => {
         const text = r.innerText.toLowerCase();
-        const matchQ = text.includes(q);
-        const matchStatus = (status === 'all') || text.includes(status.toLowerCase());
-        r.style.display = (matchQ && matchStatus) ? '' : 'none';
+        const matchesQuery = !q || text.includes(q);
+        let matchesStatus = true;
+        if (status !== 'all') {
+          matchesStatus = text.includes(status.toLowerCase());
+        }
+        r.style.display = (matchesQuery && matchesStatus) ? '' : 'none';
       });
     }
 
@@ -2382,6 +2521,11 @@
       const allOrders = [...liveOrders, ...defaultOrders];
       const o = allOrders.find(x => x.id === orderId);
       if (!o) return;
+
+      const role = sessionStorage.getItem('shoppaza_admin_role') || 'admin';
+      const isLimited = (role === 'limited_promoter');
+      const isViewer = (role === 'viewer');
+      const isReadOnly = isLimited || isViewer;
 
       document.getElementById('modalOrderHiddenId').value = o.id;
       document.getElementById('modalOrderId').innerText = o.id;
@@ -2393,10 +2537,51 @@
       document.getElementById('modalCustomerCountry').innerText = o.country || 'United Kingdom';
       document.getElementById('modalOrderTotal').innerText = `Total: ${o.total}`;
       
-      document.getElementById('modalOrderCourier').value = o.courier || 'Royal Mail Tracked 24';
-      document.getElementById('modalOrderTrackingNum').value = o.tracking || '';
-      document.getElementById('modalOrderFulfillStatus').value = o.fulfillment || 'Processing';
-      document.getElementById('modalOrderPayStatus').value = o.payment?.includes('Paid') ? 'Paid' : 'Pending';
+      const promoEl = document.getElementById('modalCustomerPromo');
+      const channelEl = document.getElementById('modalCustomerChannel');
+      if (promoEl) {
+        if (o.discount_code && o.discount_code !== 'NONE') {
+          promoEl.innerHTML = `<i class="fa-solid fa-gift text-amber-400"></i> <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono font-bold border border-amber-500/40">${escapeHtml(o.discount_code)}</span>`;
+        } else {
+          promoEl.innerHTML = `<span class="text-slate-500 font-sans font-normal">None (Standard Order)</span>`;
+        }
+      }
+      if (channelEl) {
+        if (o.affiliate_worker) {
+          channelEl.innerHTML = `Affiliate: <strong class="text-white">${escapeHtml(o.affiliate_worker)}</strong>`;
+        } else if (o.discount_code && o.discount_code !== 'NONE') {
+          channelEl.innerHTML = `Campaign: <strong class="text-white">${escapeHtml(o.discount_code)}</strong>`;
+        } else {
+          channelEl.innerHTML = `<span class="text-slate-400">Direct Store Checkout</span>`;
+        }
+      }
+
+      const courierInput = document.getElementById('modalOrderCourier');
+      const trackingInput = document.getElementById('modalOrderTrackingNum');
+      const fulfillInput = document.getElementById('modalOrderFulfillStatus');
+      const payInput = document.getElementById('modalOrderPayStatus');
+      const submitBtn = document.getElementById('modalOrderSubmitBtn');
+      const readOnlyNotice = document.getElementById('modalOrderReadOnlyNotice');
+
+      if (courierInput) {
+        courierInput.value = o.courier || 'Royal Mail Tracked 24';
+        courierInput.disabled = isReadOnly;
+      }
+      if (trackingInput) {
+        trackingInput.value = o.tracking || '';
+        trackingInput.disabled = isReadOnly;
+      }
+      if (fulfillInput) {
+        fulfillInput.value = o.fulfillment || 'Processing';
+        fulfillInput.disabled = isReadOnly;
+      }
+      if (payInput) {
+        payInput.value = o.payment?.includes('Paid') ? 'Paid' : 'Pending';
+        payInput.disabled = isReadOnly;
+      }
+
+      if (submitBtn) submitBtn.style.display = isReadOnly ? 'none' : 'block';
+      if (readOnlyNotice) readOnlyNotice.style.display = isReadOnly ? 'block' : 'none';
 
       document.getElementById('orderModal').classList.remove('hidden');
     }
@@ -2407,6 +2592,11 @@
 
     function handleSaveOrderTracking(e) {
       e.preventDefault();
+      const role = sessionStorage.getItem('shoppaza_admin_role') || 'admin';
+      if (role === 'limited_promoter' || role === 'viewer') {
+        alert('Access Denied: You are in read-only mode and cannot update order fulfillment or tracking.');
+        return;
+      }
       const id = document.getElementById('modalOrderHiddenId').value;
       const courier = document.getElementById('modalOrderCourier').value;
       const tracking = document.getElementById('modalOrderTrackingNum').value.trim();
@@ -2442,11 +2632,12 @@
     function exportOrdersCSV() {
       const liveOrders = JSON.parse(localStorage.getItem('shoppaza_live_orders') || '[]');
       const allOrders = [...liveOrders, ...defaultOrders];
-      const headers = ['Order ID', 'Date', 'Customer', 'Email', 'Address', 'Country', 'Total', 'Payment', 'Fulfillment', 'Courier', 'Tracking'];
+      const headers = ['Order ID', 'Date', 'Customer', 'Promo Code', 'Email', 'Address', 'Country', 'Total', 'Payment', 'Fulfillment', 'Courier', 'Tracking'];
       const rows = allOrders.map(o => [
         o.id,
         `"${o.date || 'Today'}"`,
         `"${o.customer}"`,
+        `"${o.discount_code || ''}"`,
         `"${o.email || ''}"`,
         `"${o.address || ''}"`,
         `"${o.country || ''}"`,
@@ -3198,8 +3389,8 @@
     <div class="bg-shopify-sidebar border border-shopify-border rounded-2xl max-w-md w-full p-6 relative shadow-2xl space-y-4 text-xs">
       <div class="flex items-center justify-between pb-3 border-b border-shopify-border">
         <div class="flex items-center gap-2">
-          <i class="fa-solid fa-user-shield text-emerald-400 text-base"></i>
-          <h3 class="font-bold text-white text-sm">Add Staff / Promoter Account</h3>
+          <i class="fa-solid fa-user-shield text-amber-400 text-base"></i>
+          <h3 class="font-bold text-white text-sm">Add Limited User / Promoter Account</h3>
         </div>
         <button type="button" onclick="closeAddStaffModal()" class="text-slate-400 hover:text-white">
           <i class="fa-solid fa-xmark text-sm"></i>
@@ -3208,37 +3399,45 @@
 
       <form onsubmit="handleSaveNewStaff(event)" class="space-y-4">
         <div>
-          <label class="block text-slate-400 mb-1">Staff Member Name / Identifier</label>
-          <input type="text" id="staffNewName" required placeholder="e.g. TikTok Chat Promoter, Telegram Desk" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-white">
+          <label class="block text-slate-400 mb-1 font-semibold">User / Promoter Name</label>
+          <input type="text" id="staffNewName" required placeholder="e.g. Promoter Ali, Team AG100, TikTok Desk" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-white focus:border-emerald-500 focus:outline-none">
         </div>
         <div>
-          <label class="block text-slate-400 mb-1">Passcode (For Lock Screen Login)</label>
+          <label class="block text-slate-400 mb-1 font-semibold">Login Passcode (For Lock Screen Login)</label>
           <div class="flex gap-2">
-            <input type="text" id="staffNewPasscode" required placeholder="e.g. STAFF-2026" class="flex-1 bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-white font-mono uppercase">
+            <input type="text" id="staffNewPasscode" required placeholder="e.g. AG100-USER" class="flex-1 bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-white font-mono uppercase focus:border-emerald-500 focus:outline-none">
             <button type="button" onclick="generateRandomStaffPasscode()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition" title="Generate Random Key">
               <i class="fa-solid fa-shuffle"></i>
             </button>
           </div>
         </div>
         <div>
-          <label class="block text-slate-400 mb-1">Role / Permissions</label>
-          <div class="p-3 rounded-lg bg-slate-900/80 border border-slate-800 space-y-1">
-            <div class="font-bold text-emerald-400 flex items-center gap-1.5">
-              <i class="fa-solid fa-eye"></i> Read-Only Viewer (Dekhne ki had tak)
-            </div>
-            <div class="text-[11px] text-slate-400">
-              Can view catalog products, prices, and orders to guide customers. Cannot edit products, delete data, or view Stripe credentials.
-            </div>
+          <label class="block text-slate-400 mb-1 font-semibold flex items-center justify-between">
+            <span>Assigned Promo Code (Is User Ka Promo Code)</span>
+            <span class="text-[10px] text-amber-400 font-bold uppercase">Important Filter</span>
+          </label>
+          <div class="relative">
+            <input type="text" id="staffNewPromoCode" required placeholder="e.g. AG100" value="AG100" class="w-full bg-slate-900 border border-amber-500/40 rounded-lg p-2.5 text-amber-400 font-mono font-bold uppercase focus:border-amber-400 focus:outline-none">
+            <i class="fa-solid fa-gift absolute right-3 top-3 text-amber-400/60"></i>
           </div>
+          <p class="text-[11px] text-slate-400 mt-1">Yeh limited user login hone ke baad sirf isi promo code ke orders aur sales dekh sakega.</p>
         </div>
         <div>
-          <label class="block text-slate-400 mb-1">Channel / Notes</label>
-          <input type="text" id="staffNewNotes" placeholder="e.g. Handles inquiries from TikTok live and Telegram" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-white">
+          <label class="block text-slate-400 mb-1 font-semibold">Role & Access Level</label>
+          <select id="staffNewRole" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-white focus:border-emerald-500 focus:outline-none">
+            <option value="limited_promoter">Limited Promoter (Sirf Home Overview + Apne Promo Code ke Orders - Read Only)</option>
+            <option value="viewer">Store Staff (Puri Store ke Sabhi Orders & Catalog Read-Only)</option>
+          </select>
+          <p class="text-[11px] text-slate-500 mt-1">Limited user settings, products, payments aur doosre users ko bilkul chhed ya dekh nahi sakega.</p>
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1 font-semibold">Channel / Campaign Notes</label>
+          <input type="text" id="staffNewNotes" placeholder="e.g. TikTok Live, Instagram reels, WhatsApp campaign" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-white focus:border-emerald-500 focus:outline-none">
         </div>
 
         <div class="pt-2 flex justify-end gap-2">
           <button type="button" onclick="closeAddStaffModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg">Cancel</button>
-          <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg shadow">Create Staff Account</button>
+          <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg shadow">Save & Create Account</button>
         </div>
       </form>
     </div>

@@ -1784,6 +1784,77 @@
       GR: 'EUR'
     };
 
+    function recordStoreVisitorTelemetry(pageName = 'Storefront Home') {
+      try {
+        const rawData = localStorage.getItem('shoppaza_traffic_analytics');
+        let traffic = null;
+        if (rawData) {
+          try { traffic = JSON.parse(rawData); } catch(e) {}
+        }
+        if (!traffic) {
+          traffic = {
+            totalVisits: 1420,
+            uniqueVisitors: 896,
+            countryCounts: { US: 596, GB: 398, PK: 198, AU: 128, CA: 45, DE: 35, SA: 20 },
+            sourceCounts: { 'Google Organic': 766, 'Direct / Storefront': 369, 'Social Media': 198, 'WhatsApp Share': 58, 'Referral / Search': 29 },
+            deviceCounts: { Mobile: 1008, Desktop: 412 },
+            visitorsList: []
+          };
+        }
+
+        let vid = localStorage.getItem('shoppaza_vid');
+        const isNewVisitor = !vid;
+        if (!vid) {
+          vid = 'vid_' + Math.random().toString(36).substring(2, 9) + Date.now().toString(36);
+          localStorage.setItem('shoppaza_vid', vid);
+        }
+
+        let country = sessionStorage.getItem('shoppaza_visitor_country') || 'US';
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+        const device = isMobile ? 'Mobile' : 'Desktop';
+
+        const ref = (document.referrer || '').toLowerCase();
+        let source = 'Direct / Storefront';
+        if (ref.includes('google.')) source = 'Google Organic';
+        else if (ref.includes('bing.') || ref.includes('yahoo.') || ref.includes('duckduckgo.')) source = 'Search Engine';
+        else if (ref.includes('facebook.') || ref.includes('instagram.') || ref.includes('tiktok.') || ref.includes('t.co') || ref.includes('twitter.')) source = 'Social Media';
+        else if (ref.includes('whatsapp') || ref.includes('wa.me')) source = 'WhatsApp Share';
+        else if (ref && !ref.includes('shoppaza.com')) {
+          try { source = 'Referral (' + new URL(document.referrer).hostname + ')'; } catch(e) { source = 'External Referral'; }
+        }
+
+        traffic.totalVisits = (traffic.totalVisits || 0) + 1;
+        if (isNewVisitor) {
+          traffic.uniqueVisitors = (traffic.uniqueVisitors || 0) + 1;
+        }
+        if (!traffic.countryCounts) traffic.countryCounts = {};
+        traffic.countryCounts[country] = (traffic.countryCounts[country] || 0) + 1;
+
+        if (!traffic.sourceCounts) traffic.sourceCounts = {};
+        traffic.sourceCounts[source] = (traffic.sourceCounts[source] || 0) + 1;
+
+        if (!traffic.deviceCounts) traffic.deviceCounts = { Mobile: 0, Desktop: 0 };
+        traffic.deviceCounts[device] = (traffic.deviceCounts[device] || 0) + 1;
+
+        if (!Array.isArray(traffic.visitorsList)) traffic.visitorsList = [];
+        traffic.visitorsList.unshift({
+          id: 'vis_' + Date.now().toString(36) + Math.random().toString(36).substring(2, 6),
+          timestamp: Date.now(),
+          country: country,
+          page: pageName,
+          source: source,
+          device: device,
+          status: 'Browsing Store'
+        });
+
+        if (traffic.visitorsList.length > 100) traffic.visitorsList = traffic.visitorsList.slice(0, 100);
+        traffic.lastUpdated = Date.now();
+        localStorage.setItem('shoppaza_traffic_analytics', JSON.stringify(traffic));
+      } catch(err) {
+        console.warn('Traffic telemetry logging error:', err);
+      }
+    }
+
     async function detectStorefrontVisitorCountry() {
       try {
         const manualChoice = localStorage.getItem('shoppaza_currency_manual');
@@ -1860,6 +1931,10 @@
           new Promise(r => setTimeout(r, 350))
         ]);
       } catch(e) { console.warn('Currency auto-detection error:', e); }
+
+      try {
+        recordStoreVisitorTelemetry('Storefront Home');
+      } catch(e) {}
 
       try {
         const savedCart = localStorage.getItem('shoppaza_cart');

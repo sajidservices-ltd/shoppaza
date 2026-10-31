@@ -1,3 +1,5 @@
+let drawerAppliedCoupon = null;
+let drawerAppliedCode = null;
 // Shoppaza Shopify-Grade Luxury Checkout Engine (v1.0)
 // Powered by Stripe PCI-DSS Level 1 & Shoppaza Worldwide
 
@@ -104,8 +106,27 @@ function renderShopifyCheckoutSummary() {
     baseGbpTotal += priceGbp * item.qty;
   });
 
-  // Apply discount
-  let discountedTotalGbp = baseGbpTotal * (1 - (checkoutDiscountRate / 100));
+  // Apply discount (percentage or tiered wig affiliate)
+  let discountedTotalGbp = baseGbpTotal;
+  let totalWigDiscountGbp = 0;
+
+  if (drawerAppliedCoupon && drawerAppliedCoupon.type === 'wig_tiered') {
+    cart.forEach(item => {
+      const isWig = (item.category === 'Wigs & Hair') || (item.title && item.title.toLowerCase().includes('wig'));
+      if (isWig) {
+        const qty = parseInt(item.qty, 10) || 1;
+        const unitPriceGbp = item.price_gbp || (item.price_usd ? item.price_usd * 0.79 : 29.00);
+        const isTierB = (item.price_usd && item.price_usd > 200);
+        const targetUsd = isTierB ? (drawerAppliedCoupon.tierB_usd || 41.99) : (drawerAppliedCoupon.tierA_usd || 35.99);
+        const targetGbp = targetUsd * 0.79;
+        const diffGbp = Math.max(0, unitPriceGbp - targetGbp);
+        totalWigDiscountGbp += diffGbp * qty;
+      }
+    });
+    discountedTotalGbp = Math.max(0, baseGbpTotal - totalWigDiscountGbp);
+  } else if (checkoutDiscountRate > 0) {
+    discountedTotalGbp = baseGbpTotal * (1 - (checkoutDiscountRate / 100));
+  }
 
   // Converted values
   const convertedSubtotal = (baseGbpTotal * checkoutRate);
@@ -217,39 +238,62 @@ function formatCardExpiry(input) {
   }
 }
 
-function applyCheckoutDiscount() {
-  const code = document.getElementById('checkoutDiscountInput')?.value.trim().toUpperCase();
+async function applyCheckoutDiscount() {
+  const codeVal = document.getElementById('checkoutDiscountInput')?.value.trim().toUpperCase();
   const msgEl = document.getElementById('discountAppliedMsg');
-  if (!code) {
+  if (!codeVal) {
     alert('Please enter a voucher or promo code.');
     return;
   }
 
-  // Check stored coupons from admin or predefined
-  const stored = JSON.parse(localStorage.getItem('shoppaza_coupons') || '[]');
-  const defaultCoupons = {
-    'WELCOME10': 10,
-    'DARAZMEGA30': 30,
-    'CRYPTO5': 5,
-    'VIP20': 20
-  };
+  let registry = [];
+  try {
+    const res = await fetch('coupons.json?t=' + Date.now());
+    if (res.ok) registry = await res.json();
+  } catch(e) {}
+  try {
+    const local = JSON.parse(localStorage.getItem('shoppaza_coupons') || '[]');
+    if (local && local.length > 0) registry = [...local, ...registry];
+  } catch(e) {}
 
-  let foundPct = defaultCoupons[code];
-  if (!foundPct) {
-    const match = stored.find(c => c.code.toUpperCase() === code);
-    if (match) foundPct = 15;
+  const fallbacks = [
+    { code: 'VIPWIG', type: 'wig_tiered', tierA_usd: 35.99, tierB_usd: 41.99, worker: 'VIP Campaign', commission_usd: 0 },
+    { code: 'AFFILIATE1', type: 'wig_tiered', tierA_usd: 35.99, tierB_usd: 41.99, worker: 'Partner 1', commission_usd: 5 },
+    { code: 'TIKTOK35', type: 'wig_tiered', tierA_usd: 35.99, tierB_usd: 41.99, worker: 'TikTok Team', commission_usd: 5 },
+    { code: 'AMANDA', type: 'wig_tiered', tierA_usd: 35.99, tierB_usd: 41.99, worker: 'Amanda S.', commission_usd: 4.5 },
+    { code: 'WELCOME10', type: 'percent', value: 10 },
+    { code: 'DARAZMEGA30', type: 'percent', value: 30 },
+    { code: 'CRYPTO5', type: 'percent', value: 5 }
+  ];
+
+  const match = (registry || []).find(c => c.code.toUpperCase() === codeVal) || fallbacks.find(c => c.code === codeVal);
+  if (!match) {
+    alert(`Coupon code "${codeVal}" is invalid or expired.`);
+    return;
   }
 
-  if (foundPct) {
-    checkoutDiscountRate = foundPct;
-    if (msgEl) {
-      msgEl.classList.remove('hidden');
-      msgEl.innerHTML = `<i class="fa-solid fa-tag"></i> <span>Coupon <strong>${code}</strong> applied (${foundPct}% OFF)!</span>`;
+  if (match.type === 'wig_tiered') {
+    const hasWigs = (cart || []).some(item => {
+      return (item.category === 'Wigs & Hair') || (item.title && item.title.toLowerCase().includes('wig'));
+    });
+    if (!hasWigs) {
+      alert(`Coupon code "${match.code}" is an exclusive VIP affiliate code valid ONLY for Wigs & Hair products.`);
+      return;
     }
-    renderShopifyCheckoutSummary();
-  } else {
-    alert(`Coupon code "${code}" is invalid or expired.`);
   }
+
+  drawerAppliedCoupon = match;
+  drawerAppliedCode = match.code;
+  checkoutDiscountRate = match.type === 'percent' ? match.value : 0;
+
+  if (msgEl) {
+    msgEl.classList.remove('hidden');
+    const msgText = match.type === 'wig_tiered' 
+      ? `VIP Promo ${match.code} applied! Special $35.99 / $41.99 rate active on Wigs!`
+      : `Coupon ${match.code} applied (${match.value || 10}% OFF)!`;
+    msgEl.innerHTML = `<i class="fa-solid fa-tag"></i> <span>${msgText}</span>`;
+  }
+  renderShopifyCheckoutSummary();
 }
 
 function handleShopifyCheckoutSubmit(e) {
@@ -293,6 +337,9 @@ function handleShopifyCheckoutSubmit(e) {
       country: country,
       items: cart.length,
       total: totalAmount,
+      discount_code: drawerAppliedCode || 'NONE',
+      affiliate_worker: drawerAppliedCoupon ? (drawerAppliedCoupon.worker || '') : '',
+      affiliate_commission: drawerAppliedCoupon ? (drawerAppliedCoupon.commission_usd || 0) : 0,
       channel: 'Online Store (Shopify-Grade)',
       payment: paymentMethod === 'card' ? 'Stripe (Paid - 256-Bit SSL)' : (paymentMethod === 'afterpay' ? 'Afterpay (4 Payments)' : (paymentMethod === 'amazon' ? 'Amazon Pay' : 'USDT TRC20')),
       fulfillment: 'Unfulfilled',

@@ -1376,26 +1376,42 @@
 
       <form onsubmit="handleSaveNewCoupon(event)" class="space-y-4 text-xs">
         <div>
-          <label class="block text-slate-400 mb-1 font-semibold">Coupon Code</label>
-          <input type="text" id="newCouponCode" required placeholder="e.g. FLASH50" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white uppercase font-mono tracking-wider focus:border-emerald-500 focus:outline-none">
+          <label class="block text-slate-400 mb-1 font-semibold">Voucher / Promo Code</label>
+          <input type="text" id="newCouponCode" required placeholder="e.g. AMANDA or VIPWIG" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white uppercase font-mono tracking-wider focus:border-emerald-500 focus:outline-none">
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-slate-400 mb-1 font-semibold">Discount Program Type</label>
+          <select id="newCouponType" onchange="toggleCouponTypeFields(this.value)" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:border-emerald-500 focus:outline-none">
+            <option value="wig_tiered">🌟 1688 Wig Special Affiliate ($35.99 / $41.99 Tiers)</option>
+            <option value="percent">Storewide Percentage (%)</option>
+            <option value="fixed">Fixed Amount (£ GBP)</option>
+          </select>
+        </div>
+
+        <div id="wigAffiliateFields" class="space-y-3 bg-slate-950/80 p-3.5 rounded-xl border border-indigo-500/30">
           <div>
-            <label class="block text-slate-400 mb-1 font-semibold">Discount Type</label>
-            <select id="newCouponType" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:border-emerald-500 focus:outline-none">
-              <option value="percent">Percentage (%)</option>
-              <option value="fixed">Fixed (£ GBP)</option>
-            </select>
+            <label class="block text-indigo-300 mb-1 font-semibold">Affiliate Promoter / Worker Name</label>
+            <input type="text" id="newCouponWorker" placeholder="e.g. Amanda Smith / Social Closer 1" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-white focus:border-indigo-500 focus:outline-none">
           </div>
           <div>
-            <label class="block text-slate-400 mb-1 font-semibold">Discount Value</label>
-            <input type="number" step="0.5" id="newCouponValue" required placeholder="e.g. 20" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white font-mono focus:border-emerald-500 focus:outline-none">
+            <label class="block text-indigo-300 mb-1 font-semibold">Worker Commission per Wig Sold ($ USD)</label>
+            <input type="number" step="0.5" id="newCouponCommission" value="5.00" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-white font-mono focus:border-indigo-500 focus:outline-none">
+          </div>
+          <div class="text-[11px] text-slate-400 space-y-1">
+            <p>✅ Charges <strong>$35.99</strong> on shorter wigs ($2–$3 factory cost).</p>
+            <p>✅ Charges <strong>$41.99</strong> on 28-32\" wigs ($5 factory cost).</p>
+            <p>✅ Shows ~$154.01 discount on checkout and records commission for worker.</p>
           </div>
         </div>
 
-        <button type="submit" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold transition shadow">
-          Activate Coupon
+        <div id="standardDiscountFields" class="hidden">
+          <label class="block text-slate-400 mb-1 font-semibold">Discount Value (% or £)</label>
+          <input type="number" step="0.5" id="newCouponValue" placeholder="e.g. 20" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white font-mono focus:border-emerald-500 focus:outline-none">
+        </div>
+
+        <button type="submit" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold transition shadow flex items-center justify-center gap-2">
+          <i class="fa-solid fa-bolt"></i> Activate Affiliate Coupon
         </button>
       </form>
     </div>
@@ -2344,7 +2360,10 @@
           trFull.innerHTML = `
             <td class="p-4 font-bold text-white cursor-pointer hover:text-emerald-400" onclick="openOrderModal('${o.id}')">${o.id}</td>
             <td class="p-4 text-slate-400">${o.date || 'Today'}</td>
-            <td class="p-4 text-slate-200 font-medium">${escapeHtml(o.customer)}</td>
+            <td class="p-4 text-slate-200 font-medium">
+              <div>${escapeHtml(o.customer)}</div>
+              ${o.discount_code && o.discount_code !== 'NONE' ? `<div class="inline-flex items-center gap-1.5 text-[10px] text-amber-300 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full mt-1 font-mono"><i class="fa-solid fa-ticket"></i> ${o.discount_code} ${o.affiliate_worker ? '• ' + escapeHtml(o.affiliate_worker) + ' (Comm: $' + (o.affiliate_commission || 5.00) + ')' : ''}</div>` : ''}
+            </td>
             <td class="p-4 text-slate-400">${escapeHtml(o.country || 'UK')}</td>
             <td class="p-4"><span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-[10px]">${o.payment}</span></td>
             <td class="p-4"><span class="px-2.5 py-0.5 rounded-full ${fulfillColor} font-bold text-[10px]">${o.fulfillment}</span></td>
@@ -2565,34 +2584,75 @@
       `).join('');
     }
 
-    // ---------------- COUPONS & DISCOUNTS ----------------
-    function renderDiscounts() {
+    // ---------------- COUPONS & AFFILIATE MANAGEMENT ----------------
+    function toggleCouponTypeFields(type) {
+      const wigBox = document.getElementById('wigAffiliateFields');
+      const stdBox = document.getElementById('standardDiscountFields');
+      if (type === 'wig_tiered') {
+        if (wigBox) wigBox.classList.remove('hidden');
+        if (stdBox) stdBox.classList.add('hidden');
+      } else {
+        if (wigBox) wigBox.classList.add('hidden');
+        if (stdBox) stdBox.classList.remove('hidden');
+      }
+    }
+
+    async function copyCouponCode(code) {
+      try {
+        await navigator.clipboard.writeText(code);
+        showToast('Copied code ' + code + ' to clipboard!', 'success');
+      } catch(e) {
+        showToast('Promo Code: ' + code, 'info');
+      }
+    }
+
+    async function renderDiscounts() {
       const container = document.getElementById('discountsContainer');
       if (!container) return;
 
-      const storedCoupons = JSON.parse(localStorage.getItem('shoppaza_coupons') || '[]');
-      const defaultCoupons = [
-        { code: 'DARAZMEGA30', discount: '30% Off', uses: '84 Used', status: 'Active' },
-        { code: 'WELCOME10', discount: '10% Off', uses: '215 Used', status: 'Active' },
-        { code: 'CRYPTO5', discount: '5% Extra on USDT', uses: '32 Used', status: 'Active' }
-      ];
-      const allCoupons = [...storedCoupons, ...defaultCoupons];
+      let registry = [];
+      try {
+        const res = await fetch('coupons.json?t=' + Date.now());
+        if (res.ok) registry = await res.json();
+      } catch(e) {}
 
-      container.innerHTML = allCoupons.map((d, idx) => `
-        <div class="p-5 rounded-2xl bg-shopify-sidebar border border-shopify-border space-y-3 relative group">
-          <div class="flex justify-between items-center">
-            <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-[10px]">${d.status || 'Active'}</span>
-            <span class="text-xs text-slate-400">${d.uses || '0 Used'}</span>
-          </div>
-          <div class="text-xl font-mono font-extrabold text-white tracking-wider">${d.code}</div>
-          <div class="text-xs text-slate-400">${d.discount} storewide checkout discount</div>
-        </div>
-      `).join('');
+      const storedCoupons = JSON.parse(localStorage.getItem('shoppaza_coupons') || '[]');
+      
+      const map = new Map();
+      storedCoupons.forEach(c => map.set(c.code.toUpperCase(), c));
+      registry.forEach(c => {
+        if (!map.has(c.code.toUpperCase())) map.set(c.code.toUpperCase(), c);
+      });
+
+      const allCoupons = Array.from(map.values());
+
+      container.innerHTML = allCoupons.map((d) => {
+        const isWigTiered = (d.type === 'wig_tiered');
+        const badgeColor = isWigTiered ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+        const badgeText = isWigTiered ? '🌟 WIG AFFILIATE ($35.99 / $41.99)' : (d.discount || (d.value ? d.value + '% Off' : 'Active Promo'));
+        const workerInfo = d.worker ? '<div class="text-xs text-indigo-300 font-semibold"><i class="fa-solid fa-user-tag mr-1"></i> Worker: ' + escapeHtml(d.worker) + (d.commission_usd ? ' • Commission: $' + parseFloat(d.commission_usd).toFixed(2) : '') + '</div>' : '';
+
+        return '<div class="p-5 rounded-2xl bg-shopify-sidebar border border-shopify-border space-y-3 relative group hover:border-slate-700 transition">' +
+          '<div class="flex justify-between items-center">' +
+            '<span class="px-2.5 py-0.5 rounded-full font-bold text-[10px] ' + badgeColor + ' font-mono">' + badgeText + '</span>' +
+            '<span class="text-xs text-slate-400">' + (d.uses || '0 Used') + '</span>' +
+          '</div>' +
+          '<div class="flex items-center justify-between">' +
+            '<div class="text-2xl font-mono font-extrabold text-white tracking-wider">' + d.code + '</div>' +
+            '<button onclick="copyCouponCode(\'' + d.code + '\')" class="text-xs px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 transition flex items-center gap-1" title="Copy Code">' +
+              '<i class="fa-regular fa-copy"></i> Copy' +
+            '</button>' +
+          '</div>' +
+          workerInfo +
+          '<div class="text-xs text-slate-400 leading-relaxed">' + (d.desc || (isWigTiered ? 'Headband Wigs promo: $35.99 short / $41.99 long' : d.discount + ' storewide')) + '</div>' +
+        '</div>';
+      }).join('');
     }
 
     function openCreateCouponModal() {
       document.getElementById('createCouponModal').classList.remove('hidden');
     }
+
     function closeCreateCouponModal() {
       document.getElementById('createCouponModal').classList.add('hidden');
     }
@@ -2601,10 +2661,37 @@
       e.preventDefault();
       const code = document.getElementById('newCouponCode').value.trim().toUpperCase();
       const type = document.getElementById('newCouponType').value;
-      const val = document.getElementById('newCouponValue').value;
-      const discount = type === 'percent' ? `${val}% Off` : `£${val} Off`;
+      
+      let newC = {};
+      if (type === 'wig_tiered') {
+        const worker = document.getElementById('newCouponWorker')?.value.trim() || 'Affiliate Partner';
+        const commission = parseFloat(document.getElementById('newCouponCommission')?.value) || 5.00;
+        newC = {
+          code: code,
+          type: 'wig_tiered',
+          tierA_usd: 35.99,
+          tierB_usd: 41.99,
+          worker: worker,
+          commission_usd: commission,
+          desc: 'Special VIP Affiliate rate for ' + worker + ' ($35.99 / $41.99). Commission: $' + commission.toFixed(2),
+          status: 'Active',
+          uses: '0 Used'
+        };
+      } else {
+        const val = document.getElementById('newCouponValue')?.value || 10;
+        const discount = type === 'percent' ? val + '% Off' : '£' + val + ' Off';
+        newC = {
+          code: code,
+          type: type,
+          value: parseFloat(val) || 10,
+          discount: discount,
+          worker: 'Storewide',
+          desc: discount + ' storewide checkout discount',
+          status: 'Active',
+          uses: '0 Used'
+        };
+      }
 
-      const newC = { code, discount, uses: '0 Used', status: 'Active' };
       const stored = JSON.parse(localStorage.getItem('shoppaza_coupons') || '[]');
       stored.unshift(newC);
       localStorage.setItem('shoppaza_coupons', JSON.stringify(stored));
@@ -2612,9 +2699,8 @@
       closeCreateCouponModal();
       e.target.reset();
       renderDiscounts();
-      showToast(`Coupon ${code} activated on Shoppaza!`, 'success');
+      showToast('Affiliate Coupon ' + code + ' activated on Shoppaza!', 'success');
     }
-
     // ---------------- ADMIN PROFILE & PASSCODE CHANGE ----------------
     function loadAdminProfile() {
       const saved = JSON.parse(localStorage.getItem('shoppaza_admin_profile') || '{}');

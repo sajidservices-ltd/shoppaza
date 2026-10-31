@@ -124,6 +124,10 @@
 
       <!-- Price breakdown -->
       <div class="space-y-2 text-xs text-slate-600 pt-3 border-t border-shopify-border">
+        <div id="mobileSummaryDiscountRow" class="hidden justify-between text-emerald-700 font-semibold">
+          <span class="flex items-center gap-1"><i class="fa-solid fa-tag text-xs"></i> Discount (<span id="mobileDiscountCodeLabel"></span>)</span>
+          <span id="mobileSummaryDiscountAmount" class="font-mono">-£0.00</span>
+        </div>
         <div class="flex justify-between">
           <span>Subtotal</span>
           <span class="font-bold text-slate-900" id="mobileSummarySubtotal">£0.00</span>
@@ -573,6 +577,10 @@
 
         <!-- Price Breakdown -->
         <div class="space-y-3 text-xs text-slate-600 pt-4 border-t border-shopify-border">
+          <div id="desktopSummaryDiscountRow" class="hidden justify-between text-emerald-700 font-semibold">
+            <span class="flex items-center gap-1"><i class="fa-solid fa-tag text-xs"></i> Discount (<span id="desktopDiscountCodeLabel"></span>)</span>
+            <span id="desktopSummaryDiscountAmount" class="font-mono">-£0.00</span>
+          </div>
           <div class="flex justify-between">
             <span>Subtotal</span>
             <span class="font-bold text-slate-900 font-mono text-sm" id="desktopSummarySubtotal">£0.00</span>
@@ -1274,8 +1282,23 @@
       else input.value = v;
     }
 
-// Discount Engine
-    function applyDiscount(source) {
+// Discount & Affiliate Engine
+    let appliedCoupon = null;
+    let appliedCouponCode = null;
+    let activeCouponsRegistry = [];
+
+    async function loadCouponsRegistry() {
+      try {
+        const res = await fetch('coupons.json?t=' + Date.now());
+        if (res.ok) activeCouponsRegistry = await res.json();
+      } catch(e) {}
+      try {
+        const local = JSON.parse(localStorage.getItem('shoppaza_coupons') || '[]');
+        if (local && local.length > 0) activeCouponsRegistry = [...local, ...activeCouponsRegistry];
+      } catch(e) {}
+    }
+
+    async function applyDiscount(source) {
       let input = null;
       if (source === 'mobileInline') {
         input = document.getElementById('mobileInlineDiscountInput');
@@ -1286,22 +1309,58 @@
       }
       const val = (input ? input.value : '').trim().toUpperCase();
       if (!val) {
-        alert('Please enter a voucher code.');
+        alert('Please enter a voucher or promo code.');
         return;
       }
 
-      if (val === 'WELCOME10') discountRate = 10;
-      else if (val === 'DARAZMEGA30') discountRate = 30;
-      else if (val === 'CRYPTO5') discountRate = 5;
-      else {
-        alert('Invalid or expired discount code.');
+      if (!activeCouponsRegistry || activeCouponsRegistry.length === 0) {
+        await loadCouponsRegistry();
+      }
+
+      const fallbacks = [
+        { code: 'VIPWIG', type: 'wig_tiered', tierA_usd: 35.99, tierB_usd: 41.99, worker: 'VIP Campaign', commission_usd: 0 },
+        { code: 'AFFILIATE1', type: 'wig_tiered', tierA_usd: 35.99, tierB_usd: 41.99, worker: 'Partner 1', commission_usd: 5 },
+        { code: 'TIKTOK35', type: 'wig_tiered', tierA_usd: 35.99, tierB_usd: 41.99, worker: 'TikTok Team', commission_usd: 5 },
+        { code: 'AMANDA', type: 'wig_tiered', tierA_usd: 35.99, tierB_usd: 41.99, worker: 'Amanda S.', commission_usd: 4.5 },
+        { code: 'WELCOME10', type: 'percent', value: 10 },
+        { code: 'DARAZMEGA30', type: 'percent', value: 30 },
+        { code: 'CRYPTO5', type: 'percent', value: 5 }
+      ];
+
+      const match = (activeCouponsRegistry || []).find(c => c.code.toUpperCase() === val) || fallbacks.find(c => c.code === val);
+      if (!match) {
+        alert('Coupon code "' + val + '" is invalid or expired.');
         return;
       }
+
+      if (match.type === 'wig_tiered') {
+        const hasWigs = (cart || []).some(item => {
+          return (item.category === 'Wigs & Hair') || (item.title && item.title.toLowerCase().includes('wig'));
+        });
+        if (!hasWigs) {
+          alert('Coupon code "' + match.code + '" is an exclusive VIP affiliate code valid ONLY for Wigs & Hair collection.');
+          return;
+        }
+      }
+
+      appliedCoupon = match;
+      appliedCouponCode = match.code;
+      discountRate = match.type === 'percent' ? match.value : 0;
+
+      const successText = match.type === 'wig_tiered' 
+        ? 'VIP Promo ' + match.code + ' applied! Special $35.99 / $41.99 rate active on Wigs!'
+        : 'Coupon ' + match.code + ' applied (' + (match.value || 10) + '% OFF)!';
 
       const msg = document.getElementById('discountSuccessMessage');
-      if (msg) msg.classList.remove('hidden');
+      if (msg) {
+        msg.classList.remove('hidden');
+        msg.innerHTML = '<i class="fa-solid fa-tag"></i> <span>' + successText + '</span>';
+      }
       const mobileInlineMsg = document.getElementById('mobileInlineDiscountSuccessMessage');
-      if (mobileInlineMsg) mobileInlineMsg.classList.remove('hidden');
+      if (mobileInlineMsg) {
+        mobileInlineMsg.classList.remove('hidden');
+        mobileInlineMsg.innerHTML = '<i class="fa-solid fa-tag"></i> <span>' + successText + '</span>';
+      }
 
       renderOrderSummary();
     }
@@ -1404,7 +1463,43 @@
       });
 
       const convertedSubtotal = baseSubtotalGbp * checkoutRate;
-      const discountAmount = convertedSubtotal * (discountRate / 100);
+      
+      let discountAmount = 0;
+      if (appliedCoupon && appliedCoupon.type === 'wig_tiered') {
+        let totalWigSavings = 0;
+        cart.forEach(item => {
+          const isWig = (item.category === 'Wigs & Hair') || (item.title && item.title.toLowerCase().includes('wig'));
+          if (isWig) {
+            const qty = parseInt(item.qty, 10) || 1;
+            const unitBaseGbp = item.price_gbp || (item.price_usd ? item.price_usd * 0.79 : 29.00);
+            const unitPriceInCurrency = unitBaseGbp * checkoutRate;
+            
+            // Tier B (higher factory cost, 28-32 inch / 250% density) -> $41.99 USD
+            // Tier A (lighter/shorter factory cost, $190-$195 retail) -> $35.99 USD
+            const isTierB = (item.price_usd && item.price_usd > 200);
+            const targetUsd = isTierB ? (appliedCoupon.tierB_usd || 41.99) : (appliedCoupon.tierA_usd || 35.99);
+            
+            let targetInCurrency = targetUsd;
+            if (checkoutCurrency === 'GBP') {
+              targetInCurrency = targetUsd * 0.79;
+            } else if (checkoutCurrency === 'PKR') {
+              targetInCurrency = targetUsd * 278;
+            } else if (checkoutCurrency === 'EUR') {
+              targetInCurrency = targetUsd * 0.92;
+            } else {
+              targetInCurrency = targetUsd; // USD, USDT
+            }
+            
+            const diff = Math.max(0, unitPriceInCurrency - targetInCurrency);
+            totalWigSavings += diff * qty;
+          }
+        });
+        discountAmount = totalWigSavings;
+      } else if (appliedCoupon && appliedCoupon.type === 'percent') {
+        discountAmount = convertedSubtotal * (appliedCoupon.value / 100);
+      } else if (discountRate > 0) {
+        discountAmount = convertedSubtotal * (discountRate / 100);
+      }
       const convertedSubtotalAfterDiscount = convertedSubtotal - discountAmount;
       const convertedShipping = shippingCost;
       const grandTotal = convertedSubtotalAfterDiscount + convertedShipping;
@@ -1434,11 +1529,32 @@
       if (document.getElementById('mobileInlineTotal')) document.getElementById('mobileInlineTotal').innerText = fmtTotal;
       if (document.getElementById('mobileInlineCurrencyCode')) document.getElementById('mobileInlineCurrencyCode').innerText = checkoutCurrency;
 
-      if (discountRate > 0) {
+      if (discountAmount > 0) {
         const row = document.getElementById('mobileInlineDiscountRow');
         const amt = document.getElementById('mobileInlineDiscountAmount');
         if (row) row.classList.remove('hidden');
         if (amt) amt.innerText = fmtDiscount;
+
+        const deskRow = document.getElementById('desktopSummaryDiscountRow');
+        const deskAmt = document.getElementById('desktopSummaryDiscountAmount');
+        const deskCode = document.getElementById('desktopDiscountCodeLabel');
+        if (deskRow) deskRow.classList.remove('hidden');
+        if (deskAmt) deskAmt.innerText = fmtDiscount;
+        if (deskCode) deskCode.innerText = appliedCouponCode || 'PROMO';
+
+        const mobRow = document.getElementById('mobileSummaryDiscountRow');
+        const mobAmt = document.getElementById('mobileSummaryDiscountAmount');
+        const mobCode = document.getElementById('mobileDiscountCodeLabel');
+        if (mobRow) mobRow.classList.remove('hidden');
+        if (mobAmt) mobAmt.innerText = fmtDiscount;
+        if (mobCode) mobCode.innerText = appliedCouponCode || 'PROMO';
+      } else {
+        const row = document.getElementById('mobileInlineDiscountRow');
+        if (row) row.classList.add('hidden');
+        const deskRow = document.getElementById('desktopSummaryDiscountRow');
+        if (deskRow) deskRow.classList.add('hidden');
+        const mobRow = document.getElementById('mobileSummaryDiscountRow');
+        if (mobRow) mobRow.classList.add('hidden');
       }
 
       // Update Pay Button Text

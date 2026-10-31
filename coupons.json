@@ -1,0 +1,73 @@
+[
+  {
+    "code": "VIPWIG",
+    "type": "wig_tiered",
+    "tierA_usd": 35.99,
+    "tierB_usd": 41.99,
+    "worker": "Official VIP Campaign",
+    "commission_usd": 0.00,
+    "desc": "Universal VIP Headband Wigs promo ($35.99 for shorter / $41.99 for 32 Inch 250% density)",
+    "status": "Active",
+    "uses": "128 Used"
+  },
+  {
+    "code": "AFFILIATE1",
+    "type": "wig_tiered",
+    "tierA_usd": 35.99,
+    "tierB_usd": 41.99,
+    "worker": "Partner Team 1",
+    "commission_usd": 5.00,
+    "desc": "Social Media Affiliate Partner 1 ($5.00 commission per wig)",
+    "status": "Active",
+    "uses": "42 Used"
+  },
+  {
+    "code": "TIKTOK35",
+    "type": "wig_tiered",
+    "tierA_usd": 35.99,
+    "tierB_usd": 41.99,
+    "worker": "TikTok Creator Team",
+    "commission_usd": 5.00,
+    "desc": "TikTok Influencer Outreach ($5.00 commission per wig)",
+    "status": "Active",
+    "uses": "67 Used"
+  },
+  {
+    "code": "AMANDA",
+    "type": "wig_tiered",
+    "tierA_usd": 35.99,
+    "tierB_usd": 41.99,
+    "worker": "Amanda S.",
+    "commission_usd": 4.50,
+    "desc": "Social Media Closer Amanda ($4.50 commission per order)",
+    "status": "Active",
+    "uses": "19 Used"
+  },
+  {
+    "code": "WELCOME10",
+    "type": "percent",
+    "value": 10,
+    "worker": "Storewide",
+    "desc": "10% Welcome Discount for New Visitors",
+    "status": "Active",
+    "uses": "215 Used"
+  },
+  {
+    "code": "DARAZMEGA30",
+    "type": "percent",
+    "value": 30,
+    "worker": "Storewide",
+    "desc": "30% Mega Sale Discount",
+    "status": "Active",
+    "uses": "84 Used"
+  },
+  {
+    "code": "CRYPTO5",
+    "type": "percent",
+    "value": 5,
+    "worker": "Storewide",
+    "desc": "5% Extra Discount on USDT Payments",
+    "status": "Active",
+    "uses": "32 Used"
+  }
+]

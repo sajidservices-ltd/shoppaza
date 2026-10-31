@@ -309,10 +309,10 @@
                 HAIR & WIGS
               </span>
               <h2 class="banner-title text-2xl sm:text-3xl lg:text-4xl font-black leading-[0.95] tracking-tight uppercase" style="color: #78350F;">
-                SALON GRADE<br>NATURAL WIGS
+                ICE SILK WEAR & GO<br>HEADBAND WIGS
               </h2>
               <p class="text-[11px] sm:text-xs font-semibold text-slate-800 leading-tight pt-0.5 max-w-xs">
-                Heat-resistant lace front wigs & curly wave extensions
+                Glueless body wave & deep wave virgin texture headband wigs
               </p>
             </div>
 
@@ -329,17 +329,17 @@
             
             <!-- Product 1 -->
             <div onclick="filterCategory('Wigs & Hair')" class="w-1/3 h-full overflow-hidden relative cursor-pointer group/img">
-              <img src="https://cdn.shopify.com/s/files/1/1107/7573/0514/files/2164196648422.jpg?v=1792326227" alt="Kabinas wig headgear" class="w-full h-full object-cover object-top group-hover/img:scale-105 transition duration-500" onerror="this.src='favicon.svg'">
+              <img src="https://ae-pic-a1.aliexpress-media.com/kf/Sfff846ff658f43b6b0320d7265efa0ffG.jpg" alt="Black Body Wave Ice Silk Headband Wig" class="w-full h-full object-cover object-top group-hover/img:scale-105 transition duration-500" onerror="this.src='favicon.svg'">
             </div>
 
             <!-- Product 2 -->
             <div onclick="filterCategory('Wigs & Hair')" class="w-1/3 h-full overflow-hidden relative border-x border-white/60 cursor-pointer group/img">
-              <img src="https://cdn.shopify.com/s/files/1/1107/7573/0514/files/1619931105515.jpg?v=1792326178" alt="Brown Pink Big Wave Long Curly Hair" class="w-full h-full object-cover object-top group-hover/img:scale-105 transition duration-500" onerror="this.src='favicon.svg'">
+              <img src="https://ae-pic-a1.aliexpress-media.com/kf/S5de239f0bcc14ea0818a2cf753cc71bfA.jpg" alt="Black Deep Wave Ice Silk Headband Wig" class="w-full h-full object-cover object-top group-hover/img:scale-105 transition duration-500" onerror="this.src='favicon.svg'">
             </div>
 
             <!-- Product 3 -->
             <div onclick="filterCategory('Wigs & Hair')" class="w-1/3 h-full overflow-hidden relative cursor-pointer group/img">
-              <img src="https://cdn.shopify.com/s/files/1/1107/7573/0514/files/569017443280_ab0940ff-69ff-4962-a5a1-7927c03f5cea.jpg?v=1792326096" alt="Gradient chemical fiber wig" class="w-full h-full object-cover object-top group-hover/img:scale-105 transition duration-500" onerror="this.src='favicon.svg'">
+              <img src="https://ae-pic-a1.aliexpress-media.com/kf/S01ee7c6ffd4a42079e94a83cbce5479a5.jpg" alt="250 Density 32 Inch Body Wave Headband Wig" class="w-full h-full object-cover object-top group-hover/img:scale-105 transition duration-500" onerror="this.src='favicon.svg'">
             </div>
 
             <!-- Floating Bottom Voucher Bar -->
@@ -1032,7 +1032,7 @@
           <h2 class="text-base sm:text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
             <i class="fa-solid fa-layer-group text-daraz-orange"></i>
             <span>Featured Collections</span>
-            <span class="text-xs font-semibold text-slate-400" id="activeFilterBadge">(805 Products Available)</span>
+            <span class="text-xs font-semibold text-slate-400" id="activeFilterBadge">(836 Products Available)</span>
           </h2>
           
           <!-- Personalized Affinity Badge -->
@@ -1064,7 +1064,7 @@
 
     <!-- EXACT 6 COLUMNS GRID WITH INTERLEAVED DIVERSE PRODUCTS -->
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3" id="mainProductsGrid">
-      <!-- 805 Products Injected dynamically with rich category mix -->
+      <!-- 836 Products Injected dynamically with rich category mix -->
     </div>
 
     <!-- Centered LOAD MORE Button (Daraz Style) -->
@@ -2051,7 +2051,7 @@
     // Categories with photos loader
     async function loadCategoriesData() {
       try {
-        const res = await fetch('categories-data.json');
+        const res = await fetch('categories-data.json?v=3.9');
         const catData = await res.json();
         const grid = document.getElementById('photoCategoriesGrid');
         if (grid && catData.length > 0) {
@@ -2192,6 +2192,7 @@
 
       page = 1;
       filterAndRenderProducts();
+      try { loadCategoriesData(); } catch(e){}
     }
 
     function handleNewsletterSubmit(e) {
@@ -2374,7 +2375,7 @@
     function filterCategory(cat) {
       currentCategory = cat;
       page = 1;
-      document.getElementById('activeFilterBadge').innerText = (cat === 'all' ? '(805 Products Available)' : `(${cat})`);
+      document.getElementById('activeFilterBadge').innerText = (cat === 'all' ? '(${allRawProducts ? allRawProducts.length : 836} Products Available)' : `(${cat})`);
 
       document.querySelectorAll('.category-pill').forEach(btn => {
         if (btn.innerText === cat || (cat === 'all' && btn.innerText === 'All')) {

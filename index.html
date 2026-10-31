@@ -60,7 +60,7 @@
       .banner-title { font-family: "Oswald", sans-serif; letter-spacing: 0.5px; }
   </style>
 </head>
-<body class="antialiased selection:bg-daraz-orange selection:text-white">
+<body class="antialiased selection:bg-daraz-orange selection:text-white pb-14 md:pb-0">
 
   <!-- ================= 1. DARAZ TOP UTILITY BAR (MULTI-COLOR / ORANGE ACCENT) ================= -->
   <div class="bg-[#18181B] text-slate-300 text-xs py-1.5 px-4 border-b border-orange-500/20">
@@ -102,104 +102,100 @@
 
   <!-- ================= 2. DARAZ ICONIC MULTI-COLOR GRADIENT HEADER ================= -->
   <header class="daraz-gradient-header sticky top-0 z-50 shadow-md">
-    <div class="max-w-[1240px] mx-auto px-4 py-3 sm:py-3.5 flex items-center justify-between gap-4 sm:gap-8">
+    <div class="max-w-[1240px] mx-auto px-3 sm:px-4 py-2.5 sm:py-3.5">
       
-      <!-- Brand Logo: 3D Isometric Parcel Box (100% High Contrast on Orange Header) -->
-      <a href="index.html" class="flex-shrink-0 flex items-center group" title="Shoppaza Worldwide Commerce">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 290 64" class="h-10 sm:h-12 w-auto" fill="none">
-          <defs>
-            <linearGradient id="cubeTop" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#FFFFFF" />
-              <stop offset="100%" stop-color="#F1F5F9" />
-            </linearGradient>
-            <linearGradient id="cubeLeft" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#090D16" />
-              <stop offset="100%" stop-color="#1E293B" />
-            </linearGradient>
-            <linearGradient id="cubeRight" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#1E293B" />
-              <stop offset="100%" stop-color="#334155" />
-            </linearGradient>
-            <linearGradient id="goldRibbon" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#FFE082" />
-              <stop offset="100%" stop-color="#FFB300" />
-            </linearGradient>
-            <filter id="logo3dShadow" x="-20%" y="-20%" width="140%" height="140%">
-              <feDropShadow dx="0" dy="3" stdDeviation="3.5" flood-color="#000000" flood-opacity="0.45"/>
-            </filter>
-          </defs>
+      <!-- Row 1: Logo & Actions (Mobile & Desktop) -->
+      <div class="flex items-center justify-between gap-3 sm:gap-8">
+        <!-- Brand Logo -->
+        <a href="index.html" class="flex-shrink-0 flex items-center group" title="Shoppaza Worldwide Commerce">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 290 64" class="h-9 sm:h-12 w-auto" fill="none">
+            <defs>
+              <linearGradient id="cubeTop" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FFFFFF" />
+                <stop offset="100%" stop-color="#F1F5F9" />
+              </linearGradient>
+              <linearGradient id="cubeLeft" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#090D16" />
+                <stop offset="100%" stop-color="#1E293B" />
+              </linearGradient>
+              <linearGradient id="cubeRight" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#1E293B" />
+                <stop offset="100%" stop-color="#334155" />
+              </linearGradient>
+              <linearGradient id="goldRibbon" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FFE082" />
+                <stop offset="100%" stop-color="#FFB300" />
+              </linearGradient>
+              <filter id="logo3dShadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="3" stdDeviation="3.5" flood-color="#000000" flood-opacity="0.45"/>
+              </filter>
+            </defs>
 
-          <g filter="url(#logo3dShadow)">
-            <!-- 3D Isometric Parcel Cube -->
-            <g transform="translate(6, 6)">
-              <!-- Top Face: Brilliant Pure White -->
-              <polygon points="26,4 48,16 26,28 4,16" fill="url(#cubeTop)"/>
-              <polygon points="21,13 31,8 31,19 21,25" fill="url(#goldRibbon)" fill-opacity="0.9"/>
+            <g filter="url(#logo3dShadow)">
+              <!-- 3D Isometric Parcel Cube -->
+              <g transform="translate(6, 6)">
+                <polygon points="26,4 48,16 26,28 4,16" fill="url(#cubeTop)"/>
+                <polygon points="21,13 31,8 31,19 21,25" fill="url(#goldRibbon)" fill-opacity="0.9"/>
+                <polygon points="4,16 26,28 26,50 4,38" fill="url(#cubeLeft)"/>
+                <polygon points="12,20 18,24 18,46 12,42" fill="url(#goldRibbon)" fill-opacity="0.9"/>
+                <polygon points="26,28 48,16 48,38 26,50" fill="url(#cubeRight)"/>
+                <polygon points="34,24 40,20 40,42 34,46" fill="url(#goldRibbon)" fill-opacity="0.9"/>
+                <line x1="26" y1="28" x2="26" y2="50" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round"/>
+                <line x1="4" y1="16" x2="26" y2="28" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round"/>
+                <line x1="48" y1="16" x2="26" y2="28" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round"/>
+                <circle cx="26" cy="28" r="3.5" fill="#FFFFFF"/>
+                <circle cx="26" cy="28" r="2.2" fill="url(#goldRibbon)"/>
+              </g>
 
-              <!-- Left Face: Deep Obsidian Black (Maximum contrast with Orange) -->
-              <polygon points="4,16 26,28 26,50 4,38" fill="url(#cubeLeft)"/>
-              <polygon points="12,20 18,24 18,46 12,42" fill="url(#goldRibbon)" fill-opacity="0.9"/>
-
-              <!-- Right Face: Deep Midnight Slate -->
-              <polygon points="26,28 48,16 48,38 26,50" fill="url(#cubeRight)"/>
-              <polygon points="34,24 40,20 40,42 34,46" fill="url(#goldRibbon)" fill-opacity="0.9"/>
-
-              <!-- Razor-Sharp Pure White Seam Lines -->
-              <line x1="26" y1="28" x2="26" y2="50" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round"/>
-              <line x1="4" y1="16" x2="26" y2="28" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round"/>
-              <line x1="48" y1="16" x2="26" y2="28" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round"/>
-
-              <!-- 3D Center Golden Node -->
-              <circle cx="26" cy="28" r="3.5" fill="#FFFFFF"/>
-              <circle cx="26" cy="28" r="2.2" fill="url(#goldRibbon)"/>
+              <text x="68" y="40" font-family="'Plus Jakarta Sans', 'Outfit', system-ui, sans-serif" font-weight="900" font-size="34" letter-spacing="-0.5" fill="#FFFFFF">
+                SHOP<tspan fill="#FFE082">PAZA</tspan>
+              </text>
+              <text x="70" y="53" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="800" font-size="8.5" letter-spacing="3.5" fill="#FFF3E0">
+                WORLDWIDE COMMERCE
+              </text>
+              <circle cx="270" cy="36" r="3.5" fill="#FFE082"/>
             </g>
+          </svg>
+        </a>
 
-            <!-- TYPOGRAPHY: 100% CRYSTAL CLEAR ON ORANGE HEADER -->
-            <!-- "SHOP" in Solid Snow White -->
-            <text x="68" y="40" font-family="'Plus Jakarta Sans', 'Outfit', system-ui, sans-serif" font-weight="900" font-size="34" letter-spacing="-0.5" fill="#FFFFFF">
-              SHOP<tspan fill="#FFE082">PAZA</tspan>
-            </text>
+        <!-- Desktop Search Box (hidden on mobile) -->
+        <div class="hidden md:block flex-1 max-w-2xl relative mx-2">
+          <form onsubmit="handleSearch(event)" class="flex items-center bg-white rounded-lg overflow-hidden shadow-sm border-2 border-amber-300/60 focus-within:ring-2 focus-within:ring-white transition">
+            <input type="text" id="searchInput" placeholder="Search across 800+ authentic jewelry, dresses, bags, watches & wigs..." class="w-full bg-transparent px-4 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none">
+            <button type="submit" class="bg-slate-900 hover:bg-black text-white px-6 py-2.5 text-sm font-bold transition flex items-center justify-center flex-shrink-0">
+              <i class="fa-solid fa-magnifying-glass text-amber-400"></i>
+            </button>
+          </form>
+        </div>
 
-            <!-- Subtitle: Crisp White with Golden Tracking -->
-            <text x="70" y="53" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="800" font-size="8.5" letter-spacing="3.5" fill="#FFF3E0">
-              WORLDWIDE COMMERCE
-            </text>
+        <!-- Header Actions -->
+        <div class="flex items-center gap-3 sm:gap-6 flex-shrink-0 text-white">
+          <button onclick="openAuthModal('signin')" class="flex items-center gap-2 p-1.5 hover:bg-white/10 rounded-lg transition text-white" title="Customer Account">
+            <i class="fa-regular fa-circle-user text-xl sm:text-2xl text-white"></i>
+            <div class="text-left hidden md:block">
+              <div class="text-[10px] text-amber-200 leading-none">Hello, Sign In</div>
+              <div class="text-xs font-bold leading-tight" id="headerCustomerName">My Account</div>
+            </div>
+          </button>
 
-            <!-- Subtle Gold Accent Sparkle -->
-            <circle cx="270" cy="36" r="3.5" fill="#FFE082"/>
-          </g>
-        </svg>
-      </a>
+          <button onclick="toggleCartDrawer()" class="flex items-center gap-2 p-1.5 hover:bg-white/10 rounded-lg transition relative text-white">
+            <div class="relative">
+              <i class="fa-solid fa-cart-shopping text-xl sm:text-2xl text-white"></i>
+              <span id="cartCountBadge" class="absolute -top-2 -right-2 bg-slate-950 text-amber-400 font-black text-[10px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow">0</span>
+            </div>
+            <span class="hidden md:inline font-bold text-xs uppercase tracking-wider">Cart</span>
+          </button>
+        </div>
+      </div>
 
-      <!-- Daraz Signature Big White Search Box with Orange Button -->
-      <div class="flex-1 max-w-2xl relative">
-        <form onsubmit="handleSearch(event)" class="flex items-center bg-white rounded-lg overflow-hidden shadow-sm border-2 border-amber-300/60 focus-within:ring-2 focus-within:ring-white transition">
-          <input type="text" id="searchInput" placeholder="Search across 800+ authentic jewelry, dresses, bags, watches & wigs..." class="w-full bg-transparent px-4 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none">
-          <button type="submit" class="bg-slate-900 hover:bg-black text-white px-6 py-2.5 text-sm font-bold transition flex items-center justify-center flex-shrink-0">
+      <!-- Row 2: Mobile Search Bar (full-width on mobile, hidden on md+) -->
+      <div class="md:hidden mt-2 pt-0.5">
+        <form onsubmit="handleSearch(event)" class="flex items-center bg-white rounded-lg overflow-hidden shadow-sm border border-amber-300/80">
+          <input type="text" id="searchInputMobile" placeholder="Search 800+ dresses, bags, jewelry, watches..." class="w-full bg-transparent px-3 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none">
+          <button type="submit" class="bg-slate-900 text-white px-4 py-2 text-xs font-bold flex items-center justify-center flex-shrink-0">
             <i class="fa-solid fa-magnifying-glass text-amber-400"></i>
           </button>
         </form>
-      </div>
-
-      <!-- Daraz Header Actions: Account & Cart -->
-      <div class="flex items-center gap-4 sm:gap-6 flex-shrink-0 text-white">
-        <!-- Customer Account / Sign In -->
-        <button onclick="openAuthModal('signin')" class="flex items-center gap-2 p-1.5 hover:bg-white/10 rounded-lg transition text-white" title="Customer Account">
-          <i class="fa-regular fa-circle-user text-2xl text-white"></i>
-          <div class="text-left hidden md:block">
-            <div class="text-[10px] text-amber-200 leading-none">Hello, Sign In</div>
-            <div class="text-xs font-bold leading-tight" id="headerCustomerName">My Account</div>
-          </div>
-        </button>
-
-        <!-- Cart -->
-        <button onclick="toggleCartDrawer()" class="flex items-center gap-2 p-1.5 hover:bg-white/10 rounded-lg transition relative text-white">
-          <div class="relative">
-            <i class="fa-solid fa-cart-shopping text-2xl text-white"></i>
-            <span id="cartCountBadge" class="absolute -top-2 -right-2 bg-slate-950 text-amber-400 font-black text-[10px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow">0</span>
-          </div>
-          <span class="hidden md:inline font-bold text-xs uppercase tracking-wider">Cart</span>
-        </button>
       </div>
 
     </div>
@@ -2619,5 +2615,32 @@
     </div>
   </div>
   <script src="checkout.js"></script>
+  <!-- ================= MOBILE BOTTOM APP NAVIGATION BAR (Shoppaza Mobile Standard) ================= -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 z-40 py-2 px-4 flex items-center justify-around text-slate-600 shadow-[0_-2px_12px_rgba(0,0,0,0.08)]">
+    <a href="index.html" class="flex flex-col items-center gap-0.5 text-daraz-orange font-bold text-[10px]">
+      <i class="fa-solid fa-house text-base"></i>
+      <span>Home</span>
+    </a>
+    <button onclick="document.getElementById('categoryGridSection')?.scrollIntoView({behavior:'smooth'})" class="flex flex-col items-center gap-0.5 hover:text-daraz-orange text-[10px]">
+      <i class="fa-solid fa-layer-group text-base"></i>
+      <span>Categories</span>
+    </button>
+    <button onclick="document.getElementById('searchInputMobile')?.focus(); window.scrollTo({top:0, behavior:'smooth'})" class="flex flex-col items-center gap-0.5 hover:text-daraz-orange text-[10px]">
+      <i class="fa-solid fa-magnifying-glass text-base"></i>
+      <span>Search</span>
+    </button>
+    <button onclick="toggleCartDrawer()" class="flex flex-col items-center gap-0.5 hover:text-daraz-orange text-[10px] relative">
+      <div class="relative">
+        <i class="fa-solid fa-cart-shopping text-base"></i>
+        <span id="mobileBottomCartBadge" class="absolute -top-1.5 -right-2 bg-daraz-orange text-white font-bold text-[9px] w-4 h-4 rounded-full flex items-center justify-center">0</span>
+      </div>
+      <span>Cart</span>
+    </button>
+    <button onclick="openAuthModal('signin')" class="flex flex-col items-center gap-0.5 hover:text-daraz-orange text-[10px]">
+      <i class="fa-regular fa-circle-user text-base"></i>
+      <span>Account</span>
+    </button>
+  </nav>
+
 </body>
 </html>

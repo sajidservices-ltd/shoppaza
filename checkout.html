@@ -214,7 +214,10 @@
 
           <!-- ================= 3. DELIVERY / SHIPPING ADDRESS ================= -->
           <div class="space-y-3">
-            <h2 class="text-base font-bold text-slate-900 tracking-tight">Delivery</h2>
+            <div class="flex items-center justify-between">
+              <h2 class="text-base font-bold text-slate-900 tracking-tight">Delivery</h2>
+              <div id="geoDetectionNotice" class="hidden text-xs"></div>
+            </div>
 
             <!-- Country / Region Select -->
             <div>
@@ -460,10 +463,64 @@
 
           </div>
 
+          <!-- ================= 6.5 MOBILE INLINE ORDER SUMMARY & DISCOUNT CODE (Shopify Mobile Standard) ================= -->
+          <div class="lg:hidden pt-4 border-t border-slate-200 space-y-4" id="mobileInlineSummarySection">
+            <div class="flex items-center justify-between cursor-pointer py-1" onclick="toggleMobileInlineSummary()">
+              <h3 class="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
+                <span>Order summary</span>
+              </h3>
+              <i id="mobileInlineSummaryChevron" class="fa-solid fa-chevron-up text-xs text-slate-500 transition-transform"></i>
+            </div>
+
+            <div id="mobileInlineSummaryContent" class="space-y-4">
+              <!-- Cart Items List (Mobile) -->
+              <div id="mobileInlineCartItemsList" class="space-y-3 max-h-[300px] overflow-y-auto pr-1">
+                <!-- Injected via JS -->
+              </div>
+
+              <!-- Discount Code Input Box (Exact Shopify Screenshot Placement) -->
+              <div class="pt-2">
+                <div class="flex gap-2">
+                  <input type="text" id="mobileInlineDiscountInput" placeholder="Discount code" class="shopify-input uppercase font-mono text-sm flex-1 bg-white">
+                  <button type="button" onclick="applyDiscount('mobileInline')" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-md text-xs font-bold transition">Apply</button>
+                </div>
+                <div id="mobileInlineDiscountSuccessMessage" class="hidden text-xs text-emerald-700 font-bold flex items-center gap-1.5 mt-2">
+                  <i class="fa-solid fa-tag"></i> <span>Promo code applied successfully!</span>
+                </div>
+              </div>
+
+              <!-- Price Breakdown -->
+              <div class="space-y-2.5 text-xs text-slate-600 pt-3 border-t border-shopify-border">
+                <div class="flex justify-between">
+                  <span>Subtotal</span>
+                  <span class="font-bold text-slate-900 font-mono text-sm" id="mobileInlineSubtotal">£0.00</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="flex items-center gap-1.5">
+                    <span>Shipping</span>
+                    <i class="fa-regular fa-circle-question text-slate-400 text-[10px]" title="Tracked delivery"></i>
+                  </span>
+                  <span class="font-bold text-emerald-700 uppercase" id="mobileInlineShipping">Free</span>
+                </div>
+                <div id="mobileInlineDiscountRow" class="hidden justify-between text-emerald-700 font-semibold">
+                  <span class="flex items-center gap-1"><i class="fa-solid fa-tag text-xs"></i> Discount</span>
+                  <span id="mobileInlineDiscountAmount">-£0.00</span>
+                </div>
+                <div class="flex justify-between items-baseline pt-2.5 border-t border-shopify-border">
+                  <span class="text-sm font-bold text-slate-900">Total</span>
+                  <div class="text-right">
+                    <span class="text-[10px] text-slate-400 font-mono mr-1" id="mobileInlineCurrencyCode">GBP</span>
+                    <span class="text-lg font-black text-slate-900 font-mono" id="mobileInlineTotal">£0.00</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- ================= 7. PAY NOW SUBMIT BUTTON ================= -->
           <div class="pt-2 space-y-4">
-            <button type="submit" id="btnShopifyPayNow" class="w-full py-4 bg-slate-950 hover:bg-black text-white font-black text-sm uppercase tracking-wider rounded-md transition shadow-lg flex items-center justify-center gap-2">
-              <i class="fa-solid fa-lock text-emerald-400 text-xs"></i>
+            <button type="submit" id="btnShopifyPayNow" class="w-full py-4 bg-[#005bd3] hover:bg-[#004bb5] text-white font-bold text-sm uppercase tracking-wider rounded-md transition shadow-md flex items-center justify-center gap-2">
+              <i class="fa-solid fa-lock text-white/90 text-xs"></i>
               <span id="btnPayNowText">Pay now • £0.00</span>
             </button>
 
@@ -572,6 +629,70 @@
       AE: { currency: 'AED', symbol: 'AED ', rate: 4.66, standardShipTitle: 'Emirates Post Tracked Airway', standardPrice: 0.0, expressShipTitle: 'DHL Express Middle East', expressPrice: 45.0 },
       SA: { currency: 'SAR', symbol: 'SAR ', rate: 4.76, standardShipTitle: 'SMSA Express Air Tracked', standardPrice: 0.0, expressShipTitle: 'DHL Express Direct', expressPrice: 50.0 }
     };
+
+    
+    // Auto Geo-IP Visitor Country & State Detection (Shopify Standard & Anti-Fraud)
+    async function detectVisitorGeoLocation() {
+      try {
+        let geoData = null;
+        try {
+          const res = await fetch('https://ipwho.is/');
+          const json = await res.json();
+          if (json && json.success) geoData = json;
+        } catch(e) {}
+
+        if (!geoData) {
+          try {
+            const res2 = await fetch('https://get.geojs.io/v1/ip/geo.json');
+            geoData = await res2.json();
+          } catch(e) {}
+        }
+
+        if (geoData) {
+          const code = (geoData.country_code || geoData.country_code2 || '').toUpperCase();
+          const country = geoData.country || geoData.country_name || '';
+          const region = geoData.region || geoData.state || '';
+          const city = geoData.city || '';
+          const ip = geoData.ip || '';
+
+          window.detectedVisitorGeo = { ip, country_code: code, country, region, city };
+
+          const destSel = document.getElementById('destCountry');
+          if (destSel && code) {
+            let exists = false;
+            for (let i = 0; i < destSel.options.length; i++) {
+              if (destSel.options[i].value === code) {
+                destSel.selectedIndex = i;
+                exists = true;
+                break;
+              }
+            }
+            if (!exists) {
+              const opt = document.createElement('option');
+              opt.value = code;
+              opt.text = `${country} (${code})`;
+              destSel.add(opt);
+              destSel.value = code;
+            }
+            handleCountryChange(code);
+          }
+
+          const custState = document.getElementById('custState');
+          if (custState && region && (!custState.value || custState.value.trim() === '')) {
+            custState.value = region;
+          }
+
+          const notice = document.getElementById('geoDetectionNotice');
+          if (notice) {
+            notice.innerHTML = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-medium"><i class="fa-solid fa-location-dot text-emerald-600"></i> ${region ? region + ', ' : ''}${country}</span>`;
+            notice.classList.remove('hidden');
+          }
+          console.log('Visitor Geo Detected & Localized:', window.detectedVisitorGeo);
+        }
+      } catch (err) {
+        console.warn('Geo IP detection error:', err);
+      }
+    }
 
     // Initialize Page
     window.addEventListener('DOMContentLoaded', () => {
@@ -918,6 +1039,7 @@
         const orderId = '#SHP-' + Math.floor(100000 + Math.random() * 900000);
         const trackingNum = (countryCode === 'GB' ? 'GB' : 'TRK') + Math.floor(100000000 + Math.random() * 900000000) + 'X';
 
+        const isCountryMismatch = (window.detectedVisitorGeo && window.detectedVisitorGeo.country_code && window.detectedVisitorGeo.country_code !== countryCode);
         const newOrder = {
           id: orderId,
           date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
@@ -933,7 +1055,12 @@
           payment: paymentMethod === 'crypto' ? 'USDT TRC20' : (paymentMethod === 'afterpay' ? 'Afterpay Installments' : 'Stripe 256-Bit SSL'),
           fulfillment: 'Unfulfilled',
           tracking: trackingNum,
-          courier: selectedShippingMethod === 'express' ? 'Express Worldwide Guaranteed' : 'Royal Mail Tracked 24'
+          courier: selectedShippingMethod === 'express' ? 'Express Worldwide Guaranteed' : 'Royal Mail Tracked 24',
+          client_ip: window.detectedVisitorGeo?.ip || 'Direct Edge Connection',
+          detected_country: window.detectedVisitorGeo?.country || countryName,
+          detected_country_code: window.detectedVisitorGeo?.country_code || countryCode,
+          detected_region: window.detectedVisitorGeo?.region || state,
+          fraud_risk_level: isCountryMismatch ? 'HIGH_RISK_PROXY' : 'VERIFIED_LOW_RISK'
         };
 
         // Save into Live Orders Database (connected with Admin Panel)

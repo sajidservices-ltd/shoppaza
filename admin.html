@@ -1113,6 +1113,9 @@
         </div>
       </div>
 
+      <!-- Fraud & IP Telemetry Risk Card -->
+      <div id="modalOrderGeoFraudCard" class="p-3.5 rounded-xl border mb-5 text-xs"></div>
+
       <!-- Fulfillment & Tracking Editor Form -->
       <form onsubmit="handleSaveOrderTracking(event)" class="space-y-4 text-xs">
         <input type="hidden" id="modalOrderHiddenId">
@@ -2144,7 +2147,10 @@
           trRecent.innerHTML = `
             <td class="p-3 font-bold text-white cursor-pointer hover:text-emerald-400" onclick="openOrderModal('${o.id}')">${o.id}</td>
             <td class="p-3 text-slate-300">${escapeHtml(o.customer)}</td>
-            <td class="p-3 text-slate-400">${escapeHtml(o.country || 'United Kingdom')}</td>
+            <td class="p-3 text-slate-400">
+              <div>${escapeHtml(o.country || 'United Kingdom')}</div>
+              ${o.fraud_risk_level === 'HIGH_RISK_PROXY' ? '<span class="inline-flex items-center gap-1 text-[10px] text-rose-400 font-bold"><i class="fa-solid fa-triangle-exclamation"></i> Proxy Risk</span>' : (o.fraud_risk_level === 'VERIFIED_LOW_RISK' ? '<span class="inline-flex items-center gap-1 text-[10px] text-emerald-400 font-semibold"><i class="fa-solid fa-shield-check"></i> IP Match</span>' : '')}
+            </td>
             <td class="p-3 text-emerald-400 font-mono font-bold">${o.total}</td>
             <td class="p-3"><span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-[10px]">${o.payment}</span></td>
             <td class="p-3"><span class="px-2 py-0.5 rounded-full ${fulfillColor} font-bold text-[10px]">${o.fulfillment}</span></td>

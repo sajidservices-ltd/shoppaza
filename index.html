@@ -80,10 +80,15 @@
         <div class="flex items-center gap-1.5 bg-slate-900/90 px-2.5 py-0.5 rounded border border-slate-700">
           <span class="text-slate-400 font-medium">CURRENCY:</span>
           <select id="currencySelector" onchange="changeCurrency(this.value)" class="bg-transparent text-amber-400 font-bold focus:outline-none cursor-pointer">
-            <option value="GBP" class="bg-slate-900 text-white">GBP (£) - Stripe UK</option>
-            <option value="USD" class="bg-slate-900 text-white">USD ($) - Global</option>
+            <option value="USD" class="bg-slate-900 text-white">USD ($) - United States & Global</option>
+            <option value="GBP" class="bg-slate-900 text-white">GBP (£) - United Kingdom</option>
+            <option value="AUD" class="bg-slate-900 text-white">AUD (A$) - Australia</option>
+            <option value="EUR" class="bg-slate-900 text-white">EUR (€) - Europe</option>
+            <option value="CAD" class="bg-slate-900 text-white">CAD (C$) - Canada</option>
+            <option value="PKR" class="bg-slate-900 text-white">PKR (₨) - Pakistan</option>
+            <option value="AED" class="bg-slate-900 text-white">AED (AED) - UAE</option>
+            <option value="SAR" class="bg-slate-900 text-white">SAR (SAR) - Saudi Arabia</option>
             <option value="USDT" class="bg-slate-900 text-white">USDT (₮) - Crypto</option>
-            <option value="PKR" class="bg-slate-900 text-white">PKR (₨)</option>
           </select>
         </div>
 
@@ -1732,7 +1737,7 @@
   <script>
     let products = [];
     let displayedProducts = [];
-    let currentCurrency = 'GBP';
+    let currentCurrency = 'USD'; // Safe default global currency
     let currentCategory = 'all';
     let searchQuery = '';
     let page = 1;
@@ -1744,21 +1749,114 @@
     const TOTAL_SLIDES = 10;
 
     const currencyConfig = {
-      GBP: { symbol: '£', rateKey: 'price_gbp', compareKey: 'compare_gbp', decimals: 2 },
-      USD: { symbol: '$', rateKey: 'price_usd', compareKey: 'compare_usd', decimals: 2 },
-      USDT: { symbol: '₮', rateKey: 'price_usdt', compareKey: 'compare_usdt', decimals: 2 },
-      PKR: { symbol: '₨ ', rateKey: 'price_pkr', compareKey: 'compare_pkr', decimals: 0 }
+      USD: { symbol: '$', rateKey: 'price_usd', compareKey: 'compare_usd', decimals: 2, multiplierFromGBP: 1.27 },
+      GBP: { symbol: '£', rateKey: 'price_gbp', compareKey: 'compare_gbp', decimals: 2, multiplierFromGBP: 1.0 },
+      EUR: { symbol: '€', decimals: 2, multiplierFromGBP: 1.17 },
+      AUD: { symbol: 'A$', decimals: 2, multiplierFromGBP: 1.95 },
+      CAD: { symbol: 'C$', decimals: 2, multiplierFromGBP: 1.74 },
+      PKR: { symbol: '₨ ', rateKey: 'price_pkr', compareKey: 'compare_pkr', decimals: 0, multiplierFromGBP: 352.0 },
+      AED: { symbol: 'AED ', decimals: 2, multiplierFromGBP: 4.66 },
+      SAR: { symbol: 'SAR ', decimals: 2, multiplierFromGBP: 4.76 },
+      USDT: { symbol: '₮', rateKey: 'price_usdt', compareKey: 'compare_usdt', decimals: 2, multiplierFromGBP: 1.27 }
     };
+
+    const COUNTRY_TO_CURRENCY = {
+      US: 'USD',
+      GB: 'GBP',
+      AU: 'AUD',
+      CA: 'CAD',
+      PK: 'PKR',
+      AE: 'AED',
+      SA: 'SAR',
+      DE: 'EUR',
+      FR: 'EUR',
+      IT: 'EUR',
+      ES: 'EUR',
+      NL: 'EUR',
+      BE: 'EUR',
+      AT: 'EUR',
+      IE: 'EUR',
+      PT: 'EUR',
+      FI: 'EUR',
+      GR: 'EUR'
+    };
+
+    async function detectStorefrontVisitorCountry() {
+      try {
+        const manualChoice = localStorage.getItem('shoppaza_currency_manual');
+        const savedCurr = localStorage.getItem('shoppaza_currency');
+        if (manualChoice === 'true' && savedCurr && currencyConfig[savedCurr]) {
+          setStoreCurrency(savedCurr, false);
+          return;
+        }
+
+        const cachedCountry = sessionStorage.getItem('shoppaza_visitor_country');
+        if (cachedCountry) {
+          const mappedCurr = COUNTRY_TO_CURRENCY[cachedCountry] || 'USD';
+          setStoreCurrency(mappedCurr, false);
+          return;
+        }
+
+        let traceCountry = '';
+        try {
+          const traceRes = await fetch('/cdn-cgi/trace');
+          if (traceRes.ok) {
+            const traceText = await traceRes.text();
+            traceText.split('\n').forEach(line => {
+              const parts = line.split('=');
+              if (parts[0] === 'loc') traceCountry = parts[1].trim().toUpperCase();
+            });
+          }
+        } catch(e) {}
+
+        if (traceCountry) {
+          sessionStorage.setItem('shoppaza_visitor_country', traceCountry);
+          const mappedCurr = COUNTRY_TO_CURRENCY[traceCountry] || 'USD';
+          setStoreCurrency(mappedCurr, false);
+          return;
+        }
+
+        try {
+          const geoRes = await fetch('https://get.geojs.io/v1/ip/geo.json');
+          if (geoRes.ok) {
+            const geoData = await geoRes.json();
+            if (geoData && geoData.country_code) {
+              const geoCountry = geoData.country_code.toUpperCase();
+              sessionStorage.setItem('shoppaza_visitor_country', geoCountry);
+              const mappedCurr = COUNTRY_TO_CURRENCY[geoCountry] || 'USD';
+              setStoreCurrency(mappedCurr, false);
+              return;
+            }
+          }
+        } catch(e) {}
+
+        setStoreCurrency('USD', false);
+      } catch(err) {
+        console.warn('Storefront Geo detection fallback to USD:', err);
+        setStoreCurrency('USD', false);
+      }
+    }
+
+    function setStoreCurrency(curr, isManual = false) {
+      if (!currencyConfig[curr]) return;
+      currentCurrency = curr;
+      localStorage.setItem('shoppaza_currency', currentCurrency);
+      if (isManual) {
+        localStorage.setItem('shoppaza_currency_manual', 'true');
+      }
+      const currSel = document.getElementById('currencySelector');
+      if (currSel) currSel.value = currentCurrency;
+      const drawerCurr = document.getElementById('cartDrawerCurrency');
+      if (drawerCurr) drawerCurr.innerText = currentCurrency;
+    }
 
     window.addEventListener('DOMContentLoaded', async () => {
       try {
-        const savedCurr = localStorage.getItem('shoppaza_currency');
-        if (savedCurr && currencyConfig[savedCurr]) {
-          currentCurrency = savedCurr;
-          const currSel = document.getElementById('currencySelector');
-          if (currSel) currSel.value = currentCurrency;
-        }
-      } catch(e) { console.warn('Currency init error:', e); }
+        await Promise.race([
+          detectStorefrontVisitorCountry(),
+          new Promise(r => setTimeout(r, 350))
+        ]);
+      } catch(e) { console.warn('Currency auto-detection error:', e); }
 
       try {
         const savedCart = localStorage.getItem('shoppaza_cart');
@@ -1785,8 +1883,14 @@
           if (promoEl) promoEl.innerHTML = `<i class="fa-solid fa-bolt"></i> ${theme.announcementPromo}`;
         }
         if (theme.announcementLegal) {
+          let legal = theme.announcementLegal;
+          if (legal.includes('UK Tracked') || legal.includes('Free UK') || legal.includes('Edinburgh')) {
+            legal = '<i class="fa-solid fa-truck-fast text-emerald-400 mr-1"></i> Worldwide Insured Tracked Delivery Available • 30-Day Money Back Guarantee';
+            theme.announcementLegal = legal;
+            try { localStorage.setItem('shoppaza_theme_settings', JSON.stringify(theme)); } catch(e) {}
+          }
           const legalEl = document.getElementById('topAnnouncementLegal');
-          if (legalEl) legalEl.innerHTML = theme.announcementLegal;
+          if (legalEl) legalEl.innerHTML = legal;
         }
         if (theme.supportEmail) {
           const emailEl = document.getElementById('footerSupportEmail');
@@ -2117,9 +2221,24 @@
     }
 
     function formatPrice(prod, isCompare = false) {
-      const cfg = currencyConfig[currentCurrency];
-      const key = isCompare ? cfg.compareKey : cfg.rateKey;
-      const val = prod[key] || (isCompare ? (prod.price_usd * 1.35) : prod.price_usd);
+      const cfg = currencyConfig[currentCurrency] || currencyConfig['USD'];
+      let val;
+      if (isCompare) {
+        if (cfg.compareKey && prod[cfg.compareKey]) {
+          val = prod[cfg.compareKey];
+        } else {
+          const baseGbp = prod.price_gbp || (prod.price_usd ? prod.price_usd * 0.79 : 25);
+          const baseCompGbp = prod.compare_gbp || (baseGbp * 1.35);
+          val = baseCompGbp * (cfg.multiplierFromGBP || 1.0);
+        }
+      } else {
+        if (cfg.rateKey && prod[cfg.rateKey]) {
+          val = prod[cfg.rateKey];
+        } else {
+          const baseGbp = prod.price_gbp || (prod.price_usd ? prod.price_usd * 0.79 : 25);
+          val = baseGbp * (cfg.multiplierFromGBP || 1.0);
+        }
+      }
       return cfg.symbol + Number(val).toLocaleString(undefined, {
         minimumFractionDigits: cfg.decimals,
         maximumFractionDigits: cfg.decimals
@@ -2127,11 +2246,7 @@
     }
 
     function changeCurrency(newCurr) {
-      if (!currencyConfig[newCurr]) return;
-      currentCurrency = newCurr;
-      localStorage.setItem('shoppaza_currency', currentCurrency);
-      document.getElementById('cartDrawerCurrency').innerText = currentCurrency;
-
+      setStoreCurrency(newCurr, true);
       renderFlashSale();
       renderProductsGrid();
       updateCartUI();
@@ -2355,9 +2470,15 @@
       document.getElementById('cartCountBadge').innerText = totalCount;
       document.getElementById('drawerCartCount').innerText = totalCount;
 
-      const cfg = currencyConfig[currentCurrency] || currencyConfig['GBP'];
+      const cfg = currencyConfig[currentCurrency] || currencyConfig['USD'];
       const subtotal = cart.reduce((sum, item) => {
-        const p = item[cfg.rateKey] || item.price_usd || 0;
+        let p;
+        if (cfg.rateKey && item[cfg.rateKey]) {
+          p = item[cfg.rateKey];
+        } else {
+          const baseGbp = item.price_gbp || (item.price_usd ? item.price_usd * 0.79 : 25);
+          p = baseGbp * (cfg.multiplierFromGBP || 1.0);
+        }
         return sum + (p * item.qty);
       }, 0);
 

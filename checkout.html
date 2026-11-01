@@ -1827,6 +1827,20 @@
       const paymentMethod = document.querySelector('input[name="paymentOption"]:checked')?.value || 'card';
       const grandTotalStr = document.getElementById('desktopSummaryFinalTotal')?.innerText || '£0.00';
 
+      // Capture safe card metadata (Brand & Last 4 digits) for fraud verification
+      const rawCardNum = (document.getElementById('cardNumInput')?.value || '').replace(/\D/g, '');
+      const cardLast4 = rawCardNum.length >= 4 ? rawCardNum.slice(-4) : '4242';
+      let cardBrand = 'Visa';
+      if (rawCardNum.startsWith('5')) cardBrand = 'Mastercard';
+      else if (rawCardNum.startsWith('3')) cardBrand = 'Amex';
+      else if (rawCardNum.startsWith('6')) cardBrand = 'Discover';
+
+      const paymentDisplay = paymentMethod === 'crypto' 
+        ? 'USDT TRC20' 
+        : (paymentMethod === 'afterpay' 
+            ? 'Afterpay Installments' 
+            : `${cardBrand} •••• ${cardLast4} (Stripe 256-Bit SSL)`);
+
       // Submit Pay Button animation
       const btn = document.getElementById('btnShopifyPayNow');
       btn.disabled = true;
@@ -1850,7 +1864,9 @@
           items: cart.length,
           total: grandTotalStr,
           channel: 'Online Store (Shopify Full-Page Checkout)',
-          payment: paymentMethod === 'crypto' ? 'USDT TRC20' : (paymentMethod === 'afterpay' ? 'Afterpay Installments' : 'Stripe 256-Bit SSL'),
+          payment: paymentDisplay,
+          card_brand: cardBrand,
+          card_last4: cardLast4,
           fulfillment: 'Unfulfilled',
           tracking: trackingNum,
           courier: selectedShippingMethod === 'express' ? 'Express Worldwide Guaranteed' : 'End-to-End Tracking',

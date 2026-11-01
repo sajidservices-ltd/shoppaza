@@ -141,6 +141,22 @@ function renderShopifyCheckoutSummary() {
   function isWatchItem(item) {
     return (item.category === 'Luxury Watches') || (item.title && (item.title.toLowerCase().includes('watch')));
   }
+  function isBagItem(item) {
+    if (!item) return false;
+    const cat = (item.category || '').toLowerCase();
+    const title = (item.title || '').toLowerCase();
+    return cat === 'bags & handbags' || cat.includes('bag') || (cat.includes('accessories') && title.includes('bag'));
+  }
+  function isJacketItem(item) {
+    if (!item) return false;
+    const cat = (item.category || '').toLowerCase();
+    return cat === 'jackets & outerwear' || cat.includes('jacket') || cat.includes('outerwear');
+  }
+  function isGlassesItem(item) {
+    if (!item) return false;
+    const cat = (item.category || '').toLowerCase();
+    return cat === 'sunglasses & eyewear' || cat.includes('sunglass') || cat.includes('eyewear');
+  }
 
   let isFreeShippingPromo = false;
   let promoShippingFeeUsd = 0;
@@ -162,6 +178,26 @@ function renderShopifyCheckoutSummary() {
         promoProductDiscountGbp += unitPriceGbp * qty;
       } else if (isWatchItem(item)) {
         promoShippingFeeUsd += 22.00 * qty;
+        promoProductDiscountGbp += unitPriceGbp * qty;
+      } else if (isBagItem(item)) {
+        const p = parseFloat(item.price_usd) || 120;
+        const shipPerUnit = (p < 150) ? 25.00 : 41.00;
+        promoShippingFeeUsd += shipPerUnit * qty;
+        promoProductDiscountGbp += unitPriceGbp * qty;
+      } else if (isJacketItem(item)) {
+        const p = parseFloat(item.price_usd) || 200;
+        let shipPerUnit = 32.00;
+        if (p > 310) {
+          shipPerUnit = 67.00;
+        } else if (p > 250) {
+          shipPerUnit = 56.00;
+        }
+        promoShippingFeeUsd += shipPerUnit * qty;
+        promoProductDiscountGbp += unitPriceGbp * qty;
+      } else if (isGlassesItem(item)) {
+        const p = parseFloat(item.price_usd) || 90;
+        const shipPerUnit = (p < 100) ? 18.00 : 20.00;
+        promoShippingFeeUsd += shipPerUnit * qty;
         promoProductDiscountGbp += unitPriceGbp * qty;
       }
     });
@@ -345,11 +381,27 @@ async function applyCheckoutDiscount() {
   function isWatchItem(item) {
     return (item.category === 'Luxury Watches') || (item.title && (item.title.toLowerCase().includes('watch')));
   }
+  function isBagItem(item) {
+    if (!item) return false;
+    const cat = (item.category || '').toLowerCase();
+    const title = (item.title || '').toLowerCase();
+    return cat === 'bags & handbags' || cat.includes('bag') || (cat.includes('accessories') && title.includes('bag'));
+  }
+  function isJacketItem(item) {
+    if (!item) return false;
+    const cat = (item.category || '').toLowerCase();
+    return cat === 'jackets & outerwear' || cat.includes('jacket') || cat.includes('outerwear');
+  }
+  function isGlassesItem(item) {
+    if (!item) return false;
+    const cat = (item.category || '').toLowerCase();
+    return cat === 'sunglasses & eyewear' || cat.includes('sunglass') || cat.includes('eyewear');
+  }
 
   if (match.type === 'free_shipping_promo' || ['AG100', 'SHOP100', 'GET100', 'AH100'].includes(match.code)) {
-    const hasEligible = (cart || []).some(item => isWigItem(item) || isJewelryItem(item) || isWatchItem(item));
+    const hasEligible = (cart || []).some(item => isWigItem(item) || isJewelryItem(item) || isWatchItem(item) || isBagItem(item) || isJacketItem(item) || isGlassesItem(item));
     if (!hasEligible) {
-      alert('Coupon code "' + match.code + '" is valid for Wigs, Jewelry, and Luxury Watches.');
+      alert('Coupon code "' + match.code + '" is valid for Wigs, Jewelry, Watches, Bags, Jackets & Eyewear.');
       return;
     }
   }
@@ -362,7 +414,7 @@ async function applyCheckoutDiscount() {
     msgEl.classList.remove('hidden');
     let msgText = 'Coupon ' + match.code + ' applied!';
     if (match.type === 'free_shipping_promo' || ['AG100', 'SHOP100', 'GET100', 'AH100'].includes(match.code)) {
-      msgText = '🎉 Promo ' + match.code + ' applied! Items 100% FREE — Customer pays only Shipping (Wigs $34/$38, Jewelry $15.80, Watches $22.00)!';
+      msgText = '🎉 Promo ' + match.code + ' applied! Items 100% FREE — Customer pays only Shipping!';
     } else if (match.type === 'percent') {
       msgText = 'Coupon ' + match.code + ' applied (' + (match.value || 10) + '% OFF)!';
     }

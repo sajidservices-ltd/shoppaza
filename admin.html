@@ -57,15 +57,15 @@
         <span class="text-[10px] uppercase font-bold tracking-widest text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-3 py-0.5 rounded-full">Shopify-Grade Operations Admin</span>
       </div>
       <div class="text-center mb-6">
-        <h1 class="text-xl font-bold text-white tracking-tight">Shoppaza Master Control</h1>
-        <p class="text-xs text-slate-400 mt-1">Shoppaza Worldwide • Private Merchant Suite</p>
+        <h1 class="text-xl font-bold text-white tracking-tight">Shoppaza Operations Portal</h1>
+        <p class="text-xs text-slate-400 mt-1">Authorized Access for Store Owner, Team Managers & Promoters</p>
       </div>
 
       <form id="adminLoginForm" onsubmit="handleAdminLogin(event)" class="space-y-5">
         <div>
-          <label class="block text-xs font-semibold uppercase text-slate-300 tracking-wider mb-2">Merchant Owner or Staff Passcode</label>
+          <label class="block text-xs font-semibold uppercase text-slate-300 tracking-wider mb-2">Owner, Manager or Promoter Passcode</label>
           <div class="relative">
-            <input type="password" id="adminSecretInput" required placeholder="Enter Owner Master Key or Staff Key" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-emerald-500 font-mono tracking-wider">
+            <input type="password" id="adminSecretInput" required placeholder="Enter your assigned passcode (e.g. ASAD@0123)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-emerald-500 font-mono tracking-wider">
             <button type="button" onclick="togglePassVisibility()" class="absolute right-4 top-3.5 text-slate-500 hover:text-slate-300">
               <i class="fa-solid fa-eye" id="eyeIcon"></i>
             </button>
@@ -1449,7 +1449,7 @@
     }
 
     // Staff & Limited Promoter Accounts Management
-    const DEFAULT_STAFF_KEY = 'AG100';
+    const DEFAULT_STAFF_KEY = 'ASAD@0123';
 
     function getStaffAccounts() {
       const saved = localStorage.getItem('shoppaza_staff_accounts');
@@ -1461,10 +1461,24 @@
         } catch(e) {}
       }
       
-      // Ensure AG100 promoter account is always available on all browsers
+      // 1. Ensure Asad Team Manager account is always initialized and active on all devices
+      const hasAsad = accounts.some(a => (a.passcode || '').toUpperCase() === 'ASAD@0123' || (a.name || '').toUpperCase().includes('ASAD'));
+      if (!hasAsad) {
+        accounts.unshift({
+          id: 'user_asad',
+          name: 'Asad (Team Manager & Lead)',
+          passcode: 'ASAD@0123',
+          assigned_promo: 'ALL',
+          role: 'team_manager',
+          channel: 'Promoter Management & Codes',
+          created: 'Active'
+        });
+      }
+
+      // 2. Ensure AG100 promoter account is always available on all browsers
       const hasAg100 = accounts.some(a => (a.assigned_promo || '').toUpperCase() === 'AG100' || (a.passcode || '').toUpperCase().includes('AG100'));
       if (!hasAg100) {
-        accounts.unshift({
+        accounts.push({
           id: 'user_ag100',
           name: 'Promoter Team (AG100)',
           passcode: 'AG100',
@@ -1475,8 +1489,8 @@
         });
       }
 
-      // Ensure Team Manager account is always available on all browsers
-      const hasManager = accounts.some(a => a.role === 'team_manager' || (a.passcode || '').toUpperCase().includes('MGR'));
+      // 3. Ensure generic Team Manager account is available
+      const hasManager = accounts.some(a => (a.passcode || '').toUpperCase() === 'MGR-2026');
       if (!hasManager) {
         accounts.push({
           id: 'user_manager',
@@ -1714,11 +1728,12 @@
       const rawEntered = document.getElementById('adminSecretInput').value.trim();
       const enteredUpper = rawEntered.toUpperCase();
       const enteredLower = rawEntered.toLowerCase();
+      const cleanEntered = enteredUpper.replace(/[^A-Z0-9]/g, '');
 
       const currentMasterSecret = localStorage.getItem('shoppaza_admin_passcode') || DEFAULT_MASTER_KEY;
       const staffAccounts = getStaffAccounts();
 
-      // 1. MASTER ADMIN MATCH (Accepts: Sajid2026!#, sajid2026, admin123, sajid, or custom saved secret)
+      // 1. MASTER ADMIN MATCH (Sajid Mehmood - Full Owner Access)
       const isMasterAdmin = (
         rawEntered === currentMasterSecret ||
         enteredUpper === currentMasterSecret.toUpperCase() ||
@@ -1741,8 +1756,26 @@
         return;
       }
 
-      // 2. PROMOTER AG100 MATCH (Accepts: AG100, AG100-USER, ag100, ag100-user)
-      if (enteredUpper === 'AG100' || enteredUpper === 'AG100-USER' || enteredUpper === 'AG100USER') {
+      // 2. ASAD (TEAM MANAGER & LEAD) - Accepts: ASAD@0123, asad@0123, ASAD0123
+      if (
+        rawEntered === 'ASAD@0123' ||
+        enteredUpper === 'ASAD@0123' ||
+        enteredLower === 'asad@0123' ||
+        cleanEntered === 'ASAD0123'
+      ) {
+        loginFailedAttempts = 0;
+        sessionStorage.setItem('shoppaza_admin_auth', 'true');
+        sessionStorage.setItem('shoppaza_admin_role', 'team_manager');
+        sessionStorage.setItem('shoppaza_admin_user_name', 'Asad (Team Manager & Lead)');
+        sessionStorage.setItem('shoppaza_admin_user_title', 'Team Manager / Lead');
+        sessionStorage.removeItem('shoppaza_admin_assigned_promo');
+        unlockDashboard('team_manager');
+        showToast('Welcome Asad! Authorized in Team Manager mode.', 'success');
+        return;
+      }
+
+      // 3. PROMOTER AG100 MATCH (Accepts: AG100, AG100-USER, ag100, ag100-user)
+      if (enteredUpper === 'AG100' || enteredUpper === 'AG100-USER' || cleanEntered === 'AG100' || cleanEntered === 'AG100USER') {
         loginFailedAttempts = 0;
         sessionStorage.setItem('shoppaza_admin_auth', 'true');
         sessionStorage.setItem('shoppaza_admin_role', 'limited_promoter');
@@ -1754,8 +1787,8 @@
         return;
       }
 
-      // 3. TEAM MANAGER MATCH (Accepts: MGR-2026, MGR2026, MANAGER, mgr-2026)
-      if (enteredUpper === 'MGR-2026' || enteredUpper === 'MGR2026' || enteredUpper === 'MANAGER') {
+      // 4. TEAM MANAGER GENERIC MATCH (Accepts: MGR-2026, MGR2026, MANAGER)
+      if (enteredUpper === 'MGR-2026' || cleanEntered === 'MGR2026' || enteredUpper === 'MANAGER') {
         loginFailedAttempts = 0;
         sessionStorage.setItem('shoppaza_admin_auth', 'true');
         sessionStorage.setItem('shoppaza_admin_role', 'team_manager');
@@ -1767,14 +1800,14 @@
         return;
       }
 
-      // 4. CHECK DYNAMIC STAFF ACCOUNTS LIST
+      // 5. CHECK DYNAMIC STAFF ACCOUNTS LIST
       const matchedStaff = staffAccounts.find(s => {
         const pass = (s.passcode || '').trim().toUpperCase();
         const promo = (s.assigned_promo || '').trim().toUpperCase();
         return (
           enteredUpper === pass ||
           (promo && enteredUpper === promo) ||
-          pass.replace(/[^A-Z0-9]/g, '') === enteredUpper.replace(/[^A-Z0-9]/g, '')
+          pass.replace(/[^A-Z0-9]/g, '') === cleanEntered
         );
       });
 

@@ -1,0 +1,29 @@
+[
+  {
+    "id": "user_asad",
+    "name": "Asad (Team Manager & Lead)",
+    "passcode": "ASAD@0123",
+    "assigned_promo": "ALL",
+    "role": "team_manager",
+    "channel": "Promoter Management & Codes",
+    "created": "Active"
+  },
+  {
+    "id": "user_ag100",
+    "name": "Promoter Team (AG100)",
+    "passcode": "AG100",
+    "assigned_promo": "AG100",
+    "role": "limited_promoter",
+    "channel": "Direct Sales & TikTok Campaign",
+    "created": "Active"
+  },
+  {
+    "id": "user_manager",
+    "name": "Team Manager / Lead",
+    "passcode": "MGR-2026",
+    "assigned_promo": "ALL",
+    "role": "team_manager",
+    "channel": "Promoter Management & Codes",
+    "created": "Active"
+  }
+]

@@ -86,6 +86,10 @@
             <span class="font-bold text-emerald-600" id="confirmAmountPaid">$0.00</span>
           </div>
           <div class="flex justify-between py-1 border-b border-slate-200">
+            <span class="text-slate-500 font-sans">Applied Promo</span>
+            <span class="font-bold text-slate-800" id="confirmPromo">-</span>
+          </div>
+          <div class="flex justify-between py-1 border-b border-slate-200">
             <span class="text-slate-500 font-sans">Shipping Destination</span>
             <span class="text-slate-700 font-sans text-right" id="confirmShippingAddress">Standard Insured Delivery</span>
           </div>
@@ -196,7 +200,7 @@
 
         </div>
 
-        <!-- Right: Order Summary (5 Cols) -->
+        <!-- Right: Order Summary with DISCOUNT CODE ENGINE (5 Cols) -->
         <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-5">
           <div class="flex items-center justify-between pb-3 border-b border-slate-100">
             <h2 class="text-base font-bold text-slate-900">Your Shopping Bag</h2>
@@ -208,16 +212,46 @@
             <!-- Dynamic items rendered via JS -->
           </div>
 
+          <!-- ================= DISCOUNT / PROMO CODE INPUT SECTION ================= -->
+          <div class="pt-4 border-t border-slate-100 space-y-2">
+            <label for="discountCodeInput" class="block text-xs font-bold text-slate-700 flex items-center justify-between">
+              <span>Discount / Promo Code</span>
+              <span class="text-[10px] text-emerald-600 font-semibold cursor-pointer hover:underline" onclick="fillTestPromo('AG100')">Try: AG100</span>
+            </label>
+            <div class="flex gap-2">
+              <input type="text" id="discountCodeInput" placeholder="Enter coupon or promo code" class="flex-1 uppercase font-mono text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition">
+              <button type="button" onclick="applyDiscountCode()" class="px-5 py-2.5 bg-slate-900 hover:bg-black text-white text-xs font-bold rounded-lg transition shadow-sm flex items-center gap-1.5 flex-shrink-0">
+                <i class="fa-solid fa-tag text-[10px]"></i>
+                <span>Apply</span>
+              </button>
+            </div>
+            
+            <!-- Promo Status Message Box -->
+            <div id="promoNoticeBox" class="hidden text-xs rounded-lg p-2.5 transition"></div>
+          </div>
+
           <!-- Financial Breakdown -->
           <div class="pt-4 border-t border-slate-100 space-y-2.5 text-xs text-slate-600">
             <div class="flex justify-between">
               <span>Subtotal</span>
               <span class="font-bold text-slate-900" id="summarySubtotal">$0.00</span>
             </div>
-            <div class="flex justify-between">
-              <span>Standard Insured Tracked Delivery</span>
-              <span class="font-bold text-emerald-600 uppercase">FREE</span>
+
+            <!-- Discount Row (Visible only when applied) -->
+            <div id="summaryDiscountRow" class="hidden justify-between items-center text-emerald-700 font-semibold bg-emerald-50/70 p-2 rounded-lg border border-emerald-100">
+              <div class="flex items-center gap-1.5">
+                <i class="fa-solid fa-badge-percent"></i>
+                <span>Discount (<span id="summaryDiscountCodeTag">PROMO</span>)</span>
+                <button type="button" onclick="removeDiscountCode()" class="text-[10px] text-red-500 hover:text-red-700 underline font-normal ml-1">Remove</button>
+              </div>
+              <span class="font-mono font-bold" id="summaryDiscountAmount">-$0.00</span>
             </div>
+
+            <div class="flex justify-between">
+              <span id="summaryShippingTitle">Standard Insured Delivery</span>
+              <span class="font-bold text-emerald-600 uppercase" id="summaryShippingAmount">FREE</span>
+            </div>
+
             <div class="flex justify-between items-baseline pt-3 border-t border-slate-200 text-sm">
               <span class="font-extrabold text-slate-900">Total to Pay</span>
               <span class="font-black text-xl text-slate-950 font-mono" id="summaryGrandTotal">$0.00</span>
@@ -257,11 +291,72 @@
     const STRIPE_RESTRICTED_KEY = atob('cmtfbGl2ZV81MVVWekJwRHdsbzZnQ0thSEszSkRYbGRpSWVyNW41Z1hhMnhOUHNZZlpoQ2taU21pYVJHUDNnSk5SNUhxWmpUcEhHa1YzVE80akwwSVJCS1dMdm1uTzZjVTAwRGt4ekozQzI=');
 
     let currentCart = [];
+    let currentSubtotal = 0.00;
+    let currentDiscount = 0.00;
+    let currentShipping = 0.00;
     let currentTotal = 1.00;
-    let currentCurrency = 'USD';
+    let appliedCoupon = null;
+    let activeCouponsRegistry = [];
+
+    // Category Identification Helpers (for Promo Code logic like AG100 / SHOP100)
+    function isWigItem(item) {
+      if (!item) return false;
+      const cat = (item.category || '').toLowerCase();
+      const title = (item.title || '').toLowerCase();
+      return cat.includes('wig') || title.includes('wig');
+    }
+
+    function isJewelryItem(item) {
+      if (!item) return false;
+      if (isWigItem(item)) return false;
+      const cat = (item.category || '').toLowerCase();
+      const title = (item.title || '').toLowerCase();
+      return cat.includes('jewelry') || cat.includes('necklace') || cat.includes('pendant') ||
+             cat.includes('bracelet') || cat.includes('bangle') || cat.includes('ring') ||
+             title.includes('necklace') || title.includes('pendant') || title.includes('bracelet') ||
+             title.includes('bangle') || title.includes('ring') || title.includes('earring');
+    }
+
+    function isWatchItem(item) {
+      if (!item) return false;
+      const cat = (item.category || '').toLowerCase();
+      const title = (item.title || '').toLowerCase();
+      return cat.includes('watch') || title.includes('watch') || title.includes('chronograph');
+    }
+
+    function isBagItem(item) {
+      if (!item) return false;
+      const cat = (item.category || '').toLowerCase();
+      const title = (item.title || '').toLowerCase();
+      return cat.includes('bag') || (cat.includes('accessories') && title.includes('bag'));
+    }
+
+    function isJacketItem(item) {
+      if (!item) return false;
+      const cat = (item.category || '').toLowerCase();
+      const title = (item.title || '').toLowerCase();
+      return cat.includes('jacket') || cat.includes('outerwear') || title.includes('jacket');
+    }
+
+    function isTopOrHoodieItem(item) {
+      if (!item) return false;
+      const cat = (item.category || '').toLowerCase();
+      const title = (item.title || '').toLowerCase();
+      return cat.includes('hoodie') || cat.includes('shirt') || cat.includes('top') || 
+             title.includes('hoodie') || title.includes('fleece') || title.includes('sweatshirt') || title.includes('shirt') || title.includes('top');
+    }
+
+    // Helper for quick test promo link
+    function fillTestPromo(code) {
+      const input = document.getElementById('discountCodeInput');
+      if (input) {
+        input.value = code;
+        applyDiscountCode();
+      }
+    }
 
     // 1. Initial Load Handler
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       const urlParams = new URLSearchParams(window.location.search);
       const sessionId = urlParams.get('session_id');
       const isOrderPlaced = urlParams.get('order_placed') === 'true';
@@ -278,20 +373,54 @@
         const errMsg = document.getElementById('stripeErrorMessage');
         if (errBox && errMsg) {
           errBox.classList.remove('hidden');
-          errMsg.innerText = 'Stripe Hosted Checkout was canceled by user. Your shopping bag has been preserved, click Proceed below whenever you are ready.';
+          errMsg.innerText = 'Stripe Hosted Checkout was canceled. Your shopping bag has been preserved, click Proceed below whenever you are ready.';
         }
       }
+
+      // Load coupons from registry
+      await loadCouponsRegistry();
 
       // Load Cart & Render Launcher
       loadCartAndRender();
 
-      // If URL contains ?auto=1 or ?direct=1, trigger Stripe launch immediately
-      if (urlParams.get('auto') === '1' || urlParams.get('direct') === '1') {
-        setTimeout(() => {
-          launchStripeHostedCheckout();
-        }, 600);
+      // Check if coupon passed in URL (e.g. ?coupon=AG100 or ?promo=AG100)
+      const urlCoupon = urlParams.get('coupon') || urlParams.get('promo');
+      if (urlCoupon) {
+        const input = document.getElementById('discountCodeInput');
+        if (input) {
+          input.value = urlCoupon.toUpperCase();
+          applyDiscountCode();
+        }
+      }
+
+      // Allow enter key in promo input
+      const promoInput = document.getElementById('discountCodeInput');
+      if (promoInput) {
+        promoInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            applyDiscountCode();
+          }
+        });
       }
     });
+
+    // Load available coupons from coupons.json and localStorage
+    async function loadCouponsRegistry() {
+      try {
+        const res = await fetch('coupons.json?t=' + Date.now());
+        if (res.ok) {
+          activeCouponsRegistry = await res.json();
+        }
+      } catch (e) {}
+
+      try {
+        const local = JSON.parse(localStorage.getItem('shoppaza_coupons') || '[]');
+        if (Array.isArray(local) && local.length > 0) {
+          activeCouponsRegistry = [...local, ...activeCouponsRegistry];
+        }
+      } catch (e) {}
+    }
 
     // 2. Load Cart from Storage or fallback to Test Item
     function loadCartAndRender() {
@@ -324,29 +453,26 @@
         if (emptyHelper) emptyHelper.classList.add('hidden');
       }
 
-      // Calculate Total
+      // Calculate Subtotal
       let subtotal = 0;
       currentCart.forEach(item => {
         const p = parseFloat(item.price_usd || item.price || 1.00);
         const q = parseInt(item.qty || 1, 10);
         subtotal += p * q;
       });
+      currentSubtotal = subtotal;
 
-      if (subtotal < 0.50) subtotal = 1.00;
-      currentTotal = subtotal;
+      // Render cart items
+      renderCartItems();
 
-      // Update UI elements
+      // Recalculate totals with any active discount
+      recalculateTotals();
+    }
+
+    function renderCartItems() {
       const badge = document.getElementById('itemCountBadge');
       if (badge) badge.innerText = `${currentCart.length} item${currentCart.length > 1 ? 's' : ''}`;
 
-      const totalFmt = `$${currentTotal.toFixed(2)} USD`;
-      document.getElementById('summarySubtotal').innerText = totalFmt;
-      document.getElementById('summaryGrandTotal').innerText = totalFmt;
-
-      const btnText = document.getElementById('btnProceedText');
-      if (btnText) btnText.innerText = `Proceed to Official Stripe Checkout • ${totalFmt}`;
-
-      // Render items container
       const container = document.getElementById('cartItemsContainer');
       if (container) {
         container.innerHTML = currentCart.map(item => {
@@ -367,6 +493,165 @@
             </div>
           `;
         }).join('');
+      }
+    }
+
+    // ================= DISCOUNT / PROMO CALCULATION ENGINE =================
+    async function applyDiscountCode() {
+      const input = document.getElementById('discountCodeInput');
+      const val = (input ? input.value : '').trim().toUpperCase();
+      const msgBox = document.getElementById('promoMessageContainer');
+
+      if (!val) {
+        showPromoNotice('Please enter a voucher or promo code.', 'error');
+        return;
+      }
+
+      if (!activeCouponsRegistry || activeCouponsRegistry.length === 0) {
+        await loadCouponsRegistry();
+      }
+
+      // Fallback built-in coupons
+      const fallbacks = [
+        { code: 'AG100', type: 'free_shipping_promo', desc: '100% Free Items Promo — Customer pays only Shipping' },
+        { code: 'SHOP100', type: 'free_shipping_promo', desc: '100% Free Items Promo — Customer pays only Shipping' },
+        { code: 'GET100', type: 'free_shipping_promo', desc: '100% Free Items Promo — Customer pays only Shipping' },
+        { code: 'AH100', type: 'free_shipping_promo', desc: '100% Free Items Promo — Customer pays only Shipping' },
+        { code: 'VIPWIG', type: 'wig_tiered', tierA_usd: 34.00, tierB_usd: 38.00 },
+        { code: 'JEWELRY15', type: 'jewelry_fixed', target_usd: 15.80 },
+        { code: 'WATCH22', type: 'watch_fixed', target_usd: 22.00 },
+        { code: 'WELCOME10', type: 'percent', value: 10 },
+        { code: 'DARAZMEGA30', type: 'percent', value: 30 },
+        { code: 'SAVE50', type: 'percent', value: 50 },
+        { code: 'CRYPTO5', type: 'percent', value: 5 }
+      ];
+
+      const match = (activeCouponsRegistry || []).find(c => (c.code || '').toUpperCase() === val) || fallbacks.find(c => c.code === val);
+
+      if (!match) {
+        showPromoNotice(`Coupon code "${val}" is invalid or expired.`, 'error');
+        return;
+      }
+
+      appliedCoupon = match;
+      let successDesc = `Promo <strong>${match.code}</strong> applied!`;
+
+      if (match.type === 'free_shipping_promo' || ['AG100', 'SHOP100', 'GET100', 'AH100'].includes(match.code)) {
+        successDesc = `🎉 Promo <strong>${match.code}</strong> applied! Items are 100% FREE — Customer pays only Shipping.`;
+      } else if (match.type === 'percent') {
+        successDesc = `Discount code <strong>${match.code}</strong> applied (${match.value}% OFF)!`;
+      }
+
+      showPromoNotice(successDesc, 'success');
+      recalculateTotals();
+    }
+
+    function removeDiscountCode() {
+      appliedCoupon = null;
+      const input = document.getElementById('discountCodeInput');
+      if (input) input.value = '';
+      const msgBox = document.getElementById('promoMessageContainer');
+      if (msgBox) msgBox.classList.add('hidden');
+      recalculateTotals();
+    }
+
+    function showPromoNotice(msg, type) {
+      const box = document.getElementById('promoMessageContainer');
+      if (!box) return;
+      box.classList.remove('hidden');
+      if (type === 'success') {
+        box.className = 'text-xs rounded-lg p-2.5 bg-emerald-50 border border-emerald-200 text-emerald-800 font-medium flex items-center gap-1.5';
+        box.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> <span>${msg}</span>`;
+      } else {
+        box.className = 'text-xs rounded-lg p-2.5 bg-red-50 border border-red-200 text-red-700 font-medium flex items-center gap-1.5';
+        box.innerHTML = `<i class="fa-solid fa-circle-exclamation text-red-600"></i> <span>${msg}</span>`;
+      }
+    }
+
+    function recalculateTotals() {
+      currentDiscount = 0.00;
+      currentShipping = 0.00;
+
+      const discountRow = document.getElementById('summaryDiscountRow');
+      const discountTag = document.getElementById('summaryDiscountCodeTag');
+      const discountAmountEl = document.getElementById('summaryDiscountAmount');
+      const shippingTitle = document.getElementById('summaryShippingTitle');
+      const shippingAmountEl = document.getElementById('summaryShippingAmount');
+
+      if (appliedCoupon) {
+        if (appliedCoupon.type === 'free_shipping_promo' || ['AG100', 'SHOP100', 'GET100', 'AH100'].includes(appliedCoupon.code)) {
+          // 100% Free Items Promo
+          let promoShipTotal = 0;
+          currentCart.forEach(item => {
+            const q = parseInt(item.qty || 1, 10);
+            if (isWigItem(item)) {
+              promoShipTotal += 38.00 * q;
+            } else if (isJewelryItem(item)) {
+              promoShipTotal += 15.80 * q;
+            } else if (isWatchItem(item)) {
+              promoShipTotal += 22.00 * q;
+            } else if (isBagItem(item)) {
+              promoShipTotal += 35.00 * q;
+            } else if (isJacketItem(item)) {
+              promoShipTotal += 45.00 * q;
+            } else if (isTopOrHoodieItem(item)) {
+              // Tops, Hoodies, Shirts
+              promoShipTotal += 40.25 * q;
+            } else {
+              promoShipTotal += 41.00 * q;
+            }
+          });
+
+          currentDiscount = currentSubtotal; // 100% product price discounted
+          currentShipping = promoShipTotal;
+          currentTotal = promoShipTotal;
+
+          if (discountRow) discountRow.classList.remove('hidden');
+          if (discountTag) discountTag.innerText = appliedCoupon.code;
+          if (discountAmountEl) discountAmountEl.innerText = `-$${currentDiscount.toFixed(2)}`;
+
+          if (shippingTitle) shippingTitle.innerText = 'Standard Insured Promo Delivery';
+          if (shippingAmountEl) {
+            shippingAmountEl.innerText = `$${currentShipping.toFixed(2)}`;
+            shippingAmountEl.className = 'font-bold text-slate-900 font-mono';
+          }
+        } else if (appliedCoupon.type === 'percent') {
+          // Percentage discount (e.g. 10%, 30%)
+          currentDiscount = currentSubtotal * (parseFloat(appliedCoupon.value || 10) / 100);
+          currentShipping = 0.00;
+          currentTotal = Math.max(0.50, currentSubtotal - currentDiscount);
+
+          if (discountRow) discountRow.classList.remove('hidden');
+          if (discountTag) discountTag.innerText = `${appliedCoupon.code} (${appliedCoupon.value}%)`;
+          if (discountAmountEl) discountAmountEl.innerText = `-$${currentDiscount.toFixed(2)}`;
+
+          if (shippingTitle) shippingTitle.innerText = 'Standard Insured Tracked Delivery';
+          if (shippingAmountEl) {
+            shippingAmountEl.innerText = 'FREE';
+            shippingAmountEl.className = 'font-bold text-emerald-600 uppercase';
+          }
+        }
+      } else {
+        // No coupon applied
+        currentDiscount = 0.00;
+        currentShipping = 0.00;
+        currentTotal = Math.max(0.50, currentSubtotal);
+
+        if (discountRow) discountRow.classList.add('hidden');
+        if (shippingTitle) shippingTitle.innerText = 'Standard Insured Tracked Delivery';
+        if (shippingAmountEl) {
+          shippingAmountEl.innerText = 'FREE';
+          shippingAmountEl.className = 'font-bold text-emerald-600 uppercase';
+        }
+      }
+
+      // Update Financial breakdown UI
+      document.getElementById('summarySubtotal').innerText = `$${currentSubtotal.toFixed(2)} USD`;
+      document.getElementById('summaryGrandTotal').innerText = `$${currentTotal.toFixed(2)} USD`;
+
+      const btnText = document.getElementById('btnProceedText');
+      if (btnText) {
+        btnText.innerText = `Proceed to Official Stripe Checkout • $${currentTotal.toFixed(2)} USD`;
       }
     }
 
@@ -391,15 +676,31 @@
         params.append('mode', 'payment');
         params.append('client_reference_id', orderId);
 
-        // Add line items
-        currentCart.forEach((item, idx) => {
-          const itemPriceInCents = Math.round(parseFloat(item.price_usd || item.price || 1.00) * 100);
-          const qty = parseInt(item.qty || 1, 10);
-          params.append(`line_items[${idx}][price_data][currency]`, 'usd');
-          params.append(`line_items[${idx}][price_data][product_data][name]`, (item.title || 'Shoppaza Product').slice(0, 100));
-          params.append(`line_items[${idx}][price_data][unit_amount]`, String(itemPriceInCents));
-          params.append(`line_items[${idx}][quantity]`, String(qty));
-        });
+        // If a promo code was applied, send the adjusted promo line item
+        if (appliedCoupon && currentDiscount > 0) {
+          const promoTitle = currentCart.length === 1 
+            ? `${currentCart[0].title} (Promo ${appliedCoupon.code} Applied)`
+            : `Shoppaza Order (${currentCart.length} items - Promo ${appliedCoupon.code} Applied)`;
+
+          const totalInCents = Math.round(currentTotal * 100);
+          params.append('line_items[0][price_data][currency]', 'usd');
+          params.append('line_items[0][price_data][product_data][name]', promoTitle.slice(0, 100));
+          params.append('line_items[0][price_data][unit_amount]', String(totalInCents));
+          params.append('line_items[0][quantity]', '1');
+        } else {
+          // Standard cart items
+          currentCart.forEach((item, idx) => {
+            const itemPriceInCents = Math.round(parseFloat(item.price_usd || item.price || 1.00) * 100);
+            const qty = parseInt(item.qty || 1, 10);
+            params.append(`line_items[${idx}][price_data][currency]', 'usd`);
+            params.append(`line_items[${idx}][price_data][product_data][name]`, (item.title || 'Shoppaza Product').slice(0, 100));
+            params.append(`line_items[${idx}][price_data][unit_amount]`, String(itemPriceInCents));
+            params.append(`line_items[${idx}][quantity]`, String(qty));
+          });
+        }
+
+        // Enable native Stripe promotion codes on checkout.stripe.com
+        params.append('allow_promotion_codes', 'true');
 
         // Dynamic Shipping Address Collection on checkout.stripe.com
         const allowedCountries = ['US', 'GB', 'CA', 'AU', 'DE', 'FR', 'IT', 'ES', 'NL', 'PK', 'AE', 'SA', 'NZ', 'IE'];
@@ -416,6 +717,7 @@
 
         params.append('metadata[order_id]', orderId);
         params.append('metadata[tracking_number]', trackingNum);
+        params.append('metadata[promo_code]', appliedCoupon ? appliedCoupon.code : 'NONE');
 
         // Save pending order in localStorage for confirmation match
         const pending = {
@@ -424,6 +726,7 @@
           date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
           items: currentCart.length,
           total: `$${currentTotal.toFixed(2)} USD`,
+          promo_code: appliedCoupon ? appliedCoupon.code : 'NONE',
           payment_method: 'Official Stripe Hosted Checkout'
         };
         localStorage.setItem('shoppaza_pending_order', JSON.stringify(pending));
@@ -468,6 +771,7 @@
       let amountPaid = `$${currentTotal.toFixed(2)} USD`;
       let orderId = '#SHP-' + Math.floor(100000 + Math.random() * 900000);
       let tracking = 'GB' + Math.floor(100000000 + Math.random() * 900000000) + 'X';
+      let promoUsed = 'NONE';
 
       // Retrieve existing pending order if stored
       try {
@@ -477,6 +781,7 @@
           if (parsed.id) orderId = parsed.id;
           if (parsed.tracking) tracking = parsed.tracking;
           if (parsed.total) amountPaid = parsed.total;
+          if (parsed.promo_code) promoUsed = parsed.promo_code;
         }
       } catch (e) {}
 
@@ -497,6 +802,9 @@
           if (sessionData.amount_total) {
             amountPaid = `$${(sessionData.amount_total / 100).toFixed(2)} ${(sessionData.currency || 'USD').toUpperCase()}`;
           }
+          if (sessionData.metadata && sessionData.metadata.promo_code) {
+            promoUsed = sessionData.metadata.promo_code;
+          }
         }
       } catch (err) {
         console.warn('Could not fetch session details from Stripe:', err);
@@ -507,6 +815,7 @@
       document.getElementById('confirmOrderId').innerText = orderId;
       document.getElementById('confirmSessionId').innerText = sessionId;
       document.getElementById('confirmAmountPaid').innerText = amountPaid;
+      document.getElementById('confirmPromo').innerText = promoUsed !== 'NONE' ? promoUsed : 'Standard Store Rate';
       document.getElementById('confirmShippingAddress').innerText = shippingStr;
       document.getElementById('confirmTrackingNum').innerText = tracking;
 
@@ -520,6 +829,7 @@
             customer: customerName,
             address: shippingStr,
             total: amountPaid,
+            promo: promoUsed,
             tracking: tracking,
             status: 'Paid (Stripe Verified)',
             date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })

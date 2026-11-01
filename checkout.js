@@ -157,6 +157,18 @@ function renderShopifyCheckoutSummary() {
     const cat = (item.category || '').toLowerCase();
     return cat === 'sunglasses & eyewear' || cat.includes('sunglass') || cat.includes('eyewear');
   }
+  function isBeautyItem(item) {
+    if (!item) return false;
+    const cat = (item.category || '').toLowerCase();
+    const title = (item.title || '').toLowerCase();
+    return cat === 'beauty & cosmetics' || cat.includes('beauty') || cat.includes('cosmetic') || title.includes('lipstick') || title.includes('eyebrow');
+  }
+  function isTopItem(item) {
+    if (!item) return false;
+    const cat = (item.category || '').toLowerCase();
+    const title = (item.title || '').toLowerCase();
+    return cat === 'tops & shirts' || cat.includes('shirt') || (cat.includes('top') && !cat.includes('bottom'));
+  }
 
   let isFreeShippingPromo = false;
   let promoShippingFeeUsd = 0;
@@ -197,6 +209,17 @@ function renderShopifyCheckoutSummary() {
       } else if (isGlassesItem(item)) {
         const p = parseFloat(item.price_usd) || 90;
         const shipPerUnit = (p < 100) ? 18.00 : 20.00;
+        promoShippingFeeUsd += shipPerUnit * qty;
+        promoProductDiscountGbp += unitPriceGbp * qty;
+      } else if (isBeautyItem(item)) {
+        promoShippingFeeUsd += 20.49 * qty;
+        promoProductDiscountGbp += unitPriceGbp * qty;
+      } else if (isTopItem(item)) {
+        promoShippingFeeUsd += 40.25 * qty;
+        promoProductDiscountGbp += unitPriceGbp * qty;
+      } else {
+        const p = parseFloat(item.price_usd) || 180;
+        const shipPerUnit = (p > 300) ? 46.00 : 41.00;
         promoShippingFeeUsd += shipPerUnit * qty;
         promoProductDiscountGbp += unitPriceGbp * qty;
       }
@@ -399,9 +422,9 @@ async function applyCheckoutDiscount() {
   }
 
   if (match.type === 'free_shipping_promo' || ['AG100', 'SHOP100', 'GET100', 'AH100'].includes(match.code)) {
-    const hasEligible = (cart || []).some(item => isWigItem(item) || isJewelryItem(item) || isWatchItem(item) || isBagItem(item) || isJacketItem(item) || isGlassesItem(item));
+    const hasEligible = (cart || []).length > 0;
     if (!hasEligible) {
-      alert('Coupon code "' + match.code + '" is valid for Wigs, Jewelry, Watches, Bags, Jackets & Eyewear.');
+      alert('Please add items to your cart before applying a promo code.');
       return;
     }
   }

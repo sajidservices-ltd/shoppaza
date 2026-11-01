@@ -774,13 +774,13 @@
         <section id="panel-settings" class="hidden space-y-6">
           <div>
             <h2 class="text-2xl font-bold text-white tracking-tight">Admin Settings & Security Key</h2>
-            <p class="text-xs text-slate-400 mt-1">Manage master authentication passcodes, admin user profile, and system resets.</p>
+            <p id="settingsPageSubtitle" class="text-xs text-slate-400 mt-1">Manage master authentication passcodes, admin user profile, and system resets.</p>
           </div>
 
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             
             <!-- Change Passcode Card -->
-            <div class="p-6 rounded-2xl bg-shopify-sidebar border border-shopify-border space-y-4">
+            <div id="settingsCardMasterPasscode" class="p-6 rounded-2xl bg-shopify-sidebar border border-shopify-border space-y-4">
               <h3 class="text-sm font-bold text-white flex items-center gap-2">
                 <i class="fa-solid fa-key text-amber-400"></i> Change Master Passcode
               </h3>
@@ -806,7 +806,7 @@
             </div>
 
             <!-- Admin Profile Details -->
-            <div class="p-6 rounded-2xl bg-shopify-sidebar border border-shopify-border space-y-4">
+            <div id="settingsCardAdminProfile" class="p-6 rounded-2xl bg-shopify-sidebar border border-shopify-border space-y-4">
               <h3 class="text-sm font-bold text-white flex items-center gap-2">
                 <i class="fa-solid fa-user-shield text-indigo-400"></i> Admin Profile & Identity
               </h3>
@@ -1506,7 +1506,14 @@
               <div>
                 <div class="font-bold text-white text-xs flex flex-wrap items-center gap-2">
                   <span>${escapeHtml(a.name)}</span>
-                  ${isLimited ? `
+                  ${a.role === 'team_manager' ? `
+                    <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold text-[10px] border border-emerald-500/30 flex items-center gap-1">
+                      <i class="fa-solid fa-users-gear text-[9px]"></i> Team Manager (Lead)
+                    </span>
+                    <span class="px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-medium text-[10px] border border-indigo-500/30">
+                      Users + Coupons Access
+                    </span>
+                  ` : (isLimited ? `
                     <span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold text-[10px] border border-amber-500/30 flex items-center gap-1">
                       <i class="fa-solid fa-gift text-[9px]"></i> Promo: ${escapeHtml(promoCode)}
                     </span>
@@ -1517,7 +1524,7 @@
                     <span class="px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-semibold text-[10px] border border-indigo-500/30">
                       <i class="fa-solid fa-eye text-[9px]"></i> Store Viewer
                     </span>
-                  `}
+                  `)}
                 </div>
                 <div class="text-[11px] text-slate-400 mt-1 flex flex-wrap items-center gap-2">
                   <span>Channel: <strong class="text-slate-300">${escapeHtml(a.channel || 'Promoter Desk')}</strong></span>
@@ -1545,6 +1552,22 @@
 
     function openAddStaffModal() {
       const modal = document.getElementById('addStaffModal');
+      const role = sessionStorage.getItem('shoppaza_admin_role') || 'admin';
+      const roleSelect = document.getElementById('staffNewRole');
+
+      // If a Team Manager is logged in, they can ONLY create limited promoters (cannot create another manager or admin)
+      if (roleSelect) {
+        if (role === 'team_manager') {
+          roleSelect.innerHTML = `<option value="limited_promoter">Limited Promoter (Sirf Home Overview + Apne Promo Code ke Orders - Read Only)</option>`;
+        } else {
+          roleSelect.innerHTML = `
+            <option value="limited_promoter">Limited Promoter (Sirf Home Overview + Apne Promo Code ke Orders - Read Only)</option>
+            <option value="team_manager">Team Manager / Lead (Naye Users + Discount Codes Banane Ki Access)</option>
+            <option value="viewer">Store Staff (Puri Store ke Sabhi Orders & Catalog Read-Only)</option>
+          `;
+        }
+      }
+
       if (modal) modal.classList.remove('hidden');
     }
 
@@ -1675,20 +1698,26 @@
         return;
       }
 
-      // 2. Check Staff / Promoter Passcode
+      // 2. Check Staff / Promoter / Manager Passcode
       if (matchedStaff) {
         loginFailedAttempts = 0;
         const isLimited = (matchedStaff.role === 'limited_promoter');
+        const isManager = (matchedStaff.role === 'team_manager');
         const assignedPromo = (matchedStaff.assigned_promo || 'AG100').toUpperCase();
 
         sessionStorage.setItem('shoppaza_admin_auth', 'true');
         sessionStorage.setItem('shoppaza_admin_role', matchedStaff.role || 'limited_promoter');
         sessionStorage.setItem('shoppaza_admin_user_name', matchedStaff.name);
-        sessionStorage.setItem('shoppaza_admin_user_title', isLimited ? `Promoter (${assignedPromo})` : 'Store Staff');
-        sessionStorage.setItem('shoppaza_admin_assigned_promo', assignedPromo);
+        sessionStorage.setItem('shoppaza_admin_user_title', isLimited ? `Promoter (${assignedPromo})` : (isManager ? 'Team Manager / Lead' : 'Store Staff'));
+        
+        if (isLimited) {
+          sessionStorage.setItem('shoppaza_admin_assigned_promo', assignedPromo);
+        } else {
+          sessionStorage.removeItem('shoppaza_admin_assigned_promo');
+        }
 
         unlockDashboard(matchedStaff.role || 'limited_promoter');
-        showToast(`Welcome ${matchedStaff.name}! Authorized in ${isLimited ? `Limited Promoter [${assignedPromo}]` : 'Viewer'} mode.`, 'success');
+        showToast(`Welcome ${matchedStaff.name}! Authorized in ${isManager ? 'Team Manager' : (isLimited ? `Limited Promoter [${assignedPromo}]` : 'Viewer')} mode.`, 'success');
         return;
       }
 
@@ -1712,8 +1741,9 @@
 
     function applyRolePermissions(role) {
       const isLimited = (role === 'limited_promoter');
+      const isManager = (role === 'team_manager');
       const isViewer = (role === 'viewer');
-      const isStaff = isLimited || isViewer;
+      const isStaff = isLimited || isViewer || isManager;
 
       const viewerBanner = document.getElementById('viewerRoleBanner');
       const assignedPromo = (sessionStorage.getItem('shoppaza_admin_assigned_promo') || 'AG100').toUpperCase();
@@ -1726,14 +1756,18 @@
       const tabPayments = document.getElementById('tabBtn-payments');
       const tabSettings = document.getElementById('tabBtn-settings');
 
+      const cardMasterPasscode = document.getElementById('settingsCardMasterPasscode');
+      const cardAdminProfile = document.getElementById('settingsCardAdminProfile');
+      const settingsSubtitle = document.getElementById('settingsPageSubtitle');
+
       const quickActions = document.getElementById('quickManagementActions');
       const btnTopAddProduct = document.getElementById('btnTopAddProduct');
       const btnResetOrders = document.getElementById('btnResetOrders');
       const btnCreateManualOrder = document.getElementById('btnCreateManualOrder');
       const productActions = document.getElementById('productManagementActions');
 
-      const userName = sessionStorage.getItem('shoppaza_admin_user_name') || (isLimited ? `Promoter (${assignedPromo})` : (isViewer ? 'Store Staff' : 'Sajid Mehmood'));
-      const userTitle = sessionStorage.getItem('shoppaza_admin_user_title') || (isLimited ? `Promoter [${assignedPromo}] (Read-Only)` : (isViewer ? 'Promoter (Read-Only)' : 'Owner & Director'));
+      const userName = sessionStorage.getItem('shoppaza_admin_user_name') || (isLimited ? `Promoter (${assignedPromo})` : (isManager ? 'Team Manager' : (isViewer ? 'Store Staff' : 'Sajid Mehmood')));
+      const userTitle = sessionStorage.getItem('shoppaza_admin_user_title') || (isLimited ? `Promoter [${assignedPromo}] (Read-Only)` : (isManager ? 'Team Manager / Lead' : (isViewer ? 'Promoter (Read-Only)' : 'Owner & Director')));
 
       const bannerName = document.getElementById('bannerStaffUserName');
       if (bannerName) bannerName.innerText = userName;
@@ -1743,9 +1777,44 @@
       const avatarEl = document.getElementById('sidebarUserAvatar');
       if (nameEl) nameEl.innerText = userName;
       if (roleEl) roleEl.innerText = userTitle;
-      if (avatarEl) avatarEl.innerText = isLimited ? 'PR' : (isViewer ? 'ST' : 'SM');
+      if (avatarEl) avatarEl.innerText = isLimited ? 'PR' : (isManager ? 'MG' : (isViewer ? 'ST' : 'SM'));
 
-      if (isLimited) {
+      if (isManager) {
+        // TEAM MANAGER ROLE: Can create discount codes & sub-users, view orders. CANNOT access payments or master passcode!
+        if (viewerBanner) {
+          viewerBanner.classList.remove('hidden');
+          viewerBanner.className = 'bg-emerald-950/90 border-b border-emerald-800 px-6 py-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-emerald-200';
+          viewerBanner.innerHTML = `
+            <div class="flex items-center gap-2.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse flex-shrink-0"></span>
+              <span>Logged in as: <strong class="text-white font-bold">${escapeHtml(userName)}</strong> • <span class="text-emerald-300 font-semibold">Team Manager / Lead Portal</span> • <span class="text-emerald-200/80">Authorized to create Promoters & Discount Codes (Payments & Master Settings Locked)</span></span>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full bg-emerald-900 border border-emerald-700 font-bold text-[10px] text-emerald-300 w-max">Team Lead Mode</span>
+          `;
+        }
+        // Allow Discounts & Settings (for promoter accounts)
+        if (tabDiscounts) tabDiscounts.classList.remove('hidden');
+        if (tabSettings) tabSettings.classList.remove('hidden');
+
+        // Strictly Hide Stripe Payments, Customizer, Catalog Edit, Analytics
+        if (tabPayments) tabPayments.classList.add('hidden');
+        if (tabCustomizer) tabCustomizer.classList.add('hidden');
+        if (tabProducts) tabProducts.classList.add('hidden');
+        if (tabCustomers) tabCustomers.classList.add('hidden');
+        if (tabAnalytics) tabAnalytics.classList.add('hidden');
+
+        // Inside Settings: Hide Owner Master Passcode & Profile cards from manager
+        if (cardMasterPasscode) cardMasterPasscode.classList.add('hidden');
+        if (cardAdminProfile) cardAdminProfile.classList.add('hidden');
+        if (settingsSubtitle) settingsSubtitle.innerText = 'Create sub-users for your team and assign promo codes.';
+
+        if (quickActions) quickActions.classList.add('hidden');
+        if (btnTopAddProduct) btnTopAddProduct.classList.add('hidden');
+        if (btnResetOrders) btnResetOrders.classList.add('hidden');
+        if (btnCreateManualOrder) btnCreateManualOrder.classList.add('hidden');
+        if (productActions) productActions.classList.add('hidden');
+
+      } else if (isLimited) {
         if (viewerBanner) {
           viewerBanner.classList.remove('hidden');
           viewerBanner.className = 'bg-amber-950/90 border-b border-amber-800 px-6 py-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-amber-200';
@@ -1807,6 +1876,11 @@
         if (tabPayments) tabPayments.classList.remove('hidden');
         if (tabSettings) tabSettings.classList.remove('hidden');
 
+        // In Settings: Restore Owner cards
+        if (cardMasterPasscode) cardMasterPasscode.classList.remove('hidden');
+        if (cardAdminProfile) cardAdminProfile.classList.remove('hidden');
+        if (settingsSubtitle) settingsSubtitle.innerText = 'Manage master authentication passcodes, admin user profile, and system resets.';
+
         if (quickActions) quickActions.classList.remove('hidden');
         if (btnTopAddProduct) btnTopAddProduct.classList.remove('hidden');
         if (btnResetOrders) btnResetOrders.classList.remove('hidden');
@@ -1831,6 +1905,9 @@
       const role = sessionStorage.getItem('shoppaza_admin_role') || 'admin';
       if (role === 'limited_promoter' && tabName !== 'home' && tabName !== 'orders') {
         alert('Access Denied: You are in Limited Promoter mode and only authorized to view Home Overview and Orders.');
+        tabName = 'orders';
+      } else if (role === 'team_manager' && (tabName === 'payments' || tabName === 'customizer' || tabName === 'products' || tabName === 'customers' || tabName === 'analytics')) {
+        alert('Access Restricted: Team Managers can only access Home, Orders, Discounts, and Team Management.');
         tabName = 'orders';
       } else if (role === 'viewer' && (tabName === 'payments' || tabName === 'settings' || tabName === 'customizer' || tabName === 'discounts')) {
         alert('Access Restricted: Only the store owner can access settings or payment configurations.');
@@ -2524,8 +2601,9 @@
 
       const role = sessionStorage.getItem('shoppaza_admin_role') || 'admin';
       const isLimited = (role === 'limited_promoter');
+      const isManager = (role === 'team_manager');
       const isViewer = (role === 'viewer');
-      const isReadOnly = isLimited || isViewer;
+      const isReadOnly = isLimited || isViewer || isManager;
 
       document.getElementById('modalOrderHiddenId').value = o.id;
       document.getElementById('modalOrderId').innerText = o.id;
@@ -3426,6 +3504,7 @@
           <label class="block text-slate-400 mb-1 font-semibold">Role & Access Level</label>
           <select id="staffNewRole" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-white focus:border-emerald-500 focus:outline-none">
             <option value="limited_promoter">Limited Promoter (Sirf Home Overview + Apne Promo Code ke Orders - Read Only)</option>
+            <option value="team_manager">Team Manager / Lead (Naye Users + Discount Codes Banane Ki Access)</option>
             <option value="viewer">Store Staff (Puri Store ke Sabhi Orders & Catalog Read-Only)</option>
           </select>
           <p class="text-[11px] text-slate-500 mt-1">Limited user settings, products, payments aur doosre users ko bilkul chhed ya dekh nahi sakega.</p>

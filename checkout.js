@@ -114,8 +114,29 @@ function renderShopifyCheckoutSummary() {
     return (item.category === 'Wigs & Hair') || (item.title && item.title.toLowerCase().includes('wig'));
   }
   function isJewelryItem(item) {
-    return (item.category === 'Necklaces & Pendants') || (item.category === 'Bracelets & Bangles') || 
-           (item.title && (item.title.toLowerCase().includes('necklace') || item.title.toLowerCase().includes('bracelet') || item.title.toLowerCase().includes('bangle')));
+    if (!item) return false;
+    if (isWigItem(item)) return false;
+    const cat = (item.category || '').toLowerCase();
+    const title = (item.title || '').toLowerCase();
+    return (
+      cat === 'necklaces & pendants' ||
+      cat === 'bracelets & bangles' ||
+      cat === 'rings & bands' ||
+      cat.includes('jewelry') ||
+      cat.includes('necklace') ||
+      cat.includes('pendant') ||
+      cat.includes('bracelet') ||
+      cat.includes('bangle') ||
+      cat.includes('ring') ||
+      title.includes('necklace') ||
+      title.includes('pendant') ||
+      title.includes('bracelet') ||
+      title.includes('bangle') ||
+      title.includes('ring') ||
+      (title.includes('band') && !cat.includes('wigs') && !title.includes('wig')) ||
+      title.includes('earring') ||
+      title.includes('jewelry')
+    );
   }
   function isWatchItem(item) {
     return (item.category === 'Luxury Watches') || (item.title && (item.title.toLowerCase().includes('watch')));
@@ -297,8 +318,29 @@ async function applyCheckoutDiscount() {
     return (item.category === 'Wigs & Hair') || (item.title && item.title.toLowerCase().includes('wig'));
   }
   function isJewelryItem(item) {
-    return (item.category === 'Necklaces & Pendants') || (item.category === 'Bracelets & Bangles') || 
-           (item.title && (item.title.toLowerCase().includes('necklace') || item.title.toLowerCase().includes('bracelet') || item.title.toLowerCase().includes('bangle')));
+    if (!item) return false;
+    if (isWigItem(item)) return false;
+    const cat = (item.category || '').toLowerCase();
+    const title = (item.title || '').toLowerCase();
+    return (
+      cat === 'necklaces & pendants' ||
+      cat === 'bracelets & bangles' ||
+      cat === 'rings & bands' ||
+      cat.includes('jewelry') ||
+      cat.includes('necklace') ||
+      cat.includes('pendant') ||
+      cat.includes('bracelet') ||
+      cat.includes('bangle') ||
+      cat.includes('ring') ||
+      title.includes('necklace') ||
+      title.includes('pendant') ||
+      title.includes('bracelet') ||
+      title.includes('bangle') ||
+      title.includes('ring') ||
+      (title.includes('band') && !cat.includes('wigs') && !title.includes('wig')) ||
+      title.includes('earring') ||
+      title.includes('jewelry')
+    );
   }
   function isWatchItem(item) {
     return (item.category === 'Luxury Watches') || (item.title && (item.title.toLowerCase().includes('watch')));

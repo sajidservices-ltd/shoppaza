@@ -125,7 +125,7 @@ function renderShopifyCheckoutSummary() {
   let promoShippingFeeUsd = 0;
   let promoProductDiscountGbp = 0;
 
-  if (drawerAppliedCoupon && (drawerAppliedCoupon.type === 'free_shipping_promo' || drawerAppliedCoupon.code === 'AG100' || drawerAppliedCoupon.type === 'wig_tiered' || drawerAppliedCoupon.type === 'jewelry_fixed' || drawerAppliedCoupon.type === 'watch_fixed')) {
+  if (drawerAppliedCoupon && (drawerAppliedCoupon.type === 'free_shipping_promo' || ['AG100', 'SHOP100', 'GET100', 'AH100'].includes(drawerAppliedCoupon.code) || drawerAppliedCoupon.type === 'wig_tiered' || drawerAppliedCoupon.type === 'jewelry_fixed' || drawerAppliedCoupon.type === 'watch_fixed')) {
     isFreeShippingPromo = true;
     cart.forEach(item => {
       const qty = parseInt(item.qty, 10) || 1;
@@ -281,7 +281,10 @@ async function applyCheckoutDiscount() {
   } catch(e) {}
 
   const fallbacks = [
-    { code: 'AG100', type: 'free_shipping_promo', desc: '100% Free Items Promo — Customer pays only Shipping' }
+    { code: 'AG100', type: 'free_shipping_promo', desc: '100% Free Items Promo — Customer pays only Shipping (Wigs $34/$38, Jewelry $15.80, Watches $22.00)' },
+    { code: 'SHOP100', type: 'free_shipping_promo', desc: '100% Free Items Promo — Customer pays only Shipping (Wigs $34/$38, Jewelry $15.80, Watches $22.00)' },
+    { code: 'GET100', type: 'free_shipping_promo', desc: '100% Free Items Promo — Customer pays only Shipping (Wigs $34/$38, Jewelry $15.80, Watches $22.00)' },
+    { code: 'AH100', type: 'free_shipping_promo', desc: '100% Free Items Promo — Customer pays only Shipping (Wigs $34/$38, Jewelry $15.80, Watches $22.00)' }
   ];
 
   const match = (registry || []).find(c => c.code.toUpperCase() === codeVal) || fallbacks.find(c => c.code === codeVal);
@@ -301,7 +304,7 @@ async function applyCheckoutDiscount() {
     return (item.category === 'Luxury Watches') || (item.title && (item.title.toLowerCase().includes('watch')));
   }
 
-  if (match.type === 'free_shipping_promo' || match.code === 'AG100') {
+  if (match.type === 'free_shipping_promo' || ['AG100', 'SHOP100', 'GET100', 'AH100'].includes(match.code)) {
     const hasEligible = (cart || []).some(item => isWigItem(item) || isJewelryItem(item) || isWatchItem(item));
     if (!hasEligible) {
       alert('Coupon code "' + match.code + '" is valid for Wigs, Jewelry, and Luxury Watches.');
@@ -316,8 +319,8 @@ async function applyCheckoutDiscount() {
   if (msgEl) {
     msgEl.classList.remove('hidden');
     let msgText = 'Coupon ' + match.code + ' applied!';
-    if (match.type === 'free_shipping_promo' || match.code === 'AG100') {
-      msgText = '🎉 Promo ' + match.code + ' applied! Items 100% FREE — Customer pays only Shipping!';
+    if (match.type === 'free_shipping_promo' || ['AG100', 'SHOP100', 'GET100', 'AH100'].includes(match.code)) {
+      msgText = '🎉 Promo ' + match.code + ' applied! Items 100% FREE — Customer pays only Shipping (Wigs $34/$38, Jewelry $15.80, Watches $22.00)!';
     } else if (match.type === 'percent') {
       msgText = 'Coupon ' + match.code + ' applied (' + (match.value || 10) + '% OFF)!';
     }

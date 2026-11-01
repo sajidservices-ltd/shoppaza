@@ -1475,19 +1475,26 @@
         });
       }
 
-      // 2. Ensure AG100 promoter account is always available on all browsers
-      const hasAg100 = accounts.some(a => (a.assigned_promo || '').toUpperCase() === 'AG100' || (a.passcode || '').toUpperCase().includes('AG100'));
-      if (!hasAg100) {
-        accounts.push({
-          id: 'user_ag100',
-          name: 'Promoter Team (AG100)',
-          passcode: 'AG100',
-          assigned_promo: 'AG100',
-          role: 'limited_promoter',
-          channel: 'Direct Sales & TikTok Campaign',
-          created: 'Active'
-        });
-      }
+      // 2. Ensure promoter accounts (AG100, SHOP100, GET100, AH100) are available
+      [
+        { id: 'user_ag100', name: 'Promoter Team (AG100)', code: 'AG100' },
+        { id: 'user_shop100', name: 'Promoter Team (SHOP100)', code: 'SHOP100' },
+        { id: 'user_get100', name: 'Promoter Team (GET100)', code: 'GET100' },
+        { id: 'user_ah100', name: 'Promoter Team (AH100)', code: 'AH100' }
+      ].forEach(p => {
+        const exists = accounts.some(a => (a.assigned_promo || '').toUpperCase() === p.code || (a.passcode || '').toUpperCase().includes(p.code));
+        if (!exists) {
+          accounts.push({
+            id: p.id,
+            name: p.name,
+            passcode: p.code,
+            assigned_promo: p.code,
+            role: 'limited_promoter',
+            channel: 'Direct Sales & Campaign',
+            created: 'Active'
+          });
+        }
+      });
 
       // 3. Ensure generic Team Manager account is available
       const hasManager = accounts.some(a => (a.passcode || '').toUpperCase() === 'MGR-2026');
@@ -1774,16 +1781,18 @@
         return;
       }
 
-      // 3. PROMOTER AG100 MATCH (Accepts: AG100, AG100-USER, ag100, ag100-user)
-      if (enteredUpper === 'AG100' || enteredUpper === 'AG100-USER' || cleanEntered === 'AG100' || cleanEntered === 'AG100USER') {
+      // 3. PROMOTER PROMO CODE MATCH (Accepts: AG100, SHOP100, GET100, AH100)
+      const directPromoCodes = ['AG100', 'SHOP100', 'GET100', 'AH100'];
+      const matchedDirectPromo = directPromoCodes.find(p => enteredUpper === p || enteredUpper === p + '-USER' || cleanEntered === p || cleanEntered === p + 'USER');
+      if (matchedDirectPromo) {
         loginFailedAttempts = 0;
         sessionStorage.setItem('shoppaza_admin_auth', 'true');
         sessionStorage.setItem('shoppaza_admin_role', 'limited_promoter');
-        sessionStorage.setItem('shoppaza_admin_user_name', 'Promoter Team (AG100)');
-        sessionStorage.setItem('shoppaza_admin_user_title', 'Promoter [AG100] (Read-Only)');
-        sessionStorage.setItem('shoppaza_admin_assigned_promo', 'AG100');
+        sessionStorage.setItem('shoppaza_admin_user_name', 'Promoter Team (' + matchedDirectPromo + ')');
+        sessionStorage.setItem('shoppaza_admin_user_title', 'Promoter [' + matchedDirectPromo + '] (Read-Only)');
+        sessionStorage.setItem('shoppaza_admin_assigned_promo', matchedDirectPromo);
         unlockDashboard('limited_promoter');
-        showToast('Welcome! Authenticated in Limited Promoter [AG100] mode.', 'success');
+        showToast('Welcome! Authenticated in Limited Promoter [' + matchedDirectPromo + '] mode.', 'success');
         return;
       }
 
@@ -2970,7 +2979,10 @@
 
       const storedCoupons = JSON.parse(localStorage.getItem('shoppaza_coupons') || '[]');
       const defaultCoupons = [
-        { code: 'AG100', type: 'free_shipping_promo', discount: '100% Free Items (Shipping Only)', uses: '0 Used', status: 'Active', desc: 'Customer pays only Shipping (Wigs $34/$38, Jewelry $15.80, Watches $22.00 per item)' }
+        { code: 'AG100', type: 'free_shipping_promo', discount: '100% Free Items (Shipping Only)', uses: '0 Used', status: 'Active', desc: 'Customer pays only Shipping (Wigs $34/$38, Jewelry $15.80, Watches $22.00 per item)' },
+        { code: 'SHOP100', type: 'free_shipping_promo', discount: '100% Free Items (Shipping Only)', uses: '0 Used', status: 'Active', desc: 'Customer pays only Shipping (Wigs $34/$38, Jewelry $15.80, Watches $22.00 per item)' },
+        { code: 'GET100', type: 'free_shipping_promo', discount: '100% Free Items (Shipping Only)', uses: '0 Used', status: 'Active', desc: 'Customer pays only Shipping (Wigs $34/$38, Jewelry $15.80, Watches $22.00 per item)' },
+        { code: 'AH100', type: 'free_shipping_promo', discount: '100% Free Items (Shipping Only)', uses: '0 Used', status: 'Active', desc: 'Customer pays only Shipping (Wigs $34/$38, Jewelry $15.80, Watches $22.00 per item)' }
       ];
 
       const map = new Map();

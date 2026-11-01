@@ -18,6 +18,33 @@
     "created": "Active"
   },
   {
+    "id": "user_shop100",
+    "name": "Promoter Team (SHOP100)",
+    "passcode": "SHOP100",
+    "assigned_promo": "SHOP100",
+    "role": "limited_promoter",
+    "channel": "Direct Sales & Campaign",
+    "created": "Active"
+  },
+  {
+    "id": "user_get100",
+    "name": "Promoter Team (GET100)",
+    "passcode": "GET100",
+    "assigned_promo": "GET100",
+    "role": "limited_promoter",
+    "channel": "Direct Sales & Campaign",
+    "created": "Active"
+  },
+  {
+    "id": "user_ah100",
+    "name": "Promoter Team (AH100)",
+    "passcode": "AH100",
+    "assigned_promo": "AH100",
+    "role": "limited_promoter",
+    "channel": "Direct Sales & Campaign",
+    "created": "Active"
+  },
+  {
     "id": "user_manager",
     "name": "Team Manager / Lead",
     "passcode": "MGR-2026",

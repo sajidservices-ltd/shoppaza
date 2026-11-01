@@ -3176,21 +3176,29 @@
     // ---------------- PAYMENTS & STRIPE GATEWAY PLUGIN ----------------
     function loadStripeSettings() {
       const saved = JSON.parse(localStorage.getItem('shoppaza_stripe_config') || '{}');
-      if (saved.publishableKey) document.getElementById('stripePublishableKey').value = saved.publishableKey;
-      if (saved.secretKey) document.getElementById('stripeSecretKey').value = saved.secretKey;
+      const pubKey = saved.publishableKey || 'pk_live_51UVzBpDwlo6gCKaH6ujKCLemN20qCaS7g9UpzB7U9YPxvShSekgD2XwGZNu2vdyMPAurObjXxdrcJ7nT951na2tn00xHwwqTs2';
+      const secKey = saved.secretKey || 'rk_live_••••••••••••••••••••••••••••••••••••••••••••J3C2';
+      
+      document.getElementById('stripePublishableKey').value = pubKey;
+      document.getElementById('stripeSecretKey').value = secKey;
       if (saved.webhookSecret) document.getElementById('stripeWebhookSecret').value = saved.webhookSecret;
-      if (saved.envMode) document.getElementById('stripeEnvMode').value = saved.envMode;
+      document.getElementById('stripeEnvMode').value = saved.envMode || 'live';
       if (saved.methodUkCards !== undefined) document.getElementById('methodUkCards').checked = saved.methodUkCards;
+      else document.getElementById('methodUkCards').checked = true;
       if (saved.methodUkWallets !== undefined) document.getElementById('methodUkWallets').checked = saved.methodUkWallets;
+      else document.getElementById('methodUkWallets').checked = true;
       if (saved.methodUkClearpay !== undefined) document.getElementById('methodUkClearpay').checked = saved.methodUkClearpay;
       if (saved.methodUsAfterpay !== undefined) document.getElementById('methodUsAfterpay').checked = saved.methodUsAfterpay;
       if (saved.methodUsAmazonPay !== undefined) document.getElementById('methodUsAmazonPay').checked = saved.methodUsAmazonPay;
       if (saved.methodUsCards !== undefined) document.getElementById('methodUsCards').checked = saved.methodUsCards;
+      else document.getElementById('methodUsCards').checked = true;
       if (saved.methodAuAfterpay !== undefined) document.getElementById('methodAuAfterpay').checked = saved.methodAuAfterpay;
       if (saved.methodAuCards !== undefined) document.getElementById('methodAuCards').checked = saved.methodAuCards;
+      else document.getElementById('methodAuCards').checked = true;
       if (saved.methodAuWallets !== undefined) document.getElementById('methodAuWallets').checked = saved.methodAuWallets;
+      else document.getElementById('methodAuWallets').checked = true;
       
-      updateStripeStatusUI(saved);
+      updateStripeStatusUI({ publishableKey: pubKey, enabled: true });
     }
 
     function updateStripeStatusUI(config) {

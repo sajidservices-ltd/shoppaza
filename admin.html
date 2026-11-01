@@ -968,9 +968,9 @@
                     <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold">Primary</span>
                   </div>
                   <div class="space-y-2 text-slate-300">
-                    <label class="flex items-center justify-between">
+                    <label class="flex items-center justify-between cursor-pointer">
                       <span>Visa, Mastercard, Amex</span>
-                      <input type="checkbox" id="methodUkCards" checked disabled class="accent-emerald-500">
+                      <input type="checkbox" id="methodUkCards" checked class="accent-emerald-500">
                     </label>
                     <label class="flex items-center justify-between cursor-pointer">
                       <span>Apple Pay & Google Pay</span>
@@ -3012,9 +3012,15 @@
       if (saved.secretKey) document.getElementById('stripeSecretKey').value = saved.secretKey;
       if (saved.webhookSecret) document.getElementById('stripeWebhookSecret').value = saved.webhookSecret;
       if (saved.envMode) document.getElementById('stripeEnvMode').value = saved.envMode;
+      if (saved.methodUkCards !== undefined) document.getElementById('methodUkCards').checked = saved.methodUkCards;
+      if (saved.methodUkWallets !== undefined) document.getElementById('methodUkWallets').checked = saved.methodUkWallets;
+      if (saved.methodUkClearpay !== undefined) document.getElementById('methodUkClearpay').checked = saved.methodUkClearpay;
       if (saved.methodUsAfterpay !== undefined) document.getElementById('methodUsAfterpay').checked = saved.methodUsAfterpay;
       if (saved.methodUsAmazonPay !== undefined) document.getElementById('methodUsAmazonPay').checked = saved.methodUsAmazonPay;
+      if (saved.methodUsCards !== undefined) document.getElementById('methodUsCards').checked = saved.methodUsCards;
       if (saved.methodAuAfterpay !== undefined) document.getElementById('methodAuAfterpay').checked = saved.methodAuAfterpay;
+      if (saved.methodAuCards !== undefined) document.getElementById('methodAuCards').checked = saved.methodAuCards;
+      if (saved.methodAuWallets !== undefined) document.getElementById('methodAuWallets').checked = saved.methodAuWallets;
       
       updateStripeStatusUI(saved);
     }

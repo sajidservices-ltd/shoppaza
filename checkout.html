@@ -337,140 +337,11 @@
             </div>
           </div>
 
-          <!-- ================= 6. BILLING ADDRESS (SEPARATE OR SAME) ================= -->
-            <div class="pt-3 space-y-3">
-              <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Billing address</h3>
-
-              <div class="rounded-lg border border-slate-300 divide-y divide-slate-200 overflow-hidden text-xs">
-                
-                <!-- Same as shipping (Default) -->
-                <label class="p-3.5 flex items-center gap-3 cursor-pointer hover:bg-slate-50 transition" onclick="toggleBillingFields(false)">
-                  <input type="radio" name="billingChoice" value="same" id="billingChoiceSame" checked class="w-4 h-4 text-shopify-link focus:ring-0 border-slate-300">
-                  <span class="font-semibold text-slate-800">Same as shipping address</span>
-                </label>
-
-                <!-- Different billing address (Custom) -->
-                <div>
-                  <label class="p-3.5 flex items-center gap-3 cursor-pointer hover:bg-slate-50 transition" onclick="toggleBillingFields(true)">
-                    <input type="radio" name="billingChoice" value="different" id="billingChoiceDifferent" class="w-4 h-4 text-shopify-link focus:ring-0 border-slate-300">
-                    <span class="font-semibold text-slate-800">Use a different billing address</span>
-                  </label>
-
-                  <!-- Expanded Separate Billing Address Fields -->
-                  <div id="separateBillingFields" class="hidden p-4 bg-slate-50/80 border-t border-slate-200 space-y-3">
-                    <div>
-                      <label class="block text-[11px] font-semibold text-slate-500 uppercase mb-1">Billing Country / Region</label>
-                      <select id="billCountry" class="shopify-select bg-white">
-                        <option value="GB">United Kingdom</option>
-                        <option value="US">United States</option>
-                        <option value="AU">Australia</option>
-                        <option value="DE">Germany</option>
-                        <option value="FR">France</option>
-                        <option value="CA">Canada</option>
-                        <option value="PK">Pakistan</option>
-                        <option value="AE">United Arab Emirates</option>
-                      </select>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div>
-                        <input type="text" id="billFirstName" placeholder="First name" class="shopify-input bg-white">
-                      </div>
-                      <div>
-                        <input type="text" id="billLastName" placeholder="Last name" class="shopify-input bg-white">
-                      </div>
-                    </div>
-
-                    <div class="relative" id="billAddressWrapper">
-                      <input type="text" id="billAddress" placeholder="Billing Street Address" class="shopify-input bg-white pr-9" autocomplete="off">
-                      <div class="absolute right-3 top-3.5 text-slate-400 text-xs pointer-events-none">
-                        <i class="fa-solid fa-magnifying-glass" id="billAddressSearchIcon"></i>
-                      </div>
-                      <div id="billAddressSuggestionsDropdown" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border border-slate-300 rounded-xl shadow-2xl z-50 overflow-hidden divide-y divide-slate-100 max-h-64 overflow-y-auto"></div>
-                    </div>
-
-                    <div>
-                      <input type="text" id="billApartment" placeholder="Apartment, suite, etc. (optional)" class="shopify-input bg-white">
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                      <div>
-                        <input type="text" id="billCity" placeholder="City / Suburb" class="shopify-input bg-white">
-                      </div>
-                      <div>
-                        <input type="text" id="billState" placeholder="State / Territory" class="shopify-input bg-white">
-                      </div>
-                      <div>
-                        <input type="text" id="billPostcode" placeholder="Postcode / ZIP" class="shopify-input bg-white uppercase">
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-
-          </div>
-
-          <!-- ================= 6.5 MOBILE INLINE ORDER SUMMARY & DISCOUNT CODE (Shopify Mobile Standard) ================= -->
-          <div class="lg:hidden pt-4 border-t border-slate-200 space-y-4" id="mobileInlineSummarySection">
-            <div class="flex items-center justify-between cursor-pointer py-1" onclick="toggleMobileInlineSummary()">
-              <h3 class="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
-                <span>Order summary</span>
-              </h3>
-              <i id="mobileInlineSummaryChevron" class="fa-solid fa-chevron-up text-xs text-slate-500 transition-transform"></i>
-            </div>
-
-            <div id="mobileInlineSummaryContent" class="space-y-4">
-              <!-- Cart Items List (Mobile) -->
-              <div id="mobileInlineCartItemsList" class="space-y-3 max-h-[300px] overflow-y-auto pr-1">
-                <!-- Injected via JS -->
-              </div>
-
-              <!-- Discount Code Input Box (Exact Shopify Screenshot Placement) -->
-              <div class="pt-2">
-                <div class="flex gap-2">
-                  <input type="text" id="mobileInlineDiscountInput" placeholder="Discount code" class="shopify-input uppercase font-mono text-sm flex-1 bg-white">
-                  <button type="button" onclick="applyDiscount('mobileInline')" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-md text-xs font-bold transition">Apply</button>
-                </div>
-                <div id="mobileInlineDiscountSuccessMessage" class="hidden text-xs text-emerald-700 font-bold flex items-center gap-1.5 mt-2">
-                  <i class="fa-solid fa-tag"></i> <span>Promo code applied successfully!</span>
-                </div>
-              </div>
-
-              <!-- Price Breakdown -->
-              <div class="space-y-2.5 text-xs text-slate-600 pt-3 border-t border-shopify-border">
-                <div class="flex justify-between">
-                  <span>Subtotal</span>
-                  <span class="font-bold text-slate-900 font-mono text-sm" id="mobileInlineSubtotal">£0.00</span>
-                </div>
-                <div class="flex justify-between items-center">
-                  <span class="flex items-center gap-1.5">
-                    <span>Shipping</span>
-                    <i class="fa-regular fa-circle-question text-slate-400 text-[10px]" title="Tracked delivery"></i>
-                  </span>
-                  <span class="font-bold text-emerald-700 uppercase" id="mobileInlineShipping">Free</span>
-                </div>
-                <div id="mobileInlineDiscountRow" class="hidden justify-between text-emerald-700 font-semibold">
-                  <span class="flex items-center gap-1"><i class="fa-solid fa-tag text-xs"></i> Discount</span>
-                  <span id="mobileInlineDiscountAmount">-£0.00</span>
-                </div>
-                <div class="flex justify-between items-baseline pt-2.5 border-t border-shopify-border">
-                  <span class="text-sm font-bold text-slate-900">Total</span>
-                  <div class="text-right">
-                    <span class="text-[10px] text-slate-400 font-mono mr-1" id="mobileInlineCurrencyCode">GBP</span>
-                    <span class="text-lg font-black text-slate-900 font-mono" id="mobileInlineTotal">£0.00</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <!-- ================= 7. PAY NOW SUBMIT BUTTON ================= -->
           <div class="pt-2 space-y-4">
             <button type="submit" id="btnShopifyPayNow" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-extrabold text-sm uppercase tracking-wider rounded-lg shadow-lg shadow-emerald-600/30 transition flex items-center justify-center gap-2 cursor-pointer">
             <i class="fa-solid fa-lock text-emerald-200"></i>
-            <span id="btnPayNowText">Proceed to Official Stripe Checkout • £0.00</span>
+            <span id="btnPayNowText">Proceed to Official Stripe Checkout</span>
             <i class="fa-solid fa-arrow-right text-xs"></i>
           </button>
 
@@ -1278,7 +1149,7 @@
       const totalStr = document.getElementById('desktopSummaryFinalTotal')?.innerText || '£0.00';
       if (opt === 'afterpay') btnText.innerText = `Pay with Afterpay • ${totalStr}`;
       else if (opt === 'crypto') btnText.innerText = `Transfer USDT • ${totalStr}`;
-      else btnText.innerText = `Proceed to Official Stripe Checkout • ${grandTotalStr}`;
+      else btnText.innerText = `Proceed to Official Stripe Checkout • ${fmtTotal}`;
     }
 
     function selectExpressMethod(type) {
@@ -1783,7 +1654,7 @@
         const checkedOpt = document.querySelector('input[name="paymentOption"]:checked')?.value || 'card';
         if (checkedOpt === 'afterpay') btnText.innerText = `Pay with Afterpay • ${fmtTotal}`;
         else if (checkedOpt === 'crypto') btnText.innerText = `Transfer USDT • ${fmtTotal}`;
-        else btnText.innerText = `Proceed to Official Stripe Checkout • ${grandTotalStr}`;
+        else btnText.innerText = `Proceed to Official Stripe Checkout • ${fmtTotal}`;
       }
 
       // Update Afterpay installments
@@ -1929,6 +1800,12 @@
         params.append('line_items[0][price_data][product_data][name]', orderSummaryTitle.slice(0, 100));
         params.append('line_items[0][price_data][unit_amount]', String(amountInCents));
         params.append('line_items[0][quantity]', '1');
+
+        // Dynamic Shipping Address Collection on checkout.stripe.com
+        const allowedCountries = ['US', 'GB', 'CA', 'AU', 'DE', 'FR', 'IT', 'ES', 'NL', 'PK', 'AE', 'SA'];
+        allowedCountries.forEach((c, idx) => {
+          params.append(`shipping_address_collection[allowed_countries][${idx}]`, c);
+        });
 
         params.append('success_url', `https://shoppaza.com/checkout.html?session_id={CHECKOUT_SESSION_ID}&order_placed=true`);
         params.append('cancel_url', `https://shoppaza.com/checkout.html?payment_canceled=true`);

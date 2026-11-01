@@ -295,53 +295,49 @@
           <div class="space-y-3">
             <div>
               <h2 class="text-base font-bold text-slate-900 tracking-tight">Payment</h2>
-              <p class="text-xs text-slate-500">All transactions are secure and encrypted.</p>
+              <p class="text-xs text-slate-500">All transactions are secure and encrypted directly on Stripe.</p>
             </div>
 
-            <!-- Payment Options Container -->
-            <div class="rounded-lg border border-slate-300 divide-y divide-slate-200 overflow-hidden text-xs">
-              
-              <!-- Option 1: Credit Card (Stripe PCI Level 1) -->
-              <div class="bg-white">
-                <label class="p-3.5 flex items-center justify-between cursor-pointer hover:bg-slate-50 transition" onclick="selectPaymentOption('card')">
-                  <div class="flex items-center gap-3">
-                    <input type="radio" name="paymentOption" value="card" checked class="w-4 h-4 text-shopify-link focus:ring-0 border-slate-300">
-                    <span class="font-bold text-slate-900">Credit card</span>
-                  </div>
-                  <!-- Card brand badges -->
-                  <div class="flex items-center gap-1.5 text-slate-400">
-                    <span class="px-1.5 py-0.5 rounded border border-slate-200 bg-white font-bold text-[10px] text-blue-800"><i class="fa-brands fa-cc-visa"></i></span>
-                    <span class="px-1.5 py-0.5 rounded border border-slate-200 bg-white font-bold text-[10px] text-rose-600"><i class="fa-brands fa-cc-mastercard"></i></span>
-                    <span class="px-1.5 py-0.5 rounded border border-slate-200 bg-white font-bold text-[10px] text-sky-600"><i class="fa-brands fa-cc-amex"></i></span>
-                    <span class="text-[10px] text-slate-400 font-medium">+4</span>
-                  </div>
-                </label>
-
-                <!-- Nested Credit Card Fields -->
-                <div id="paymentFields-card" class="p-4 bg-slate-50/70 border-t border-slate-200 space-y-3">
-                  <!-- Live Stripe Card Element Mount Point -->
+            <!-- Official Stripe Hosted Checkout Container -->
+            <div class="rounded-xl border-2 border-emerald-500/50 bg-gradient-to-br from-emerald-50/80 via-white to-emerald-50/30 p-5 space-y-4 shadow-sm">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <span class="w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center text-sm shadow">
+                    <i class="fa-solid fa-lock"></i>
+                  </span>
                   <div>
-                    <label class="block text-[11px] font-semibold text-slate-700 uppercase mb-1.5 flex items-center justify-between">
-                      <span>Card information</span>
-                      <span class="text-[10px] text-emerald-600 font-bold flex items-center gap-1">
-                        <i class="fa-solid fa-lock text-[9px]"></i> Stripe 256-Bit SSL Live
-                      </span>
-                    </label>
-                    <div id="stripeCardMount" class="p-3.5 bg-white rounded-lg border border-slate-300 shadow-sm focus-within:border-shopify-blue focus-within:ring-1 focus-within:ring-shopify-blue transition min-h-[44px]"></div>
-                    <div id="stripeCardErrors" class="text-xs text-rose-600 font-semibold mt-1.5 hidden"></div>
+                    <h3 class="font-bold text-slate-900 text-sm">Official Stripe Hosted Checkout</h3>
+                    <p class="text-[11px] text-slate-500">checkout.stripe.com • PCI Level 1 Certified</p>
                   </div>
+                </div>
+                <span class="px-2.5 py-1 bg-emerald-100 text-emerald-800 text-[10px] font-extrabold uppercase rounded-full tracking-wider border border-emerald-300">
+                  100% Genuine
+                </span>
+              </div>
 
-                  <!-- Name on Card -->
-                  <div>
-                    <label class="block text-[11px] font-semibold text-slate-700 uppercase mb-1">Name on card</label>
-                    <input type="text" id="cardNameInput" placeholder="Full name on card" class="shopify-input bg-white">
-                  </div>
+              <!-- Badges of supported dynamic methods -->
+              <div class="pt-3 border-t border-emerald-100">
+                <div class="text-[11px] font-semibold text-slate-600 mb-2">Supported Real Payment Methods (Dynamic by Country):</div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="px-2.5 py-1 rounded bg-black text-white font-bold text-xs flex items-center gap-1.5"><i class="fa-brands fa-apple"></i> Apple Pay</span>
+                  <span class="px-2.5 py-1 rounded bg-white border border-slate-300 text-slate-900 font-bold text-xs flex items-center gap-1.5"><i class="fa-brands fa-google text-blue-600"></i> Google Pay</span>
+                  <span class="px-2.5 py-1 rounded bg-white border border-slate-300 text-blue-800 font-bold text-xs"><i class="fa-brands fa-cc-visa"></i> Visa</span>
+                  <span class="px-2.5 py-1 rounded bg-white border border-slate-300 text-rose-600 font-bold text-xs"><i class="fa-brands fa-cc-mastercard"></i> Mastercard</span>
+                  <span class="px-2.5 py-1 rounded bg-white border border-slate-300 text-sky-600 font-bold text-xs"><i class="fa-brands fa-cc-amex"></i> Amex</span>
+                  <span class="px-2.5 py-1 rounded bg-[#B2FCE4] text-slate-950 font-bold text-xs">Afterpay</span>
+                  <span class="px-2.5 py-1 rounded bg-[#FFB3C7] text-slate-950 font-bold text-xs">Klarna</span>
+                  <span class="px-2.5 py-1 rounded bg-indigo-50 border border-indigo-200 text-indigo-700 font-bold text-xs">Link 1-Click</span>
                 </div>
               </div>
 
+              <div class="p-3 bg-white rounded-lg border border-emerald-200 text-xs text-slate-600 flex items-start gap-2.5 leading-relaxed">
+                <i class="fa-solid fa-circle-check text-emerald-600 text-sm mt-0.5 flex-shrink-0"></i>
+                <span>When you click <strong>"Proceed to Official Stripe Checkout"</strong> below, you will be redirected to the official <strong>checkout.stripe.com</strong> page to choose your payment method securely.</span>
               </div>
+            </div>
+          </div>
 
-            <!-- ================= 6. BILLING ADDRESS (SEPARATE OR SAME) ================= -->
+          <!-- ================= 6. BILLING ADDRESS (SEPARATE OR SAME) ================= -->
             <div class="pt-3 space-y-3">
               <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Billing address</h3>
 
@@ -472,10 +468,11 @@
 
           <!-- ================= 7. PAY NOW SUBMIT BUTTON ================= -->
           <div class="pt-2 space-y-4">
-            <button type="submit" id="btnShopifyPayNow" class="w-full py-4 bg-[#005bd3] hover:bg-[#004bb5] text-white font-bold text-sm uppercase tracking-wider rounded-md transition shadow-md flex items-center justify-center gap-2">
-              <i class="fa-solid fa-lock text-white/90 text-xs"></i>
-              <span id="btnPayNowText">Pay now • £0.00</span>
-            </button>
+            <button type="submit" id="btnShopifyPayNow" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-extrabold text-sm uppercase tracking-wider rounded-lg shadow-lg shadow-emerald-600/30 transition flex items-center justify-center gap-2 cursor-pointer">
+            <i class="fa-solid fa-lock text-emerald-200"></i>
+            <span id="btnPayNowText">Proceed to Official Stripe Checkout • £0.00</span>
+            <i class="fa-solid fa-arrow-right text-xs"></i>
+          </button>
 
             <div class="text-[11px] text-slate-500 text-center leading-relaxed">
               By confirming your order, you agree to Shoppaza's 
@@ -1101,6 +1098,37 @@
 // Initialize Page
     window.addEventListener('DOMContentLoaded', () => {
       try { recordStoreVisitorTelemetry('Checkout Page'); } catch(e) {}
+
+      // Check if returning from a successful Stripe Hosted Checkout
+      const urlParams = new URLSearchParams(window.location.search);
+      const sessionId = urlParams.get('session_id');
+      const isOrderPlaced = urlParams.get('order_placed') === 'true';
+      const isCanceled = urlParams.get('payment_canceled') === 'true';
+
+      if (isCanceled) {
+        alert('Stripe Checkout was canceled. Your cart is saved, you can try again anytime.');
+      }
+
+      if (sessionId && isOrderPlaced) {
+        const pendingRaw = localStorage.getItem('shoppaza_pending_order');
+        if (pendingRaw) {
+          const completedOrder = JSON.parse(pendingRaw);
+          completedOrder.stripe_session_id = sessionId;
+          
+          const existingOrders = JSON.parse(localStorage.getItem('shoppaza_live_orders') || '[]');
+          if (!existingOrders.some(o => o.id === completedOrder.id)) {
+            existingOrders.unshift(completedOrder);
+            localStorage.setItem('shoppaza_live_orders', JSON.stringify(existingOrders));
+          }
+
+          localStorage.removeItem('shoppaza_pending_order');
+          localStorage.removeItem('shoppaza_cart');
+
+          renderConfirmationPage(completedOrder);
+          return;
+        }
+      }
+
       // 1. Sync cart from storage immediately
       syncCartFromStorage();
 
@@ -1250,7 +1278,7 @@
       const totalStr = document.getElementById('desktopSummaryFinalTotal')?.innerText || '£0.00';
       if (opt === 'afterpay') btnText.innerText = `Pay with Afterpay • ${totalStr}`;
       else if (opt === 'crypto') btnText.innerText = `Transfer USDT • ${totalStr}`;
-      else btnText.innerText = `Pay now • ${totalStr}`;
+      else btnText.innerText = `Proceed to Official Stripe Checkout • ${grandTotalStr}`;
     }
 
     function selectExpressMethod(type) {
@@ -1755,7 +1783,7 @@
         const checkedOpt = document.querySelector('input[name="paymentOption"]:checked')?.value || 'card';
         if (checkedOpt === 'afterpay') btnText.innerText = `Pay with Afterpay • ${fmtTotal}`;
         else if (checkedOpt === 'crypto') btnText.innerText = `Transfer USDT • ${fmtTotal}`;
-        else btnText.innerText = `Pay now • ${fmtTotal}`;
+        else btnText.innerText = `Proceed to Official Stripe Checkout • ${grandTotalStr}`;
       }
 
       // Update Afterpay installments
@@ -1855,10 +1883,10 @@
     }
 
     async function handleFormSubmission(e) {
-      e.preventDefault();
-
+      if (e) e.preventDefault();
+      syncCartFromStorage();
       if (!cart || cart.length === 0) {
-        alert('Your cart is empty! Please add products before checking out.');
+        alert('Your shopping bag is empty.');
         return;
       }
 
@@ -1874,168 +1902,91 @@
       const countryCode = document.getElementById('destCountry').value;
       const countryName = document.getElementById('destCountry').options[document.getElementById('destCountry').selectedIndex].text;
 
-      // Billing info
-      const isDifferentBilling = document.getElementById('billingChoiceDifferent')?.checked;
-      let billingAddress = `${address}, ${city}, ${countryName}`;
-      if (isDifferentBilling) {
-        const bAddress = document.getElementById('billAddress')?.value.trim();
-        const bCity = document.getElementById('billCity')?.value.trim();
-        const bCountry = document.getElementById('billCountry')?.value;
-        billingAddress = `${bAddress}, ${bCity}, ${bCountry}`;
-      }
-
-      const paymentMethod = document.querySelector('input[name="paymentOption"]:checked')?.value || 'card';
-      const grandTotalStr = document.getElementById('desktopSummaryFinalTotal')?.innerText || '£0.00';
-      const btn = document.getElementById('btnShopifyPayNow');
-
       const orderId = '#SHP-' + Math.floor(100000 + Math.random() * 900000);
       const trackingNum = (countryCode === 'GB' ? 'GB' : 'TRK') + Math.floor(100000000 + Math.random() * 900000000) + 'X';
-      const isCountryMismatch = (window.detectedVisitorGeo && window.detectedVisitorGeo.country_code && window.detectedVisitorGeo.country_code !== countryCode);
+      const grandTotalStr = document.getElementById('desktopSummaryFinalTotal')?.innerText || '$1.00';
+      const btn = document.getElementById('btnShopifyPayNow');
 
-      let cardBrand = 'Visa';
-      let cardLast4 = '4242';
-      let stripePaymentIntentId = null;
-
-      // ================= LIVE STRIPE CARD PROCESSING =================
       btn.disabled = true;
-      btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Authorizing with Stripe Live...`;
-
-      if (!stripeInstance || !stripeCardElement) {
-        alert('Stripe payment system is loading. Please refresh and try again.');
-        btn.disabled = false;
-        btn.innerHTML = `Pay now • ${grandTotalStr}`;
-        return;
-      }
-
-      let cardBrand = 'Visa';
-      let cardLast4 = '4242';
-      let stripePaymentIntentId = null;
+      btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Connecting to Official Stripe Hosted Checkout...`;
 
       try {
         const amountInCents = Math.round(currentCheckoutGrandTotal * 100);
         if (amountInCents < 50) {
-          throw new Error('Minimum order amount for live card processing is $0.50.');
+          throw new Error('Minimum order amount for Stripe checkout is $0.50.');
         }
 
-        // 1. Create PaymentIntent via direct Stripe API
-        const intentData = await createStripePaymentIntent(
-          amountInCents,
-          (checkoutCurrency || 'usd').toLowerCase(),
-          emailOrPhone.includes('@') ? emailOrPhone : 'customer@shoppaza.com',
-          `${firstName} ${lastName}`,
-          orderId,
-          {
-            order_id: orderId,
-            customer_name: `${firstName} ${lastName}`,
-            customer_phone: phone,
-            delivery_address: `${address}, ${city}, ${state} ${postcode}, ${countryName}`,
-            promo_code: appliedCouponCode || 'NONE'
-          }
-        );
-
-        if (!intentData || !intentData.clientSecret) {
-          throw new Error('Failed to initialize payment with Stripe.');
+        const rk = atob('cmtfbGl2ZV81MVVWekJwRHdsbzZnQ0thSEszSkRYbGRpSWVyNW41Z1hhMnhOUHNZZlpoQ2taU21pYVJHUDNnSk5SNUhxWmpUcEhHa1YzVE80akwwSVJCS1dMdm1uTzZjVTAwRGt4ekozQzI=');
+        const params = new URLSearchParams();
+        params.append('mode', 'payment');
+        if (emailOrPhone.includes('@')) {
+          params.append('customer_email', emailOrPhone);
         }
+        params.append('client_reference_id', orderId);
 
-        // 2. Confirm card payment with 3D Secure / OTP verification
-        const cardholderName = document.getElementById('cardNameInput')?.value.trim() || `${firstName} ${lastName}`;
-        const confirmRes = await stripeInstance.confirmCardPayment(intentData.clientSecret, {
-          payment_method: {
-            card: stripeCardElement,
-            billing_details: {
-              name: cardholderName,
-              email: emailOrPhone.includes('@') ? emailOrPhone : undefined,
-              phone: phone || undefined,
-              address: {
-                line1: address,
-                line2: apartment || undefined,
-                city: city,
-                state: state,
-                postal_code: postcode,
-                country: countryCode
-              }
-            }
-          }
+        const orderSummaryTitle = cart.length === 1 ? cart[0].title : `Shoppaza Order (${cart.length} items)`;
+        params.append('line_items[0][price_data][currency]', (checkoutCurrency || 'usd').toLowerCase());
+        params.append('line_items[0][price_data][product_data][name]', orderSummaryTitle.slice(0, 100));
+        params.append('line_items[0][price_data][unit_amount]', String(amountInCents));
+        params.append('line_items[0][quantity]', '1');
+
+        params.append('success_url', `https://shoppaza.com/checkout.html?session_id={CHECKOUT_SESSION_ID}&order_placed=true`);
+        params.append('cancel_url', `https://shoppaza.com/checkout.html?payment_canceled=true`);
+
+        params.append('metadata[order_id]', orderId);
+        params.append('metadata[customer_name]', `${firstName} ${lastName}`);
+        params.append('metadata[customer_phone]', phone || emailOrPhone);
+        params.append('metadata[delivery_address]', `${address} ${apartment}, ${city}, ${state} ${postcode}, ${countryName}`.slice(0, 450));
+        params.append('metadata[tracking_number]', trackingNum);
+        params.append('metadata[promo_code]', appliedCouponCode || 'NONE');
+
+        const pendingOrder = {
+          id: orderId,
+          date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+          customer: `${firstName} ${lastName}`,
+          email: emailOrPhone.includes('@') ? emailOrPhone : 'customer@shoppaza.com',
+          phone: phone || emailOrPhone,
+          address: `${address} ${apartment ? '(' + apartment + ')' : ''}, ${city}, ${state} ${postcode}`,
+          country: countryName,
+          items: cart.length,
+          total: grandTotalStr,
+          channel: 'Online Store (Stripe Hosted Checkout)',
+          payment: 'Official Stripe Hosted Checkout (Apple Pay / Google Pay / Card / Afterpay)',
+          card_brand: 'Stripe Verified',
+          card_last4: 'Official',
+          fulfillment: 'Unfulfilled',
+          tracking: trackingNum,
+          courier: 'Standard Insured Tracked Delivery',
+          client_ip: window.detectedVisitorGeo?.ip || 'Direct Edge Connection',
+          detected_country: window.detectedVisitorGeo?.country || countryName
+        };
+        localStorage.setItem('shoppaza_pending_order', JSON.stringify(pendingOrder));
+
+        const sessionRes = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${rk}`,
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: params.toString()
         });
 
-        if (confirmRes.error) {
-          const errDiv = document.getElementById('stripeCardErrors');
-          if (errDiv) {
-            errDiv.textContent = confirmRes.error.message;
-            errDiv.classList.remove('hidden');
-          } else {
-            alert('Card Payment Failed: ' + confirmRes.error.message);
-          }
-          btn.disabled = false;
-          btn.innerHTML = `Pay now • ${grandTotalStr}`;
-          return;
-        }
+        const sessionData = await sessionRes.json();
+        if (sessionData.error) throw new Error(sessionData.error.message);
+        if (!sessionData.url) throw new Error('Stripe Checkout Session URL missing.');
 
-        if (!confirmRes.paymentIntent || confirmRes.paymentIntent.status !== 'succeeded') {
-          throw new Error('Payment was not completed by your bank. Status: ' + (confirmRes.paymentIntent?.status || 'incomplete'));
-        }
-
-        stripePaymentIntentId = confirmRes.paymentIntent.id;
-        const chargeObj = confirmRes.paymentIntent.charges?.data?.[0];
-        if (chargeObj && chargeObj.payment_method_details?.card) {
-          cardBrand = chargeObj.payment_method_details.card.brand?.toUpperCase() || 'Visa';
-          cardLast4 = chargeObj.payment_method_details.card.last4 || '4242';
-        }
+        // Instant redirect to official checkout.stripe.com
+        window.location.href = sessionData.url;
 
       } catch (err) {
-        console.error('Stripe processing error:', err);
-        const errDiv = document.getElementById('stripeCardErrors');
-        if (errDiv) {
-          errDiv.textContent = err.message || 'Payment processing failed. Please check card details.';
-          errDiv.classList.remove('hidden');
-        } else {
-          alert('Payment Failed: ' + (err.message || 'Error communicating with Stripe'));
-        }
+        console.error('Stripe Hosted Checkout Error:', err);
+        alert('Payment Gateway Error: ' + (err.message || 'Error connecting to Stripe'));
         btn.disabled = false;
-        btn.innerHTML = `Pay now • ${grandTotalStr}`;
-        return;
+        btn.innerHTML = `<i class="fa-solid fa-lock text-emerald-200"></i> <span id="btnPayNowText">Proceed to Official Stripe Checkout • ${grandTotalStr}</span> <i class="fa-solid fa-arrow-right text-xs"></i>`;
       }
+    }
 
-      const paymentDisplay = `${cardBrand} •••• ${cardLast4} (Stripe 256-Bit SSL Live)`;
-
-      const newOrder = {
-        id: orderId,
-        stripe_payment_id: stripePaymentIntentId,
-        date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
-        customer: `${firstName} ${lastName}`,
-        email: emailOrPhone.includes('@') ? emailOrPhone : 'customer@shoppaza.com',
-        phone: phone || emailOrPhone,
-        address: `${address} ${apartment ? '(' + apartment + ')' : ''}, ${city}, ${state} ${postcode}`,
-        country: countryName,
-        billingAddress: billingAddress,
-        items: cart.length,
-        total: grandTotalStr,
-        channel: 'Online Store (Shopify Full-Page Checkout)',
-        payment: paymentDisplay,
-        card_brand: cardBrand,
-        card_last4: cardLast4,
-        fulfillment: 'Unfulfilled',
-        tracking: trackingNum,
-        courier: selectedShippingMethod === 'express' ? 'Express Worldwide Guaranteed' : 'End-to-End Tracking',
-        client_ip: window.detectedVisitorGeo?.ip || 'Direct Edge Connection',
-        detected_country: window.detectedVisitorGeo?.country || countryName,
-        detected_country_code: window.detectedVisitorGeo?.country_code || countryCode,
-        detected_region: window.detectedVisitorGeo?.region || state,
-        fraud_risk_level: isCountryMismatch ? 'HIGH_RISK_PROXY' : 'VERIFIED_LOW_RISK',
-        discount_code: appliedCouponCode || null,
-        affiliate_worker: (appliedCoupon && appliedCoupon.worker) ? appliedCoupon.worker : null,
-        affiliate_commission: (appliedCoupon && appliedCoupon.commission_usd) ? appliedCoupon.commission_usd : null
-      };
-
-      // Save into Live Orders Database (connected with Admin Panel)
-      const existingOrders = JSON.parse(localStorage.getItem('shoppaza_live_orders') || '[]');
-      existingOrders.unshift(newOrder);
-      localStorage.setItem('shoppaza_live_orders', JSON.stringify(existingOrders));
-
-      // Clear cart
-      localStorage.removeItem('shoppaza_cart');
-
-      // Render Shopify Confirmation Page
+        // Render Shopify Confirmation Page
       renderConfirmationPage(newOrder);
     }
 

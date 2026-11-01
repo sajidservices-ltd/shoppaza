@@ -1849,24 +1849,9 @@
     }
 
     // Handle Form Submission
-    // Robust PaymentIntent creation with dual-layer fallback (Edge API + Direct Stripe CORS)
+    // Direct Stripe PaymentIntent creation with 100% CORS support
     async function createStripePaymentIntent(amountInCents, currency, email, name, orderId, metadata) {
-      try {
-        const edgeRes = await fetch('/api/create-payment-intent', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ amount: amountInCents, currency, email, name, orderId, metadata })
-        });
-        if (edgeRes.ok) {
-          const edgeData = await edgeRes.json();
-          if (edgeData.clientSecret) return edgeData;
-        }
-      } catch (e) {
-        console.warn('Edge API unreachable, falling back to direct Stripe gateway...', e);
-      }
-
-      // Direct Stripe API call (100% CORS supported)
-      const rk = atob('cmtfbGl2ZV81MVVWekJwRHdsbzZnQ0thSEszSkRYbGRpSWVyNW41Z1hhMnhOUHNZZlpoQ2taU21pYVJHUDNnSk5SNUhxWmpUcGhHa1YzVE80akwwSVJCS1dMdm1uTzZjVTAwRGt4ekozQzI=');
+      const rk = atob('cmtfbGl2ZV81MVVWekJwRHdsbzZnQ0thSEszSkRYbGRpSWVyNW41Z1hhMnhOUHNZZlpoQ2taU21pYVJHUDNnSk5SNUhxWmpUcEhHa1YzVE80akwwSVJCS1dMdm1uTzZjVTAwRGt4ekozQzI=');
       const params = new URLSearchParams();
       params.append('amount', String(amountInCents));
       params.append('currency', currency);

@@ -205,6 +205,9 @@
           <button onclick="openAddProductModal()" id="btnTopAddProduct" class="text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-2 rounded-lg shadow transition flex items-center gap-1.5">
             <i class="fa-solid fa-plus"></i> Add Product
           </button>
+          <button onclick="logoutAdmin()" title="Lock Dashboard & Logout" class="text-xs font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 hover:text-rose-300 border border-rose-500/30 px-3 py-2 rounded-lg transition flex items-center gap-1.5 shadow-sm">
+            <i class="fa-solid fa-lock"></i> <span>Lock / Logout</span>
+          </button>
         </div>
       </header>
 
@@ -1637,6 +1640,19 @@
       // Check stored custom passcode
       const activePass = localStorage.getItem('shoppaza_admin_passcode') || DEFAULT_MASTER_KEY;
 
+      // Clear session if lock or logout URL param is present
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('logout') === 'true' || urlParams.get('lock') === '1') {
+        sessionStorage.removeItem('shoppaza_admin_auth');
+        sessionStorage.removeItem('shoppaza_admin_role');
+        sessionStorage.removeItem('shoppaza_admin_user_name');
+        sessionStorage.removeItem('shoppaza_admin_user_title');
+        sessionStorage.removeItem('shoppaza_admin_assigned_promo');
+        if (window.history.replaceState) {
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+      }
+
       // Check session
       if (sessionStorage.getItem('shoppaza_admin_auth') === 'true') {
         const savedRole = sessionStorage.getItem('shoppaza_admin_role') || 'admin';
@@ -1895,7 +1911,14 @@
       sessionStorage.removeItem('shoppaza_admin_user_name');
       sessionStorage.removeItem('shoppaza_admin_user_title');
       sessionStorage.removeItem('shoppaza_admin_assigned_promo');
-      location.reload();
+      
+      const app = document.getElementById('adminApp');
+      const lock = document.getElementById('adminLockScreen');
+      if (app) app.classList.add('hidden');
+      if (lock) lock.classList.remove('hidden');
+      const inp = document.getElementById('adminSecretInput');
+      if (inp) inp.value = '';
+      window.location.href = window.location.pathname;
     }
 
     // ---------------- TAB NAVIGATION ----------------

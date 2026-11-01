@@ -1111,46 +1111,7 @@
     }
 
     // Billing Address Toggle (User Request)
-    function toggleBillingFields(isDifferent) {
-      const container = document.getElementById('separateBillingFields');
-      if (isDifferent) {
-        container.classList.remove('hidden');
-        // Set required on billing fields
-        document.getElementById('billFirstName').required = true;
-        document.getElementById('billLastName').required = true;
-        document.getElementById('billAddress').required = true;
-        document.getElementById('billCity').required = true;
-        document.getElementById('billPostcode').required = true;
-      } else {
-        container.classList.add('hidden');
-        document.getElementById('billFirstName').required = false;
-        document.getElementById('billLastName').required = false;
-        document.getElementById('billAddress').required = false;
-        document.getElementById('billCity').required = false;
-        document.getElementById('billPostcode').required = false;
-      }
-    }
-
-    // Payment Section Toggle
-    function selectPaymentOption(opt) {
-      ['card', 'afterpay', 'crypto'].forEach(o => {
-        const field = document.getElementById('paymentFields-' + o);
-        if (field) {
-          if (o === opt) field.classList.remove('hidden');
-          else field.classList.add('hidden');
-        }
-      });
-      const radios = document.querySelectorAll('input[name="paymentOption"]');
-      radios.forEach(r => {
-        if (r.value === opt) r.checked = true;
-      });
-
-      const btnText = document.getElementById('btnPayNowText');
-      const totalStr = document.getElementById('desktopSummaryFinalTotal')?.innerText || '£0.00';
-      if (opt === 'afterpay') btnText.innerText = `Pay with Afterpay • ${totalStr}`;
-      else if (opt === 'crypto') btnText.innerText = `Transfer USDT • ${totalStr}`;
-      else btnText.innerText = `Proceed to Official Stripe Checkout • ${fmtTotal}`;
-    }
+    function toggleBillingFields() {}
 
     function selectExpressMethod(type) {
       if (type === 'apple') {

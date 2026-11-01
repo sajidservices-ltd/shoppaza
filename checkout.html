@@ -174,29 +174,13 @@
           </div>
         </div>
 
-        <!-- ================= 1. EXPRESS CHECKOUT ================= -->
-        <div class="space-y-3" id="expressCheckoutSection">
-          <div class="text-xs text-slate-500 text-center font-medium">Express checkout</div>
-          <div class="grid grid-cols-3 gap-2.5">
-            <!-- Shop / Apple Pay -->
-            <button type="button" onclick="selectExpressMethod('apple')" class="h-11 bg-black hover:bg-slate-900 text-white rounded-md flex items-center justify-center transition shadow-sm">
-              <i class="fa-brands fa-apple text-base mr-1"></i> <span class="font-bold text-xs tracking-wide">Pay</span>
-            </button>
-            <!-- Amazon Pay -->
-            <button type="button" onclick="selectExpressMethod('amazon')" id="btnExpressAmazon" class="h-11 bg-[#FF9900] hover:bg-[#eb8c00] text-slate-950 rounded-md flex items-center justify-center transition shadow-sm font-bold text-xs">
-              <i class="fa-brands fa-amazon text-sm mr-1"></i> Pay
-            </button>
-            <!-- Afterpay / PayPal -->
-            <button type="button" onclick="selectExpressMethod('afterpay')" id="btnExpressAfterpay" class="h-11 bg-[#B2FCE4] hover:bg-[#9dedd3] text-slate-900 rounded-md flex items-center justify-center transition shadow-sm font-bold text-xs tracking-tight">
-              afterpay<span class="text-[10px] font-normal ml-0.5">✦</span>
-            </button>
+        <!-- ================= 1. SECURE STRIPE BANNER ================= -->
+        <div class="p-3.5 bg-emerald-50 border border-emerald-200 rounded-lg flex items-center justify-between text-xs text-emerald-800 mb-6 shadow-sm">
+          <div class="flex items-center gap-2 font-medium">
+            <i class="fa-solid fa-shield-halved text-emerald-600 text-sm"></i>
+            <span>Stripe Encrypted Live Checkout (3D Secure Bank Verified)</span>
           </div>
-
-          <!-- Divider -->
-          <div class="relative py-3 flex items-center justify-center">
-            <div class="border-t border-slate-200 w-full"></div>
-            <span class="bg-white px-3 text-xs uppercase font-medium text-slate-400 absolute">OR</span>
-          </div>
+          <span class="text-[10px] font-bold uppercase bg-emerald-600 text-white px-2.5 py-1 rounded">Live Active</span>
         </div>
 
         <!-- MAIN CHECKOUT FORM -->
@@ -355,37 +339,7 @@
                 </div>
               </div>
 
-              <!-- Option 2: Afterpay / Clearpay (Pay in 4 installments) -->
-              <div class="bg-white" id="containerAfterpayOption">
-                <label class="p-3.5 flex items-center justify-between cursor-pointer hover:bg-slate-50 transition" onclick="selectPaymentOption('afterpay')">
-                  <div class="flex items-center gap-3">
-                    <input type="radio" name="paymentOption" value="afterpay" class="w-4 h-4 text-shopify-link focus:ring-0 border-slate-300">
-                    <span class="font-bold text-slate-900">Afterpay</span>
-                  </div>
-                  <span class="px-2 py-0.5 rounded bg-[#B2FCE4] text-slate-900 font-bold text-[10px]">4 Interest-Free Payments</span>
-                </label>
-                <div id="paymentFields-afterpay" class="hidden p-4 bg-slate-50/70 border-t border-slate-200 text-xs text-slate-600 space-y-2">
-                  <p>Pay in 4 interest-free installments of <strong class="text-slate-900 font-mono" id="afterpayInstallmentAmount">£0.00</strong> due every 2 weeks.</p>
-                  <p class="text-[11px] text-slate-500">You will be redirected to Afterpay securely to complete your purchase.</p>
-                </div>
               </div>
-
-              <!-- Option 3: PayPal / Web3 Crypto USDT -->
-              <div class="bg-white">
-                <label class="p-3.5 flex items-center justify-between cursor-pointer hover:bg-slate-50 transition" onclick="selectPaymentOption('crypto')">
-                  <div class="flex items-center gap-3">
-                    <input type="radio" name="paymentOption" value="crypto" class="w-4 h-4 text-shopify-link focus:ring-0 border-slate-300">
-                    <span class="font-bold text-slate-900">USDT Web3 Crypto / Direct Payout</span>
-                  </div>
-                  <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-[10px]">Zero Network Fee</span>
-                </label>
-                <div id="paymentFields-crypto" class="hidden p-4 bg-slate-50/70 border-t border-slate-200 text-xs text-slate-600 space-y-2">
-                  <p>Official merchant wallet: <code class="bg-white px-2 py-1 rounded border border-slate-200 text-slate-900 font-mono font-bold select-all">TShpza874640EdinUK99x2</code> (TRC20)</p>
-                  <p class="text-[11px] text-slate-500">Corporate invoice and proof-of-dispatch issued immediately via SAJID SERVICES LTD.</p>
-                </div>
-              </div>
-
-            </div>
 
             <!-- ================= 6. BILLING ADDRESS (SEPARATE OR SAME) ================= -->
             <div class="pt-3 space-y-3">
@@ -614,6 +568,25 @@
     // Checkout State
     let cart = [];
     function syncCartFromStorage() {
+      // 1-Dollar Live Test URL shortcut: ?test=1 or ?test_order=1
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('test') === '1' || urlParams.get('test_order') === '1') {
+          cart = [{
+            id: 999000111222,
+            title: 'Live Stripe Test Order ($1.00 USD)',
+            price_usd: 1.00,
+            price_gbp: 0.79,
+            price_pkr: 280,
+            qty: 1,
+            image: 'https://images.unsplash.com/photo-1556742049-0a67c5574f73?w=800&q=80',
+            selectedOptions: { Type: 'Live Card Verification' }
+          }];
+          localStorage.setItem('shoppaza_cart', JSON.stringify(cart));
+          return cart;
+        }
+      } catch (e) {}
+
       try {
         const saved = localStorage.getItem('shoppaza_cart');
         if (saved) {
@@ -1583,8 +1556,12 @@
       // Calculate totals in base GBP
       let baseSubtotalGbp = 0;
       cart.forEach(item => {
-        const price = item.price_gbp || (item.price_usd ? item.price_usd * 0.79 : 29.00);
-        baseSubtotalGbp += price * (parseInt(item.qty, 10) || 1);
+        if (item.id === 999000111222 && checkoutCurrency === 'USD') {
+          baseSubtotalGbp += (1.00 / checkoutRate) * (parseInt(item.qty, 10) || 1);
+        } else {
+          const price = item.price_gbp || (item.price_usd ? item.price_usd * 0.79 : 29.00);
+          baseSubtotalGbp += price * (parseInt(item.qty, 10) || 1);
+        }
       });
 
       const convertedSubtotal = baseSubtotalGbp * checkoutRate;
@@ -1920,92 +1897,106 @@
       let stripePaymentIntentId = null;
 
       // ================= LIVE STRIPE CARD PROCESSING =================
-      if (paymentMethod === 'card' && stripeInstance && stripeCardElement) {
-        btn.disabled = true;
-        btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Authorizing with Stripe Live...`;
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Authorizing with Stripe Live...`;
 
-        try {
-          const amountInCents = Math.round(currentCheckoutGrandTotal * 100);
-          
-          if (amountInCents > 0) {
-            // 1. Create PaymentIntent via robust dual-layer gateway
-            const intentData = await createStripePaymentIntent(
-              amountInCents,
-              (checkoutCurrency || 'usd').toLowerCase(),
-              emailOrPhone.includes('@') ? emailOrPhone : 'customer@shoppaza.com',
-              `${firstName} ${lastName}`,
-              orderId,
-              {
-                order_id: orderId,
-                customer_name: `${firstName} ${lastName}`,
-                customer_phone: phone,
-                delivery_address: `${address}, ${city}, ${state} ${postcode}, ${countryName}`,
-                promo_code: appliedCouponCode || 'NONE'
-              }
-            );
+      if (!stripeInstance || !stripeCardElement) {
+        alert('Stripe payment system is loading. Please refresh and try again.');
+        btn.disabled = false;
+        btn.innerHTML = `Pay now • ${grandTotalStr}`;
+        return;
+      }
 
-            if (!intentData || !intentData.clientSecret) {
-              throw new Error('Payment gateway error. Please try again.');
-            }
+      let cardBrand = 'Visa';
+      let cardLast4 = '4242';
+      let stripePaymentIntentId = null;
 
-            // 2. Confirm card payment with 3D Secure / OTP verification
-            const cardholderName = document.getElementById('cardNameInput')?.value.trim() || `${firstName} ${lastName}`;
-            const confirmRes = await stripeInstance.confirmCardPayment(intentData.clientSecret, {
-              payment_method: {
-                card: stripeCardElement,
-                billing_details: {
-                  name: cardholderName,
-                  email: emailOrPhone.includes('@') ? emailOrPhone : undefined,
-                  phone: phone || undefined,
-                  address: {
-                    line1: address,
-                    line2: apartment || undefined,
-                    city: city,
-                    state: state,
-                    postal_code: postcode,
-                    country: countryCode
-                  }
-                }
-              }
-            });
+      try {
+        const amountInCents = Math.round(currentCheckoutGrandTotal * 100);
+        if (amountInCents < 50) {
+          throw new Error('Minimum order amount for live card processing is $0.50.');
+        }
 
-            if (confirmRes.error) {
-              const errDiv = document.getElementById('stripeCardErrors');
-              if (errDiv) {
-                errDiv.textContent = confirmRes.error.message;
-                errDiv.classList.remove('hidden');
-              } else {
-                alert('Payment Failed: ' + confirmRes.error.message);
-              }
-              btn.disabled = false;
-              btn.innerHTML = `Pay now • ${grandTotalStr}`;
-              return;
-            }
+        // 1. Create PaymentIntent via direct Stripe API
+        const intentData = await createStripePaymentIntent(
+          amountInCents,
+          (checkoutCurrency || 'usd').toLowerCase(),
+          emailOrPhone.includes('@') ? emailOrPhone : 'customer@shoppaza.com',
+          `${firstName} ${lastName}`,
+          orderId,
+          {
+            order_id: orderId,
+            customer_name: `${firstName} ${lastName}`,
+            customer_phone: phone,
+            delivery_address: `${address}, ${city}, ${state} ${postcode}, ${countryName}`,
+            promo_code: appliedCouponCode || 'NONE'
+          }
+        );
 
-            if (confirmRes.paymentIntent && confirmRes.paymentIntent.status === 'succeeded') {
-              stripePaymentIntentId = confirmRes.paymentIntent.id;
-              const chargeObj = confirmRes.paymentIntent.charges?.data?.[0];
-              if (chargeObj && chargeObj.payment_method_details?.card) {
-                cardBrand = chargeObj.payment_method_details.card.brand?.toUpperCase() || 'Visa';
-                cardLast4 = chargeObj.payment_method_details.card.last4 || '4242';
+        if (!intentData || !intentData.clientSecret) {
+          throw new Error('Failed to initialize payment with Stripe.');
+        }
+
+        // 2. Confirm card payment with 3D Secure / OTP verification
+        const cardholderName = document.getElementById('cardNameInput')?.value.trim() || `${firstName} ${lastName}`;
+        const confirmRes = await stripeInstance.confirmCardPayment(intentData.clientSecret, {
+          payment_method: {
+            card: stripeCardElement,
+            billing_details: {
+              name: cardholderName,
+              email: emailOrPhone.includes('@') ? emailOrPhone : undefined,
+              phone: phone || undefined,
+              address: {
+                line1: address,
+                line2: apartment || undefined,
+                city: city,
+                state: state,
+                postal_code: postcode,
+                country: countryCode
               }
             }
           }
-        } catch (err) {
-          console.error('Stripe processing error:', err);
+        });
+
+        if (confirmRes.error) {
+          const errDiv = document.getElementById('stripeCardErrors');
+          if (errDiv) {
+            errDiv.textContent = confirmRes.error.message;
+            errDiv.classList.remove('hidden');
+          } else {
+            alert('Card Payment Failed: ' + confirmRes.error.message);
+          }
+          btn.disabled = false;
+          btn.innerHTML = `Pay now • ${grandTotalStr}`;
+          return;
         }
-      } else {
-        // Fallback or non-card payment
-        btn.disabled = true;
-        btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Processing Secure Payment...`;
-        await new Promise(r => setTimeout(r, 1200));
+
+        if (!confirmRes.paymentIntent || confirmRes.paymentIntent.status !== 'succeeded') {
+          throw new Error('Payment was not completed by your bank. Status: ' + (confirmRes.paymentIntent?.status || 'incomplete'));
+        }
+
+        stripePaymentIntentId = confirmRes.paymentIntent.id;
+        const chargeObj = confirmRes.paymentIntent.charges?.data?.[0];
+        if (chargeObj && chargeObj.payment_method_details?.card) {
+          cardBrand = chargeObj.payment_method_details.card.brand?.toUpperCase() || 'Visa';
+          cardLast4 = chargeObj.payment_method_details.card.last4 || '4242';
+        }
+
+      } catch (err) {
+        console.error('Stripe processing error:', err);
+        const errDiv = document.getElementById('stripeCardErrors');
+        if (errDiv) {
+          errDiv.textContent = err.message || 'Payment processing failed. Please check card details.';
+          errDiv.classList.remove('hidden');
+        } else {
+          alert('Payment Failed: ' + (err.message || 'Error communicating with Stripe'));
+        }
+        btn.disabled = false;
+        btn.innerHTML = `Pay now • ${grandTotalStr}`;
+        return;
       }
 
-      const paymentDisplay = paymentMethod === 'crypto' 
-        ? 'USDT TRC20' 
-        : (paymentMethod === 'afterpay' 
-            ? 'Afterpay Installments' 
-            : `${cardBrand} •••• ${cardLast4} (Stripe 256-Bit SSL Live)`);
+      const paymentDisplay = `${cardBrand} •••• ${cardLast4} (Stripe 256-Bit SSL Live)`;
 
       const newOrder = {
         id: orderId,

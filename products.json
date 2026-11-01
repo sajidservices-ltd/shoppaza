@@ -1,5 +1,30 @@
 [
   {
+    "id": 999000111222,
+    "title": "Live Stripe Test Order (.00 USD)",
+    "handle": "live-stripe-test-order-1-usd",
+    "category": "Test & Verification",
+    "price_usd": 1,
+    "compare_usd": 10,
+    "price_gbp": 0.79,
+    "compare_gbp": 8,
+    "price_usdt": 1,
+    "compare_usdt": 10,
+    "price_pkr": 280,
+    "compare_pkr": 2800,
+    "discount": 90,
+    "rating": 5,
+    "reviews_count": 120,
+    "sold_count": 450,
+    "image": "https://images.unsplash.com/photo-1556742049-0a67c5574f73?w=800&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1556742049-0a67c5574f73?w=800&q=80"
+    ],
+    "in_stock": true,
+    "options": [],
+    "description": "Live Stripe Payment Verification Product (.00 USD) with 100% Free Shipping. Use this to verify instant live bank credit/debit card processing on Shoppaza."
+  },
+  {
     "id": 11179406459218,
     "title": "Studio Versatile Solid-color Shirt",
     "handle": "studio-versatile-solid-color-shirt",

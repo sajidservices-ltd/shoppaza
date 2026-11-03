@@ -147,19 +147,16 @@
             <!-- Dynamic items rendered via JS -->
           </div>
 
-          <!-- ================= PROMINENT DISCOUNT / PROMO CODE INPUT BOX ================= -->
+          <!-- ================= DISCOUNT / PROMO CODE INPUT BOX ================= -->
           <div class="pt-4 border-t border-slate-100 space-y-2.5 bg-slate-50/70 p-3.5 rounded-xl border border-slate-200">
-            <label for="discountCodeInput" class="block text-xs font-bold text-slate-800 flex items-center justify-between">
-              <span class="flex items-center gap-1.5">
-                <i class="fa-solid fa-tags text-emerald-600"></i>
-                <span>Discount / Promo Code</span>
-              </span>
-              <span class="text-[11px] text-emerald-700 font-bold cursor-pointer hover:underline bg-emerald-100/70 px-2 py-0.5 rounded" onclick="fillTestPromo('AG100')">Try: AG100</span>
+            <label for="discountCodeInput" class="block text-xs font-bold text-slate-800 flex items-center gap-1.5">
+              <i class="fa-solid fa-tags text-emerald-600"></i>
+              <span>Discount or Promo Code</span>
             </label>
             
             <div class="flex gap-2">
               <div class="relative flex-1">
-                <input type="text" id="discountCodeInput" placeholder="Enter coupon (e.g. AG100)" class="w-full uppercase font-mono text-xs px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-inner transition">
+                <input type="text" id="discountCodeInput" placeholder="Discount code or promo code" class="w-full uppercase font-mono text-xs px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-inner transition">
               </div>
               <button type="button" onclick="applyDiscountCode()" class="px-5 py-2.5 bg-slate-900 hover:bg-black active:scale-95 text-white text-xs font-extrabold rounded-lg transition shadow flex items-center gap-1.5 flex-shrink-0">
                 <i class="fa-solid fa-check text-[10px]"></i>
@@ -356,14 +353,6 @@
              title.includes('hoodie') || title.includes('fleece') || title.includes('sweatshirt') || title.includes('shirt') || title.includes('top');
     }
 
-    // Helper for quick test promo link
-    function fillTestPromo(code) {
-      const input = document.getElementById('discountCodeInput');
-      if (input) {
-        input.value = code;
-        applyDiscountCode();
-      }
-    }
 
     // 1. Initial Load Handler
     document.addEventListener('DOMContentLoaded', async () => {
@@ -809,9 +798,26 @@
         params.append('success_url', `https://shoppaza.com/checkout.html?session_id={CHECKOUT_SESSION_ID}&order_placed=true`);
         params.append('cancel_url', `https://shoppaza.com/checkout.html?payment_canceled=true`);
 
+        const promoCodeName = (appliedCoupon && appliedCoupon.code) ? appliedCoupon.code.toUpperCase() : 'NONE';
+        const hasPromo = (appliedCoupon && currentDiscount > 0);
+
         params.append('metadata[order_id]', orderId);
         params.append('metadata[tracking_number]', trackingNum);
-        params.append('metadata[promo_code]', appliedCoupon ? appliedCoupon.code : 'NONE');
+        params.append('metadata[promo_code]', promoCodeName);
+        if (hasPromo) {
+          params.append('metadata[discount_amount]', `$${currentDiscount.toFixed(2)} USD`);
+        }
+
+        // Pass directly to PaymentIntent so it is PROMINENT in Stripe Dashboard Transaction Details!
+        const intentDesc = hasPromo 
+          ? `Shoppaza Order ${orderId} • Promo: ${promoCodeName}` 
+          : `Shoppaza Order ${orderId}`;
+        params.append('payment_intent_data[description]', intentDesc);
+        params.append('payment_intent_data[metadata][promo_code]', promoCodeName);
+        params.append('payment_intent_data[metadata][order_id]', orderId);
+        if (hasPromo) {
+          params.append('payment_intent_data[metadata][discount_applied]', `$${currentDiscount.toFixed(2)} USD`);
+        }
 
         // Save pending order in localStorage for confirmation match
         const pending = {
@@ -820,7 +826,9 @@
           date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
           items: currentCart.length,
           total: `$${currentTotal.toFixed(2)} USD`,
-          promo_code: appliedCoupon ? appliedCoupon.code : 'NONE',
+          promo_code: promoCodeName,
+          promo: promoCodeName,
+          discount_code: promoCodeName,
           payment_method: 'Official Stripe Hosted Checkout'
         };
         localStorage.setItem('shoppaza_pending_order', JSON.stringify(pending));
@@ -924,6 +932,8 @@
             address: shippingStr,
             total: amountPaid,
             promo: promoUsed,
+            promo_code: promoUsed,
+            discount_code: promoUsed,
             tracking: tracking,
             status: 'Paid (Stripe Verified)',
             date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })

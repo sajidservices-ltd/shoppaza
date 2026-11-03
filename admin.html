@@ -2595,7 +2595,7 @@
       // Strict filter for Limited Promoter: only their assigned promo code!
       if (isLimited) {
         allOrders = allOrders.filter(o => {
-          const code = (o.discount_code || '').trim().toUpperCase();
+          const code = (o.discount_code || o.promo_code || o.promo || '').trim().toUpperCase();
           return code === assignedPromo;
         });
       }
@@ -2651,7 +2651,8 @@
           ? 'bg-emerald-500/20 text-emerald-300'
           : (o.fulfillment === 'Processing' ? 'bg-indigo-500/20 text-indigo-300' : 'bg-amber-500/20 text-amber-300');
 
-        const promoCode = (o.discount_code && o.discount_code !== 'NONE') ? o.discount_code : '';
+        const promoRaw = (o.discount_code || o.promo_code || o.promo || '').trim();
+        const promoCode = (promoRaw && promoRaw !== 'NONE') ? promoRaw : '';
         const promoBadge = promoCode 
           ? `<span class="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 font-mono font-bold text-[11px] border border-amber-500/30 flex items-center gap-1 w-max"><i class="fa-solid fa-gift text-[10px]"></i> ${escapeHtml(promoCode)}</span>`
           : `<span class="text-slate-600 text-[11px]">—</span>`;
@@ -2748,9 +2749,10 @@
       
       const promoEl = document.getElementById('modalCustomerPromo');
       const channelEl = document.getElementById('modalCustomerChannel');
+      const promoVal = (o.discount_code || o.promo_code || o.promo || '').trim();
       if (promoEl) {
-        if (o.discount_code && o.discount_code !== 'NONE') {
-          promoEl.innerHTML = `<i class="fa-solid fa-gift text-amber-400"></i> <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono font-bold border border-amber-500/40">${escapeHtml(o.discount_code)}</span>`;
+        if (promoVal && promoVal !== 'NONE') {
+          promoEl.innerHTML = `<i class="fa-solid fa-gift text-amber-400"></i> <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono font-bold border border-amber-500/40">${escapeHtml(promoVal)}</span>`;
         } else {
           promoEl.innerHTML = `<span class="text-slate-500 font-sans font-normal">None (Standard Order)</span>`;
         }
@@ -2758,8 +2760,8 @@
       if (channelEl) {
         if (o.affiliate_worker) {
           channelEl.innerHTML = `Affiliate: <strong class="text-white">${escapeHtml(o.affiliate_worker)}</strong>`;
-        } else if (o.discount_code && o.discount_code !== 'NONE') {
-          channelEl.innerHTML = `Campaign: <strong class="text-white">${escapeHtml(o.discount_code)}</strong>`;
+        } else if (promoVal && promoVal !== 'NONE') {
+          channelEl.innerHTML = `Campaign: <strong class="text-white">${escapeHtml(promoVal)}</strong>`;
         } else {
           channelEl.innerHTML = `<span class="text-slate-400">Direct Store Checkout</span>`;
         }
@@ -2880,7 +2882,7 @@
         o.id,
         `"${o.date || 'Today'}"`,
         `"${o.customer}"`,
-        `"${o.discount_code || ''}"`,
+        `"${o.discount_code || o.promo_code || o.promo || ''}"`,
         `"${o.email || ''}"`,
         `"${o.address || ''}"`,
         `"${o.country || ''}"`,

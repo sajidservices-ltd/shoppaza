@@ -261,7 +261,7 @@
         <div class="font-bold text-slate-800 px-3 py-2 text-[11px] uppercase tracking-wider border-b border-slate-100 flex items-center gap-2">
           <i class="fa-solid fa-bars text-daraz-orange"></i> All Categories
         </div>
-        <ul class="py-1 space-y-0.5 text-slate-600 font-normal" id="heroCategoryMenu">
+        <ul class="py-1 space-y-0.5 text-slate-600 font-normal max-h-[420px] overflow-y-auto pr-0.5" id="heroCategoryMenu">
           <!-- Dynamically populated categories with icons -->
         </ul>
       </aside>
@@ -2094,7 +2094,7 @@
     // Categories with photos loader
     async function loadCategoriesData() {
       try {
-        const res = await fetch('categories-data.json?v=3.9');
+        const res = await fetch('categories-data.json?v=5.1&t=' + Date.now());
         const catData = await res.json();
         const grid = document.getElementById('photoCategoriesGrid');
         if (grid && catData.length > 0) {
@@ -2177,7 +2177,7 @@
       try {
         let data = [];
         try {
-          const res = await fetch('products.json');
+          const res = await fetch('products.json?v=5.1&t=' + Date.now());
           if (res.ok) data = await res.json();
         } catch(e) {}
 
@@ -2391,34 +2391,99 @@
     }
 
     function buildCategoriesList() {
-      const cats = Array.from(new Set(allRawProducts.map(p => p.category))).filter(Boolean).sort();
-      
+      const wigCats = [
+        { name: 'DEEP HAIR WIGS', icon: 'fa-wand-magic-sparkles', count: 37 },
+        { name: 'CURLY HAIR WIGS', icon: 'fa-certificate', count: 25 },
+        { name: 'WARM AMBER WIGS', icon: 'fa-fire-flame-curved', count: 13 },
+        { name: 'SHORT HAIR WIGS', icon: 'fa-scissors', count: 15 },
+        { name: 'BUNDLES', icon: 'fa-layer-group', count: 19 },
+        { name: 'PREMIUM WIGS', icon: 'fa-crown', count: 41 }
+      ];
+
+      const otherPreferredOrder = [
+        'Necklaces & Pendants',
+        'Rings & Bands',
+        'Bracelets & Bangles',
+        'Luxury Watches',
+        'Dresses & Gowns',
+        'Bags & Handbags',
+        'Sunglasses & Eyewear',
+        'Beauty & Cosmetics',
+        'Tops & Shirts',
+        'Pants & Bottoms',
+        'Jackets & Outerwear'
+      ];
+
       // Hero menu (Left Sidebar)
       const heroMenu = document.getElementById('heroCategoryMenu');
-      heroMenu.innerHTML = '';
-      cats.slice(0, 11).forEach(c => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-          <button onclick="filterCategory('${c}')" class="w-full text-left py-1.5 px-2.5 rounded hover:bg-[#F5F5F5] hover:text-daraz-orange transition flex items-center justify-between group">
-            <span class="truncate">${c}</span>
-            <i class="fa-solid fa-chevron-right text-[8px] text-slate-300 group-hover:text-daraz-orange"></i>
-          </button>
+      if (heroMenu) {
+        heroMenu.innerHTML = '';
+
+        // Section 1 Header: 6 WIG COLLECTIONS
+        const wigHeader = document.createElement('li');
+        wigHeader.className = 'px-2.5 pt-1.5 pb-1 text-[10px] font-black uppercase text-daraz-orange tracking-wider flex items-center justify-between border-b border-orange-100 bg-orange-50/70 rounded mb-1';
+        wigHeader.innerHTML = `
+          <span class="flex items-center gap-1.5"><i class="fa-solid fa-crown text-[10px]"></i> Wig Collections</span>
+          <span class="text-[9px] bg-daraz-orange text-white px-1.5 py-0.2 rounded font-bold">6 STYLES</span>
         `;
-        heroMenu.appendChild(li);
-      });
+        heroMenu.appendChild(wigHeader);
+
+        // 6 Wig items prominently
+        wigCats.forEach(w => {
+          const li = document.createElement('li');
+          li.innerHTML = `
+            <button onclick="filterCategory('${w.name}')" class="w-full text-left py-1.5 px-2.5 rounded hover:bg-orange-50 hover:text-daraz-orange transition flex items-center justify-between group font-semibold text-slate-800 text-[11px]">
+              <span class="truncate flex items-center gap-1.5"><i class="fa-solid ${w.icon} text-[9px] text-orange-400 group-hover:text-daraz-orange"></i> ${w.name}</span>
+              <span class="text-[10px] text-slate-400 font-mono group-hover:text-daraz-orange font-normal">${w.count}</span>
+            </button>
+          `;
+          heroMenu.appendChild(li);
+        });
+
+        // Section 2 Header: JEWELRY & FASHION
+        const otherHeader = document.createElement('li');
+        otherHeader.className = 'px-2.5 pt-2.5 pb-1 text-[10px] font-black uppercase text-slate-400 tracking-wider flex items-center justify-between border-b border-slate-100 mt-1 mb-1';
+        otherHeader.innerHTML = `<span>Jewelry & Apparel</span>`;
+        heroMenu.appendChild(otherHeader);
+
+        // Other items
+        otherPreferredOrder.forEach(c => {
+          const li = document.createElement('li');
+          li.innerHTML = `
+            <button onclick="filterCategory('${c}')" class="w-full text-left py-1 px-2.5 rounded hover:bg-[#F5F5F5] hover:text-daraz-orange transition flex items-center justify-between group text-[11px] text-slate-600">
+              <span class="truncate">${c}</span>
+              <i class="fa-solid fa-chevron-right text-[8px] text-slate-300 group-hover:text-daraz-orange"></i>
+            </button>
+          `;
+          heroMenu.appendChild(li);
+        });
+      }
 
       // Filter Pills
       const pillsContainer = document.getElementById('categoryFilterPills');
-      pillsContainer.innerHTML = `
-        <button onclick="filterCategory('all')" class="category-pill px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap transition bg-daraz-orange text-white">All</button>
-      `;
-      cats.forEach(c => {
-        const btn = document.createElement('button');
-        btn.onclick = () => filterCategory(c);
-        btn.className = 'category-pill px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition bg-white text-slate-700 hover:bg-slate-100 border border-slate-200';
-        btn.innerText = c;
-        pillsContainer.appendChild(btn);
-      });
+      if (pillsContainer) {
+        pillsContainer.innerHTML = `
+          <button onclick="filterCategory('all')" class="category-pill px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap transition bg-daraz-orange text-white">All</button>
+        `;
+        
+        // Put the 6 Wig Collections at the FRONT of pills
+        wigCats.forEach(w => {
+          const btn = document.createElement('button');
+          btn.onclick = () => filterCategory(w.name);
+          btn.className = 'category-pill px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition bg-amber-50 text-amber-900 hover:bg-amber-100 border border-amber-200';
+          btn.innerHTML = `<i class="fa-solid ${w.icon} text-[10px] text-daraz-orange mr-1"></i> ${w.name}`;
+          pillsContainer.appendChild(btn);
+        });
+
+        // Followed by other categories
+        otherPreferredOrder.forEach(c => {
+          const btn = document.createElement('button');
+          btn.onclick = () => filterCategory(c);
+          btn.className = 'category-pill px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition bg-white text-slate-700 hover:bg-slate-100 border border-slate-200';
+          btn.innerText = c;
+          pillsContainer.appendChild(btn);
+        });
+      }
     }
 
     function filterCategory(cat) {

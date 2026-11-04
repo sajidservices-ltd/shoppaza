@@ -2,28 +2,49 @@
   {
     "code": "AG100",
     "type": "free_shipping_promo",
-    "desc": "100% Free Items Promo - Customer pays only Shipping (Storewide Promo)",
+    "desc": "100% Free Items Promo - Customer pays only Shipping",
     "status": "Active",
     "uses": "0 Used"
   },
   {
     "code": "SHOP100",
     "type": "free_shipping_promo",
-    "desc": "100% Free Items Promo - Customer pays only Shipping (Storewide Promo)",
+    "desc": "100% Free Items Promo - Customer pays only Shipping",
     "status": "Active",
     "uses": "0 Used"
   },
   {
     "code": "GET100",
     "type": "free_shipping_promo",
-    "desc": "100% Free Items Promo - Customer pays only Shipping (Storewide Promo)",
+    "desc": "100% Free Items Promo - Customer pays only Shipping",
     "status": "Active",
     "uses": "0 Used"
   },
   {
     "code": "AH100",
     "type": "free_shipping_promo",
-    "desc": "100% Free Items Promo - Customer pays only Shipping (Storewide Promo)",
+    "desc": "100% Free Items Promo - Customer pays only Shipping",
+    "status": "Active",
+    "uses": "0 Used"
+  },
+  {
+    "code": "VIPWIG",
+    "type": "free_shipping_promo",
+    "desc": "100% Free Items Promo - Customer pays only Shipping",
+    "status": "Active",
+    "uses": "0 Used"
+  },
+  {
+    "code": "FREEWIG",
+    "type": "free_shipping_promo",
+    "desc": "100% Free Items Promo - Customer pays only Shipping",
+    "status": "Active",
+    "uses": "0 Used"
+  },
+  {
+    "code": "WELCOME100",
+    "type": "free_shipping_promo",
+    "desc": "100% Free Items Promo - Customer pays only Shipping",
     "status": "Active",
     "uses": "0 Used"
   }

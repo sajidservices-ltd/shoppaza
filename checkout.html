@@ -319,7 +319,81 @@
       if (!item) return false;
       const cat = (item.category || '').toLowerCase();
       const title = (item.title || '').toLowerCase();
-      return cat.includes('wig') || title.includes('wig');
+      return cat.includes('wig') || title.includes('wig') || cat.includes('bundle') || title.includes('bundle') ||
+             (Array.isArray(item.categories) && item.categories.some(c => c.toLowerCase().includes('wig') || c.toLowerCase().includes('bundle')));
+    }
+
+    function getWigPromoShippingFee(item) {
+      if (!item) return 31.49;
+      if (typeof item.promo_shipping_usd === 'number' && item.promo_shipping_usd > 0) {
+        return item.promo_shipping_usd;
+      }
+      const cat = (item.category || '').toUpperCase();
+      const title = (item.title || '').toLowerCase();
+      const price = parseFloat(item.price_usd || item.price || 0);
+
+      // Tier 5 ($66.99 USD) - Premium Full HD Lace & Virgin Human Hair (Avenrossa $67.99 - $1)
+      if (price >= 300 || 
+          title.includes('samit') || 
+          title.includes('former lace wig') || 
+          title.includes('straight hair long') || 
+          title.includes('human hair hood') || 
+          (cat === 'PREMIUM WIGS' && price >= 280)) {
+        return 66.99;
+      }
+
+      // Tier 4 ($40.99 USD) - Deep Hair Wigs & Heavy Lace Front (Avenrossa $41.99 - $1)
+      if (cat === 'DEEP HAIR WIGS' && !title.includes('long wavy') && !title.includes('large-loop') && !title.includes('black mid-length') && !title.includes('golden fluffy') && !title.includes('body wave wear')) {
+        return 40.99;
+      }
+      if (title.includes('former lace head') || 
+          title.includes('burgundy long') || 
+          title.includes('300 density') || 
+          title.includes('deep curly fringe') || 
+          title.includes('highlight honey blonde') || 
+          title.includes('fluffy large-wave') || 
+          title.includes('bleached water') || 
+          title.includes('piano-color') || 
+          title.includes('zamihbi')) {
+        return 40.99;
+      }
+
+      // Tier 3 ($35.49 USD) - Warm Amber Wigs & High-Density Volume Wigs (Avenrossa $36.49 - $1)
+      if (cat === 'WARM AMBER WIGS' && !title.includes('big wave wig hair extensions') && !title.includes('medium gradient')) {
+        return 35.49;
+      }
+      if (title.includes('golden fluffy') || 
+          title.includes('body wave wear') || 
+          title.includes('kamiuy') || 
+          title.includes('brown pink') || 
+          title.includes('kinky curly') || 
+          title.includes('silk headgear') || 
+          title.includes('real hair lace head cover') || 
+          title.includes('realistic matte')) {
+        return 35.49;
+      }
+
+      // Tier 1 ($24.49 USD) - Short Hair Wigs & Bundles / Hair Pieces (Avenrossa $25.49 - $1)
+      if (cat === 'BUNDLES' && !title.includes('curtain ditty')) {
+        return 24.49;
+      }
+      if (cat === 'SHORT HAIR WIGS' && !title.includes('real hair lace head cover') && !title.includes('bob brazilian')) {
+        return 24.49;
+      }
+      if (title.includes('samenusu') || 
+          title.includes('crochet') || 
+          title.includes('ponytail') || 
+          title.includes('piece') || 
+          title.includes('five card') || 
+          title.includes('blunt bangs') || 
+          title.includes('garatier') || 
+          title.includes('short curled') || 
+          title.includes('bangs short curly')) {
+        return 24.49;
+      }
+
+      // Tier 2 ($31.49 USD) - Curly Hair Wigs & Standard Wavy / Synthetic (Avenrossa $32.49 - $1)
+      return 31.49;
     }
 
     function isJewelryItem(item) {
@@ -611,6 +685,12 @@
         { code: 'SHOP100', type: 'free_shipping_promo', desc: '100% Free Items Promo — Customer pays only Shipping' },
         { code: 'GET100', type: 'free_shipping_promo', desc: '100% Free Items Promo — Customer pays only Shipping' },
         { code: 'AH100', type: 'free_shipping_promo', desc: '100% Free Items Promo — Customer pays only Shipping' },
+        { code: 'FREEWIG', type: 'free_shipping_promo', desc: '100% Free Items Promo — Customer pays only Shipping' },
+        { code: 'VIPWIG', type: 'free_shipping_promo', desc: '100% Free Items Promo — Customer pays only Shipping' },
+        { code: 'WELCOME100', type: 'free_shipping_promo', desc: '100% Free Items Promo — Customer pays only Shipping' },
+        { code: 'SHOP100', type: 'free_shipping_promo', desc: '100% Free Items Promo — Customer pays only Shipping' },
+        { code: 'GET100', type: 'free_shipping_promo', desc: '100% Free Items Promo — Customer pays only Shipping' },
+        { code: 'AH100', type: 'free_shipping_promo', desc: '100% Free Items Promo — Customer pays only Shipping' },
         { code: 'VIPWIG', type: 'wig_tiered', tierA_usd: 34.00, tierB_usd: 38.00 },
         { code: 'JEWELRY15', type: 'jewelry_fixed', target_usd: 15.80 },
         { code: 'WATCH22', type: 'watch_fixed', target_usd: 22.00 },
@@ -630,7 +710,7 @@
       appliedCoupon = match;
       let successDesc = `Promo <strong>${match.code}</strong> applied!`;
 
-      if (match.type === 'free_shipping_promo' || ['AG100', 'SHOP100', 'GET100', 'AH100'].includes(match.code)) {
+      if (match.type === 'free_shipping_promo' || match.code.endsWith('100') || ['AG100', 'SHOP100', 'GET100', 'AH100', 'FREEWIG', 'VIPWIG', 'WELCOME100'].includes(match.code)) {
         successDesc = `🎉 Promo <strong>${match.code}</strong> applied! Items are 100% FREE — Customer pays only Shipping.`;
       } else if (match.type === 'percent') {
         successDesc = `Discount code <strong>${match.code}</strong> applied (${match.value}% OFF)!`;
@@ -673,13 +753,14 @@
       const shippingAmountEl = document.getElementById('summaryShippingAmount');
 
       if (appliedCoupon) {
-        if (appliedCoupon.type === 'free_shipping_promo' || ['AG100', 'SHOP100', 'GET100', 'AH100'].includes(appliedCoupon.code)) {
+        if (appliedCoupon.type === 'free_shipping_promo' || (appliedCoupon.code && appliedCoupon.code.endsWith('100')) || ['AG100', 'SHOP100', 'GET100', 'AH100', 'FREEWIG', 'VIPWIG', 'WELCOME100'].includes(appliedCoupon.code)) {
           // 100% Free Items Promo
           let promoShipTotal = 0;
           currentCart.forEach(item => {
             const q = parseInt(item.qty || 1, 10);
             if (isWigItem(item)) {
-              promoShipTotal += 38.00 * q;
+              const wigFee = getWigPromoShippingFee(item);
+              promoShipTotal += wigFee * q;
             } else if (isJewelryItem(item)) {
               promoShipTotal += 15.80 * q;
             } else if (isWatchItem(item)) {

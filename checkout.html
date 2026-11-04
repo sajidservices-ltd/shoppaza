@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-72BJ8J2P5N"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-72BJ8J2P5N');
+  </script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>Official Stripe Checkout | Shoppaza</title>
@@ -942,6 +952,17 @@
         }
         // Clear shopping cart
         localStorage.removeItem('shoppaza_cart');
+
+        // Track purchase event in Google Analytics 4
+        if (typeof gtag === 'function') {
+          const numericTotal = parseFloat(amountPaid.replace(/[^0-9.]/g, '')) || 0;
+          gtag('event', 'purchase', {
+            transaction_id: orderId,
+            value: numericTotal,
+            currency: 'USD',
+            coupon: promoUsed !== 'NONE' ? promoUsed : undefined
+          });
+        }
       } catch (e) {}
     }
 

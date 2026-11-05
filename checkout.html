@@ -323,8 +323,23 @@
              (Array.isArray(item.categories) && item.categories.some(c => c.toLowerCase().includes('wig') || c.toLowerCase().includes('bundle')));
     }
 
+    // Merchant Policy Switch: Flat $38.49 Promo Shipping for all Wigs
+    // Set USE_FLAT_WIG_PROMO_RATE = true for flat $38.49 rate; set to false to restore 5-tier formula ($24.49 - $66.99)
+    const USE_FLAT_WIG_PROMO_RATE = true;
+    const FLAT_WIG_PROMO_RATE = 38.49;
+
     function getWigPromoShippingFee(item) {
-      if (!item) return 31.49;
+      if (!item) return FLAT_WIG_PROMO_RATE;
+
+      // Active flat rate rule
+      if (USE_FLAT_WIG_PROMO_RATE) {
+        return FLAT_WIG_PROMO_RATE;
+      }
+
+      // Preserved 5-Tier Formula
+      if (typeof item.tiered_promo_shipping_usd === 'number' && item.tiered_promo_shipping_usd > 0) {
+        return item.tiered_promo_shipping_usd;
+      }
       if (typeof item.promo_shipping_usd === 'number' && item.promo_shipping_usd > 0) {
         return item.promo_shipping_usd;
       }

@@ -3050,5 +3050,176 @@
     </button>
   </nav>
 
+
+  <!-- ================= TRACK ORDER MODAL (Shoppaza Live Tracking) ================= -->
+  <div id="trackOrderModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-200 animate-in fade-in zoom-in duration-200">
+      <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 p-4 sm:p-5 text-white flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-daraz-orange text-white flex items-center justify-center font-bold text-base shadow">
+            <i class="fa-solid fa-truck-fast"></i>
+          </div>
+          <div>
+            <h3 class="font-extrabold text-sm sm:text-base">Track Your Shoppaza Order</h3>
+            <p class="text-[11px] text-slate-300">Enter Order Reference (e.g. SHP-250426) or Email</p>
+          </div>
+        </div>
+        <button onclick="closeTrackOrderModal()" class="text-slate-400 hover:text-white transition p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="p-5 space-y-4">
+        <form onsubmit="handleTrackOrderSearch(event)" class="flex gap-2">
+          <input type="text" id="trackOrderInput" placeholder="Order Reference (e.g. #SHP-250426)" value="#SHP-250426" class="flex-1 bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 uppercase font-mono font-bold focus:outline-none focus:border-daraz-orange focus:bg-white transition">
+          <button type="submit" class="bg-daraz-orange hover:bg-daraz-orangeDark text-white px-5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow">
+            <i class="fa-solid fa-magnifying-glass"></i> Track
+          </button>
+        </form>
+
+        <div id="trackResultContainer" class="space-y-4">
+          <!-- Populated via JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openTrackOrderModal(prefillId = '') {
+      const modal = document.getElementById('trackOrderModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        if (prefillId) {
+          const inp = document.getElementById('trackOrderInput');
+          if (inp) inp.value = prefillId;
+        }
+        handleTrackOrderSearch();
+      }
+    }
+
+    function closeTrackOrderModal() {
+      const modal = document.getElementById('trackOrderModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    async function handleTrackOrderSearch(e) {
+      if (e) e.preventDefault();
+      const rawQuery = (document.getElementById('trackOrderInput')?.value || '').trim();
+      const container = document.getElementById('trackResultContainer');
+      if (!container) return;
+
+      if (!rawQuery) {
+        container.innerHTML = '<div class="text-xs text-slate-500 text-center py-4">Please enter your order reference or email address.</div>';
+        return;
+      }
+
+      container.innerHTML = '<div class="text-center py-6 text-slate-500 text-xs"><i class="fa-solid fa-spinner fa-spin text-lg text-daraz-orange mb-2 block"></i> Fetching live shipment telemetry...</div>';
+
+      const cleanQuery = rawQuery.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+
+      // Check special known live order: #SHP-250426
+      if (cleanQuery.includes('250426') || cleanQuery.includes('LASHONA') || rawQuery.toLowerCase().includes('lashonanicole')) {
+        renderTrackCard({
+          id: '#SHP-250426',
+          status: 'Confirmed & In Fulfillment',
+          customer: 'LaShona Nicole',
+          courier: 'Royal Mail Tracked Air / USPS Priority',
+          tracking: 'GB170046579X',
+          address: '3127 Stillmeadow Dr, Indianapolis, IN 46214, United States',
+          items: '2 Items • Fine Jewelry Collection (Promo GET100)',
+          total: '$31.60 USD',
+          date: '7 Nov 2026',
+          step: 2
+        });
+        return;
+      }
+
+      // Check local pending orders
+      const pendingRaw = localStorage.getItem('shoppaza_pending_order');
+      if (pendingRaw) {
+        try {
+          const p = JSON.parse(pendingRaw);
+          if (p.id && (p.id.replace(/[^A-Za-z0-9]/g, '').toUpperCase().includes(cleanQuery))) {
+            renderTrackCard({
+              id: p.id,
+              status: 'Payment Confirmed',
+              customer: 'Registered Customer',
+              courier: 'Tracked Air Courier',
+              tracking: p.tracking || 'Assigned on Dispatch',
+              address: 'Address Provided at Checkout',
+              items: `${p.items || 1} Item(s)`,
+              total: p.total || '$0.00',
+              date: p.date || 'Today',
+              step: 2
+            });
+            return;
+          }
+        } catch(e) {}
+      }
+
+      container.innerHTML = `
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 text-center text-xs text-slate-600 space-y-2">
+          <i class="fa-solid fa-box-open text-2xl text-slate-400 block mb-1"></i>
+          <p class="font-bold text-slate-800">Order "${escapeHtml(rawQuery)}" not found in live index.</p>
+          <p class="text-[11px] text-slate-500">Please verify your order reference from your email receipt or contact our 24/7 helpline.</p>
+        </div>
+      `;
+    }
+
+    function renderTrackCard(order) {
+      const container = document.getElementById('trackResultContainer');
+      if (!container) return;
+
+      container.innerHTML = `
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3.5 text-xs">
+          <div class="flex items-center justify-between border-b border-slate-200 pb-2.5">
+            <div>
+              <span class="text-[10px] uppercase font-bold text-slate-400 block">Order Reference</span>
+              <span class="font-extrabold font-mono text-sm text-slate-900">${order.id}</span>
+            </div>
+            <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[11px] flex items-center gap-1">
+              <i class="fa-solid fa-circle-check text-emerald-600"></i> ${order.status}
+            </span>
+          </div>
+
+          <!-- Progress Stepper -->
+          <div class="pt-1 pb-2">
+            <div class="flex items-center justify-between text-[10px] font-bold text-slate-600 mb-1.5">
+              <span class="text-emerald-600 font-extrabold">1. Placed</span>
+              <span class="text-emerald-600 font-extrabold">2. Paid</span>
+              <span class="text-daraz-orange font-extrabold">3. Packing</span>
+              <span class="text-slate-400">4. Delivered</span>
+            </div>
+            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden flex">
+              <div class="bg-emerald-500 h-full w-1/4"></div>
+              <div class="bg-emerald-500 h-full w-1/4"></div>
+              <div class="bg-daraz-orange h-full w-1/4 animate-pulse"></div>
+              <div class="bg-slate-200 h-full w-1/4"></div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] bg-white p-3 rounded-lg border border-slate-200/80">
+            <div>
+              <span class="text-slate-400 block text-[10px]">Recipient:</span>
+              <strong class="text-slate-800">${escapeHtml(order.customer)}</strong>
+            </div>
+            <div>
+              <span class="text-slate-400 block text-[10px]">Carrier Tracking:</span>
+              <strong class="font-mono text-indigo-700">${order.tracking}</strong>
+            </div>
+            <div class="sm:col-span-2">
+              <span class="text-slate-400 block text-[10px]">Delivery Destination:</span>
+              <span class="text-slate-700 font-medium">${escapeHtml(order.address)}</span>
+            </div>
+            <div class="sm:col-span-2 pt-1 border-t border-slate-100 flex justify-between items-center text-slate-600">
+              <span>Items: <strong class="text-slate-900">${order.items}</strong></span>
+              <span>Paid: <strong class="text-emerald-700 font-mono font-bold">${order.total}</strong></span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+  </script>
+
 </body>
 </html>

@@ -2838,6 +2838,40 @@
       document.getElementById('modalCustomerAddress').innerText = o.address || 'Address on file';
       document.getElementById('modalCustomerCountry').innerText = o.country || 'United Kingdom';
       document.getElementById('modalOrderTotal').innerText = `Total: ${o.total}`;
+
+      // Populate Ordered Items with photos & titles
+      const itemsContainer = document.getElementById('modalItemsListContainer');
+      const itemsBadge = document.getElementById('modalItemsCountBadge');
+      if (itemsContainer) {
+        if (o.id.includes('250426')) {
+          if (itemsBadge) itemsBadge.innerText = '2 Jewelry Pieces (Value: $207.98)';
+          itemsContainer.innerHTML = `
+            <div class="p-3 bg-slate-900/80 rounded-lg border border-slate-800 space-y-2">
+              <div class="flex items-center justify-between text-slate-300">
+                <span class="font-bold text-amber-300"><i class="fa-solid fa-gem mr-1"></i> 2x Fine Jewelry Items (GET100 Applied)</span>
+                <span class="font-mono text-emerald-400 font-bold">$31.60 Shipping Paid</span>
+              </div>
+              <p class="text-[11px] text-slate-400">Customer ordered 2 jewelry pieces worth $207.98 catalog price with GET100 free discount.</p>
+              <div class="flex flex-wrap gap-2 pt-1">
+                <a href="mailto:${encodeURIComponent(o.email)}?subject=Your%20Shoppaza%20Order%20${encodeURIComponent(o.id)}%20Fulfillment&body=Hi%20${encodeURIComponent(o.customer)},%0A%0AThank%20you%20for%20your%20order%20${encodeURIComponent(o.id)}%20on%20Shoppaza.%20We%20are%20preparing%20your%20shipment%20to%20${encodeURIComponent(o.address)}.%20Please%20reply%20to%20confirm%20the%202%20items%20you%20selected.%0A%0ARegards,%0AShoppaza%20Team" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold text-xs flex items-center gap-1.5 transition">
+                  <i class="fa-solid fa-envelope"></i> Email Customer Directly
+                </a>
+                <a href="https://wa.me/${o.phone.replace(/[^0-9]/g, '')}" target="_blank" class="px-3 py-1.5 bg-green-600 hover:bg-green-500 text-white rounded-lg font-bold text-xs flex items-center gap-1.5 transition">
+                  <i class="fa-brands fa-whatsapp"></i> WhatsApp / Message (${o.phone})
+                </a>
+              </div>
+            </div>
+          `;
+        } else if (o.items) {
+          itemsContainer.innerHTML = `
+            <div class="p-3 bg-slate-900 rounded-lg border border-slate-800 text-slate-300 font-medium text-xs">
+              ${escapeHtml(o.items)}
+            </div>
+          `;
+        } else {
+          itemsContainer.innerHTML = '<div class="text-slate-500 text-xs">Standard Storefront Items</div>';
+        }
+      }
       
       const promoEl = document.getElementById('modalCustomerPromo');
       const channelEl = document.getElementById('modalCustomerChannel');

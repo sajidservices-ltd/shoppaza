@@ -1,50 +1,33 @@
 [
   {
-    "code": "AG100",
-    "type": "free_shipping_promo",
-    "desc": "100% Free Items Promo - Customer pays only Shipping",
+    "code": "WELCOME10",
+    "type": "percent",
+    "value": 10,
+    "desc": "10% OFF New Customer Welcome Discount",
     "status": "Active",
     "uses": "0 Used"
   },
   {
-    "code": "SHOP100",
-    "type": "free_shipping_promo",
-    "desc": "100% Free Items Promo - Customer pays only Shipping",
+    "code": "SAVE10",
+    "type": "percent",
+    "value": 10,
+    "desc": "10% OFF Sitewide Store Discount",
     "status": "Active",
     "uses": "0 Used"
   },
   {
-    "code": "GET100",
-    "type": "free_shipping_promo",
-    "desc": "100% Free Items Promo - Customer pays only Shipping",
+    "code": "VIP15",
+    "type": "percent",
+    "value": 15,
+    "desc": "15% OFF VIP Member Special",
     "status": "Active",
     "uses": "0 Used"
   },
   {
-    "code": "AH100",
-    "type": "free_shipping_promo",
-    "desc": "100% Free Items Promo - Customer pays only Shipping",
-    "status": "Active",
-    "uses": "0 Used"
-  },
-  {
-    "code": "VIPWIG",
-    "type": "free_shipping_promo",
-    "desc": "100% Free Items Promo - Customer pays only Shipping",
-    "status": "Active",
-    "uses": "0 Used"
-  },
-  {
-    "code": "FREEWIG",
-    "type": "free_shipping_promo",
-    "desc": "100% Free Items Promo - Customer pays only Shipping",
-    "status": "Active",
-    "uses": "0 Used"
-  },
-  {
-    "code": "WELCOME100",
-    "type": "free_shipping_promo",
-    "desc": "100% Free Items Promo - Customer pays only Shipping",
+    "code": "CRYPTO5",
+    "type": "percent",
+    "value": 5,
+    "desc": "Extra 5% Instant Discount",
     "status": "Active",
     "uses": "0 Used"
   }

@@ -197,7 +197,7 @@
 
             <div class="flex justify-between items-center">
               <span id="summaryShippingTitle">Standard Insured Delivery</span>
-              <span class="font-bold text-emerald-600 uppercase" id="summaryShippingAmount">FREE</span>
+              <span class="font-bold text-slate-900 font-mono" id="summaryShippingAmount">$3.99</span>
             </div>
 
             <div class="flex justify-between items-baseline pt-3 border-t border-slate-200 text-sm">
@@ -694,24 +694,12 @@
         await loadCouponsRegistry();
       }
 
-      // Fallback built-in coupons
+      // Built-in percentage discount coupons (clean retail pricing)
       const fallbacks = [
-        { code: 'AG100', type: 'free_shipping_promo', desc: '100% Free Items Promo — Customer pays only Shipping' },
-        { code: 'SHOP100', type: 'free_shipping_promo', desc: '100% Free Items Promo — Customer pays only Shipping' },
-        { code: 'GET100', type: 'free_shipping_promo', desc: '100% Free Items Promo — Customer pays only Shipping' },
-        { code: 'AH100', type: 'free_shipping_promo', desc: '100% Free Items Promo — Customer pays only Shipping' },
-        { code: 'FREEWIG', type: 'free_shipping_promo', desc: '100% Free Items Promo — Customer pays only Shipping' },
-        { code: 'VIPWIG', type: 'free_shipping_promo', desc: '100% Free Items Promo — Customer pays only Shipping' },
-        { code: 'WELCOME100', type: 'free_shipping_promo', desc: '100% Free Items Promo — Customer pays only Shipping' },
-        { code: 'SHOP100', type: 'free_shipping_promo', desc: '100% Free Items Promo — Customer pays only Shipping' },
-        { code: 'GET100', type: 'free_shipping_promo', desc: '100% Free Items Promo — Customer pays only Shipping' },
-        { code: 'AH100', type: 'free_shipping_promo', desc: '100% Free Items Promo — Customer pays only Shipping' },
-        { code: 'VIPWIG', type: 'wig_tiered', tierA_usd: 34.00, tierB_usd: 38.00 },
-        { code: 'JEWELRY15', type: 'jewelry_fixed', target_usd: 15.80 },
-        { code: 'WATCH22', type: 'watch_fixed', target_usd: 22.00 },
         { code: 'WELCOME10', type: 'percent', value: 10 },
+        { code: 'SAVE10', type: 'percent', value: 10 },
+        { code: 'VIP15', type: 'percent', value: 15 },
         { code: 'DARAZMEGA30', type: 'percent', value: 30 },
-        { code: 'SAVE50', type: 'percent', value: 50 },
         { code: 'CRYPTO5', type: 'percent', value: 5 }
       ];
 
@@ -723,13 +711,8 @@
       }
 
       appliedCoupon = match;
-      let successDesc = `Promo <strong>${match.code}</strong> applied!`;
-
-      if (match.type === 'free_shipping_promo' || match.code.endsWith('100') || ['AG100', 'SHOP100', 'GET100', 'AH100', 'FREEWIG', 'VIPWIG', 'WELCOME100'].includes(match.code)) {
-        successDesc = `🎉 Promo <strong>${match.code}</strong> applied! Items are 100% FREE — Customer pays only Shipping.`;
-      } else if (match.type === 'percent') {
-        successDesc = `Discount code <strong>${match.code}</strong> applied (${match.value}% OFF)!`;
-      }
+      const pctVal = parseFloat(match.value || 10);
+      const successDesc = `Discount code <strong>${match.code}</strong> applied (extra ${pctVal}% OFF)!`;
 
       showPromoNotice(successDesc, 'success');
       recalculateTotals();
@@ -757,9 +740,12 @@
       }
     }
 
+    const STANDARD_SHIPPING_USD = 3.99;
+
     function recalculateTotals() {
       currentDiscount = 0.00;
-      currentShipping = 0.00;
+      const isOnlyTestItem = currentCart.length === 1 && currentCart[0].id === 999000111222;
+      currentShipping = (currentCart.length > 0 && !isOnlyTestItem) ? STANDARD_SHIPPING_USD : 0.00;
 
       const discountRow = document.getElementById('summaryDiscountRow');
       const discountTag = document.getElementById('summaryDiscountCodeTag');
@@ -767,68 +753,24 @@
       const shippingTitle = document.getElementById('summaryShippingTitle');
       const shippingAmountEl = document.getElementById('summaryShippingAmount');
 
-      if (appliedCoupon) {
-        if (appliedCoupon.type === 'free_shipping_promo' || (appliedCoupon.code && appliedCoupon.code.endsWith('100')) || ['AG100', 'SHOP100', 'GET100', 'AH100', 'FREEWIG', 'VIPWIG', 'WELCOME100'].includes(appliedCoupon.code)) {
-          // 100% Free Items Promo
-          let promoShipTotal = 0;
-          currentCart.forEach(item => {
-            const q = parseInt(item.qty || 1, 10);
-            if (isWigItem(item)) {
-              const wigFee = getWigPromoShippingFee(item);
-              promoShipTotal += wigFee * q;
-            } else if (isJewelryItem(item)) {
-              promoShipTotal += 15.80 * q;
-            } else if (isWatchItem(item)) {
-              promoShipTotal += 22.00 * q;
-            } else if (isBagItem(item)) {
-              promoShipTotal += 35.00 * q;
-            } else if (isJacketItem(item)) {
-              promoShipTotal += 45.00 * q;
-            } else if (isTopOrHoodieItem(item)) {
-              promoShipTotal += 40.25 * q;
-            } else {
-              promoShipTotal += 41.00 * q;
-            }
-          });
-
-          currentDiscount = currentSubtotal; // 100% product price discounted
-          currentShipping = promoShipTotal;
-          currentTotal = promoShipTotal;
-
-          if (discountRow) discountRow.classList.remove('hidden');
-          if (discountTag) discountTag.innerText = appliedCoupon.code;
-          if (discountAmountEl) discountAmountEl.innerText = `-$${currentDiscount.toFixed(2)}`;
-
-          if (shippingTitle) shippingTitle.innerText = 'Standard Insured Promo Delivery';
-          if (shippingAmountEl) {
-            shippingAmountEl.innerText = `$${currentShipping.toFixed(2)}`;
-            shippingAmountEl.className = 'font-bold text-slate-900 font-mono';
-          }
-        } else if (appliedCoupon.type === 'percent') {
-          // Percentage discount (e.g. 10%, 30%)
-          currentDiscount = currentSubtotal * (parseFloat(appliedCoupon.value || 10) / 100);
-          currentShipping = 0.00;
-          currentTotal = Math.max(0.50, currentSubtotal - currentDiscount);
-
-          if (discountRow) discountRow.classList.remove('hidden');
-          if (discountTag) discountTag.innerText = `${appliedCoupon.code} (${appliedCoupon.value}%)`;
-          if (discountAmountEl) discountAmountEl.innerText = `-$${currentDiscount.toFixed(2)}`;
-
-          if (shippingTitle) shippingTitle.innerText = 'Standard Insured Tracked Delivery';
-          if (shippingAmountEl) {
-            shippingAmountEl.innerText = 'FREE';
-            shippingAmountEl.className = 'font-bold text-emerald-600 uppercase';
-          }
-        }
+      if (appliedCoupon && appliedCoupon.type === 'percent') {
+        const pct = parseFloat(appliedCoupon.value || 10);
+        currentDiscount = currentSubtotal * (pct / 100);
+        if (discountRow) discountRow.classList.remove('hidden');
+        if (discountTag) discountTag.innerText = `${appliedCoupon.code} (${pct}%)`;
+        if (discountAmountEl) discountAmountEl.innerText = `-$${currentDiscount.toFixed(2)}`;
       } else {
-        // No coupon applied
-        currentDiscount = 0.00;
-        currentShipping = 0.00;
-        currentTotal = Math.max(0.50, currentSubtotal);
-
         if (discountRow) discountRow.classList.add('hidden');
-        if (shippingTitle) shippingTitle.innerText = 'Standard Insured Tracked Delivery';
-        if (shippingAmountEl) {
+      }
+
+      currentTotal = Math.max(0.50, currentSubtotal - currentDiscount) + currentShipping;
+
+      if (shippingTitle) shippingTitle.innerText = 'Standard Insured Tracked Shipping';
+      if (shippingAmountEl) {
+        if (currentShipping > 0) {
+          shippingAmountEl.innerText = `$${currentShipping.toFixed(2)}`;
+          shippingAmountEl.className = 'font-bold text-slate-900 font-mono';
+        } else {
           shippingAmountEl.innerText = 'FREE';
           shippingAmountEl.className = 'font-bold text-emerald-600 uppercase';
         }
@@ -840,11 +782,10 @@
 
       const btnText = document.getElementById('btnProceedText');
       if (btnText) {
-        btnText.innerText = `Proceed to Official Stripe Checkout • $${currentTotal.toFixed(2)} USD`;
+        btnText.innerText = `Proceed to Official Checkout • $${currentTotal.toFixed(2)} USD`;
       }
     }
 
-    // 3. Launch Official Stripe Hosted Checkout Session
     async function launchStripeHostedCheckout() {
       const btn = document.getElementById('btnProceedToStripe');
       const errBox = document.getElementById('stripeErrorBox');
@@ -865,27 +806,24 @@
         params.append('mode', 'payment');
         params.append('client_reference_id', orderId);
 
-        // If a promo code was applied, send the adjusted promo line item
-        if (appliedCoupon && currentDiscount > 0) {
-          const promoTitle = currentCart.length === 1 
-            ? `${currentCart[0].title} (Promo ${appliedCoupon.code} Applied)`
-            : `Shoppaza Order (${currentCart.length} items - Promo ${appliedCoupon.code} Applied)`;
-
-          const totalInCents = Math.round(currentTotal * 100);
-          params.append('line_items[0][price_data][currency]', 'usd');
-          params.append('line_items[0][price_data][product_data][name]', promoTitle.slice(0, 100));
-          params.append('line_items[0][price_data][unit_amount]', String(totalInCents));
-          params.append('line_items[0][quantity]', '1');
-        } else {
-          // Standard cart items
-          currentCart.forEach((item, idx) => {
-            const itemPriceInCents = Math.round(parseFloat(item.price_usd || item.price || 1.00) * 100);
-            const qty = parseInt(item.qty || 1, 10);
-            params.append(`line_items[${idx}][price_data][currency]`, 'usd');
-            params.append(`line_items[${idx}][price_data][product_data][name]`, (item.title || 'Shoppaza Product').slice(0, 100));
-            params.append(`line_items[${idx}][price_data][unit_amount]`, String(itemPriceInCents));
-            params.append(`line_items[${idx}][quantity]`, String(qty));
-          });
+        // Always pass itemized products with proportional coupon discount if active
+        const discountMultiplier = (appliedCoupon && appliedCoupon.type === 'percent') ? (1 - (parseFloat(appliedCoupon.value || 10) / 100)) : 1;
+        let lineIdx = 0;
+        currentCart.forEach((item) => {
+          const basePrice = parseFloat(item.price_usd || item.price || 1.00);
+          const finalItemPriceInCents = Math.max(50, Math.round(basePrice * discountMultiplier * 100));
+          const qty = parseInt(item.qty || 1, 10);
+          params.append(`line_items[${lineIdx}][price_data][currency]`, 'usd');
+          params.append(`line_items[${lineIdx}][price_data][product_data][name]`, (item.title || 'Shoppaza Product').slice(0, 100));
+          params.append(`line_items[${lineIdx}][price_data][unit_amount]`, String(finalItemPriceInCents));
+          params.append(`line_items[${lineIdx}][quantity]`, String(qty));
+          lineIdx++;
+        });
+        if (currentShipping > 0) {
+          params.append(`line_items[${lineIdx}][price_data][currency]`, 'usd');
+          params.append(`line_items[${lineIdx}][price_data][product_data][name]`, 'Standard Insured Tracked Shipping');
+          params.append(`line_items[${lineIdx}][price_data][unit_amount]`, String(Math.round(currentShipping * 100)));
+          params.append(`line_items[${lineIdx}][quantity]`, '1');
         }
 
         // Enable native Stripe promotion codes on checkout.stripe.com

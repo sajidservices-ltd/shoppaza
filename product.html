@@ -300,7 +300,7 @@
                   £45.00
                 </span>
                 <span id="productDiscountPill" class="bg-red-500 text-white text-xs font-black px-2 py-0.5 rounded">
-                  -35% OFF
+                  -70% OFF
                 </span>
               </div>
               <div class="text-[11px] text-slate-500 mt-2 flex items-center gap-1.5">
@@ -407,7 +407,7 @@
         <div class="space-y-3 pt-2 text-xs">
           <div class="p-3 bg-slate-50 rounded-lg flex items-center justify-between">
             <span class="font-bold text-slate-800">United Kingdom (Standard Insured Tracked)</span>
-            <span class="text-emerald-600 font-bold">1 - 2 Business Days • Free on £40+</span>
+            <span class="text-emerald-600 font-bold">1 - 2 Business Days • Flat £2.99 / $3.99</span>
           </div>
           <div class="p-3 bg-slate-50 rounded-lg flex items-center justify-between">
             <span class="font-bold text-slate-800">United States & Europe (DHL Express / FedEx)</span>
@@ -779,7 +779,7 @@
               </div>
               <div class="flex justify-between">
                 <span>Shipping (Standard Insured Tracked)</span>
-                <span class="font-bold text-emerald-600 uppercase">Free</span>
+                <span class="font-bold text-slate-800">$3.99 / £2.99</span>
               </div>
               <div class="flex justify-between text-slate-500">
                 <span>Estimated taxes</span>
@@ -1448,6 +1448,8 @@
       if (!currentProduct) return;
       document.getElementById('productPriceDisplay').innerText = formatPrice(currentProduct);
       document.getElementById('productComparePriceDisplay').innerText = formatPrice(currentProduct, true);
+      const pillEl = document.getElementById('productDiscountPill');
+      if (pillEl) pillEl.innerText = `-${currentProduct.discount || 70}% OFF`;
     }
 
     function changeCurrency(curr) {

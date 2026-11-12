@@ -294,13 +294,13 @@
               <div class="text-[11px] text-slate-500 uppercase font-semibold">Special Offer Price</div>
               <div class="flex items-baseline gap-3 mt-1 flex-wrap">
                 <span id="productPriceDisplay" class="text-3xl sm:text-4xl font-black text-daraz-orange">
-                  £29.00
+                  —
                 </span>
                 <span id="productComparePriceDisplay" class="text-base text-slate-400 line-through">
-                  £45.00
+                  —
                 </span>
                 <span id="productDiscountPill" class="bg-red-500 text-white text-xs font-black px-2 py-0.5 rounded">
-                  -70% OFF
+                  SPECIAL OFFER
                 </span>
               </div>
               <div class="text-[11px] text-slate-500 mt-2 flex items-center gap-1.5">
@@ -349,7 +349,7 @@
             </div>
             <div class="flex items-center gap-2">
               <i class="fa-solid fa-lock text-slate-900"></i>
-              <span>Secure checkout powered by Stripe PCI-DSS Level 1 & Web3 USDT Gateway.</span>
+              <span>256-Bit SSL Encrypted Checkout • Worldwide Insured Tracked Dispatch.</span>
             </div>
           </div>
 
@@ -548,10 +548,10 @@
               <button type="button" onclick="selectExpressPayment('apple')" class="py-2.5 px-3 rounded-lg bg-black hover:bg-slate-900 text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow">
                 <i class="fa-brands fa-apple text-sm"></i> Pay
               </button>
-              <button type="button" onclick="selectExpressPayment('amazon')" id="btnExpressAmazon" class="py-2.5 px-3 rounded-lg bg-[#FF9900] hover:bg-[#e68a00] text-slate-950 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow">
+              <button type="button" onclick="selectExpressPayment('amazon')" id="btnExpressAmazon" class="hidden py-2.5 px-3 rounded-lg bg-[#FF9900] hover:bg-[#e68a00] text-slate-950 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow">
                 <i class="fa-brands fa-amazon text-sm"></i> Pay
               </button>
-              <button type="button" onclick="selectExpressPayment('afterpay')" id="btnExpressAfterpay" class="py-2.5 px-3 rounded-lg bg-[#B2FCE4] hover:bg-[#9eedd5] text-slate-900 text-xs font-extrabold transition flex items-center justify-center gap-1 shadow">
+              <button type="button" onclick="selectExpressPayment('afterpay')" id="btnExpressAfterpay" class="hidden py-2.5 px-3 rounded-lg bg-[#B2FCE4] hover:bg-[#9eedd5] text-slate-900 text-xs font-extrabold transition flex items-center justify-center gap-1 shadow">
                 afterpay<span class="text-[9px]">®</span>
               </button>
             </div>
@@ -622,7 +622,7 @@
                     <span class="text-[11px] text-slate-500 block">Direct doorstep tracked fulfillment via partner centers</span>
                   </div>
                 </div>
-                <span class="font-bold text-emerald-600 uppercase text-xs tracking-wider">FREE</span>
+                <span class="font-bold text-slate-800 text-xs tracking-wider">$3.99 / £2.99</span>
               </div>
             </div>
 
@@ -677,7 +677,7 @@
                 </div>
 
                 <!-- Option 2: Afterpay / Clearpay -->
-                <div id="containerAfterpayOption" class="bg-white">
+                <div id="containerAfterpayOption" class="bg-white hidden">
                   <label class="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50 transition" onclick="togglePaymentSection('afterpay')">
                     <div class="flex items-center gap-3">
                       <input type="radio" name="paymentOption" value="afterpay" class="text-slate-900 focus:ring-0">
@@ -692,7 +692,7 @@
                 </div>
 
                 <!-- Option 3: Amazon Pay -->
-                <div id="containerAmazonOption" class="bg-white">
+                <div id="containerAmazonOption" class="bg-white hidden">
                   <label class="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50 transition" onclick="togglePaymentSection('amazon')">
                     <div class="flex items-center gap-3">
                       <input type="radio" name="paymentOption" value="amazon" class="text-slate-900 focus:ring-0">
@@ -1147,6 +1147,11 @@
 
     async function detectStorefrontVisitorCountry() {
       try {
+        const urlCurrency = (new URLSearchParams(window.location.search).get('currency') || new URLSearchParams(window.location.search).get('curr') || '').toUpperCase();
+        if (urlCurrency && currencyConfig[urlCurrency]) {
+          setStoreCurrency(urlCurrency, false);
+          return;
+        }
         const manualChoice = localStorage.getItem('shoppaza_currency_manual');
         const savedCurr = localStorage.getItem('shoppaza_currency');
         if (manualChoice === 'true' && savedCurr && currencyConfig[savedCurr]) {
@@ -1449,7 +1454,36 @@
       document.getElementById('productPriceDisplay').innerText = formatPrice(currentProduct);
       document.getElementById('productComparePriceDisplay').innerText = formatPrice(currentProduct, true);
       const pillEl = document.getElementById('productDiscountPill');
-      if (pillEl) pillEl.innerText = `-${currentProduct.discount || 70}% OFF`;
+      if (pillEl) pillEl.innerText = `-${currentProduct.discount || 25}% OFF`;
+      try {
+        const schemaCurr = currentCurrency === 'USDT' ? 'USD' : currentCurrency;
+        const cfg = currencyConfig[currentCurrency] || currencyConfig['GBP'];
+        const numPrice = cfg.rateKey && currentProduct[cfg.rateKey] ? currentProduct[cfg.rateKey] : (currentProduct.price_gbp || currentProduct.price_usd || 0);
+        let schemaEl = document.getElementById('dynamicProductSchema');
+        if (!schemaEl) {
+          schemaEl = document.createElement('script');
+          schemaEl.id = 'dynamicProductSchema';
+          schemaEl.type = 'application/ld+json';
+          document.head.appendChild(schemaEl);
+        }
+        schemaEl.textContent = JSON.stringify({
+          '@context': 'https://schema.org/',
+          '@type': 'Product',
+          'name': currentProduct.title,
+          'image': [currentProduct.image],
+          'description': currentProduct.description || currentProduct.title,
+          'sku': 'SHP-' + currentProduct.id,
+          'brand': { '@type': 'Brand', 'name': 'Shoppaza' },
+          'offers': {
+            '@type': 'Offer',
+            'url': window.location.href,
+            'priceCurrency': schemaCurr,
+            'price': Number(numPrice).toFixed(cfg.decimals),
+            'availability': currentProduct.in_stock === false ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock',
+            'itemCondition': 'https://schema.org/NewCondition'
+          }
+        });
+      } catch(e) {}
     }
 
     function changeCurrency(curr) {

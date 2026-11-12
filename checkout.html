@@ -131,7 +131,7 @@
           </div>
           <h1 class="text-xl sm:text-3xl font-black">Official Stripe Secure Checkout</h1>
           <p class="text-slate-300 text-xs sm:text-sm max-w-2xl leading-relaxed">
-            All customer addresses, payment cards, Apple Pay, Google Pay, Amazon Pay, and 3D Secure bank authorizations are processed securely on Stripe's official servers (<code class="bg-slate-800 text-emerald-300 px-1 py-0.5 rounded text-[11px]">checkout.stripe.com</code>).
+            All customer addresses, payment cards, Apple Pay, Google Pay, and 3D Secure bank authorizations are processed over encrypted 256-bit SSL gateways.
           </p>
         </div>
         <div class="absolute -right-8 -bottom-8 opacity-10 text-8xl sm:text-9xl text-white pointer-events-none">
@@ -208,7 +208,7 @@
 
           <!-- Empty cart notice helper -->
           <div id="emptyCartHelper" class="hidden p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-[11px] space-y-2">
-            <div><strong>Notice:</strong> Cart is empty. A <strong>$1.00 USD Live Test Item</strong> is loaded so you can test Stripe checkout directly!</div>
+            <div><strong>Your shopping bag is currently empty.</strong> Please add items from our storefront before proceeding to payment.</div>
             <a href="index.html" class="inline-block text-shopify-link font-bold hover:underline">
               ← Add real products from shop
             </a>
@@ -536,19 +536,14 @@
 
       const emptyHelper = document.getElementById('emptyCartHelper');
 
-      // If cart is empty, provide $1.00 Live Test Item so testing never fails
+      const proceedBtn = document.getElementById('btnProceedToStripe');
       if (!currentCart || currentCart.length === 0) {
-        currentCart = [{
-          id: 'test-order-1',
-          title: 'Shoppaza Live Test Order ($1.00 USD)',
-          price: 1.00,
-          price_usd: 1.00,
-          qty: 1,
-          image: 'logo.svg'
-        }];
+        currentCart = [];
         if (emptyHelper) emptyHelper.classList.remove('hidden');
+        if (proceedBtn) { proceedBtn.disabled = true; proceedBtn.classList.add('opacity-50', 'cursor-not-allowed'); }
       } else {
         if (emptyHelper) emptyHelper.classList.add('hidden');
+        if (proceedBtn) { proceedBtn.disabled = false; proceedBtn.classList.remove('opacity-50', 'cursor-not-allowed'); }
       }
 
       // Calculate Subtotal
@@ -763,7 +758,7 @@
         if (discountRow) discountRow.classList.add('hidden');
       }
 
-      currentTotal = Math.max(0.50, currentSubtotal - currentDiscount) + currentShipping;
+      currentTotal = currentCart.length > 0 ? (Math.max(0.50, currentSubtotal - currentDiscount) + currentShipping) : 0.00;
 
       if (shippingTitle) shippingTitle.innerText = 'Standard Insured Tracked Shipping';
       if (shippingAmountEl) {

@@ -322,13 +322,13 @@
             <div class="absolute bottom-3 left-3 right-3 sm:left-8 sm:right-8 z-30 bg-white/95 backdrop-blur-md rounded-xl p-2 shadow-xl border border-white flex items-center justify-around divide-x divide-slate-200 text-xs">
               <div class="flex items-center gap-1.5 px-2">
                 <span class="text-[9px] font-black text-white bg-daraz-orange px-1.5 py-0.5 rounded uppercase">VOUCHER</span>
-                <span class="font-black text-daraz-orange text-[10px] sm:text-xs">STRIPE 12% OFF</span>
+                <span class="font-black text-daraz-orange text-[10px] sm:text-xs">SEASONAL SAVINGS</span>
               </div>
               <div class="flex items-center gap-1.5 px-2">
-                <span class="font-black text-emerald-600 text-[10px] sm:text-xs">USDT 15% OFF</span>
+                <span class="font-black text-emerald-600 text-[10px] sm:text-xs">LOW FLAT SHIPPING</span>
               </div>
               <div class="hidden sm:flex items-center gap-1.5 px-2">
-                <span class="font-black text-blue-600 text-[10px] sm:text-xs">CARDS 10% OFF</span>
+                <span class="font-black text-blue-600 text-[10px] sm:text-xs">256-BIT SSL CHECKOUT</span>
               </div>
             </div>
 
@@ -392,7 +392,7 @@
                 <span class="font-black text-daraz-orange text-[10px] sm:text-xs">100% VIRGIN HAIR</span>
               </div>
               <div class="flex items-center gap-1.5 px-2">
-                <span class="font-black text-emerald-600 text-[10px] sm:text-xs">FREE SHIPPING</span>
+                <span class="font-black text-emerald-600 text-[10px] sm:text-xs">TRACKED SHIPPING</span>
               </div>
               <div class="hidden sm:flex items-center gap-1.5 px-2">
                 <span class="font-black text-blue-600 text-[10px] sm:text-xs">30-DAY RETURNS</span>
@@ -1329,10 +1329,10 @@
               <button type="button" onclick="selectExpressPayment('apple')" class="py-2.5 px-3 rounded-lg bg-black hover:bg-slate-900 text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow">
                 <i class="fa-brands fa-apple text-sm"></i> Pay
               </button>
-              <button type="button" onclick="selectExpressPayment('amazon')" id="btnExpressAmazon" class="py-2.5 px-3 rounded-lg bg-[#FF9900] hover:bg-[#e68a00] text-slate-950 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow">
+              <button type="button" onclick="selectExpressPayment('amazon')" id="btnExpressAmazon" class="hidden py-2.5 px-3 rounded-lg bg-[#FF9900] hover:bg-[#e68a00] text-slate-950 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow">
                 <i class="fa-brands fa-amazon text-sm"></i> Pay
               </button>
-              <button type="button" onclick="selectExpressPayment('afterpay')" id="btnExpressAfterpay" class="py-2.5 px-3 rounded-lg bg-[#B2FCE4] hover:bg-[#9eedd5] text-slate-900 text-xs font-extrabold transition flex items-center justify-center gap-1 shadow">
+              <button type="button" onclick="selectExpressPayment('afterpay')" id="btnExpressAfterpay" class="hidden py-2.5 px-3 rounded-lg bg-[#B2FCE4] hover:bg-[#9eedd5] text-slate-900 text-xs font-extrabold transition flex items-center justify-center gap-1 shadow">
                 afterpay<span class="text-[9px]">®</span>
               </button>
             </div>
@@ -1458,7 +1458,7 @@
                 </div>
 
                 <!-- Option 2: Afterpay / Clearpay -->
-                <div id="containerAfterpayOption" class="bg-white">
+                <div id="containerAfterpayOption" class="bg-white hidden">
                   <label class="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50 transition" onclick="togglePaymentSection('afterpay')">
                     <div class="flex items-center gap-3">
                       <input type="radio" name="paymentOption" value="afterpay" class="text-slate-900 focus:ring-0">
@@ -1473,7 +1473,7 @@
                 </div>
 
                 <!-- Option 3: Amazon Pay -->
-                <div id="containerAmazonOption" class="bg-white">
+                <div id="containerAmazonOption" class="bg-white hidden">
                   <label class="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50 transition" onclick="togglePaymentSection('amazon')">
                     <div class="flex items-center gap-3">
                       <input type="radio" name="paymentOption" value="amazon" class="text-slate-900 focus:ring-0">
@@ -1982,6 +1982,11 @@
 
     async function detectStorefrontVisitorCountry() {
       try {
+        const urlCurrency = (new URLSearchParams(window.location.search).get('currency') || new URLSearchParams(window.location.search).get('curr') || '').toUpperCase();
+        if (urlCurrency && currencyConfig[urlCurrency]) {
+          setStoreCurrency(urlCurrency, false);
+          return;
+        }
         const manualChoice = localStorage.getItem('shoppaza_currency_manual');
         const savedCurr = localStorage.getItem('shoppaza_currency');
         if (manualChoice === 'true' && savedCurr && currencyConfig[savedCurr]) {

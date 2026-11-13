@@ -13,8 +13,11 @@
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <title>Official Stripe Checkout | Shoppaza</title>
+  <title>Official PayPal Checkout | Shoppaza</title>
   <link rel="icon" type="image/svg+xml" href="logo.svg">
+
+  <!-- PayPal Config File (Local / Manual Key Storage) -->
+  <script src="paypal-config.js"></script>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -55,9 +58,9 @@
         <img src="logo.svg" alt="Shoppaza" class="h-7 sm:h-8 w-auto">
       </a>
       <div class="flex items-center gap-2 sm:gap-3 text-xs">
-        <div class="flex items-center gap-1.5 text-emerald-700 bg-emerald-50 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full font-semibold border border-emerald-200 text-[11px] sm:text-xs">
-          <i class="fa-solid fa-lock text-emerald-600"></i>
-          <span>Official Stripe Checkout</span>
+        <div class="flex items-center gap-1.5 text-blue-700 bg-blue-50 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full font-semibold border border-blue-200 text-[11px] sm:text-xs">
+          <i class="fa-brands fa-paypal text-blue-600"></i>
+          <span>Official PayPal Checkout</span>
         </div>
         <span class="hidden md:inline text-slate-400 font-mono text-[11px]">SAJID SERVICES LTD</span>
       </div>
@@ -76,10 +79,10 @@
 
         <div>
           <span class="text-[11px] sm:text-xs uppercase font-extrabold text-emerald-600 tracking-wider bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-            Payment Verified • Stripe Official
+            Payment Verified • PayPal Official
           </span>
           <h1 class="text-2xl sm:text-3xl font-black text-slate-900 mt-3" id="confirmCustomerName">Thank you for your order!</h1>
-          <p class="text-xs sm:text-sm text-slate-500 mt-1">Your order has been officially processed and confirmed via Stripe.</p>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">Your order has been officially processed and confirmed via PayPal.</p>
         </div>
 
         <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 sm:p-5 text-left text-xs space-y-3 font-mono">
@@ -88,7 +91,7 @@
             <span class="font-bold text-slate-900" id="confirmOrderId">#SHP-LIVE</span>
           </div>
           <div class="flex justify-between py-1 border-b border-slate-200">
-            <span class="text-slate-500 font-sans">Stripe Session ID</span>
+            <span class="text-slate-500 font-sans">PayPal Transaction ID</span>
             <span class="text-slate-700 truncate max-w-[200px] sm:max-w-[280px]" id="confirmSessionId">-</span>
           </div>
           <div class="flex justify-between py-1 border-b border-slate-200">
@@ -127,15 +130,15 @@
       <div class="bg-gradient-to-r from-slate-900 to-slate-800 rounded-2xl text-white p-5 sm:p-8 shadow-lg relative overflow-hidden">
         <div class="relative z-10 space-y-2">
           <div class="flex items-center gap-2 text-emerald-400 text-[11px] sm:text-xs font-bold uppercase tracking-wider">
-            <i class="fa-solid fa-shield-halved"></i> 100% Genuine Stripe Hosted Page
+            <i class="fa-solid fa-shield-halved"></i> 100% Genuine PayPal & Card Checkout
           </div>
-          <h1 class="text-xl sm:text-3xl font-black">Official Stripe Secure Checkout</h1>
+          <h1 class="text-xl sm:text-3xl font-black">Official PayPal Secure Checkout</h1>
           <p class="text-slate-300 text-xs sm:text-sm max-w-2xl leading-relaxed">
-            All customer addresses, payment cards, Apple Pay, Google Pay, and 3D Secure bank authorizations are processed over encrypted 256-bit SSL gateways.
+            All transactions, credit/debit cards, and Pay Later installments are processed over official encrypted PayPal gateways for SAJID SERVICES LTD.
           </p>
         </div>
         <div class="absolute -right-8 -bottom-8 opacity-10 text-8xl sm:text-9xl text-white pointer-events-none">
-          <i class="fa-brands fa-stripe"></i>
+          <i class="fa-brands fa-paypal"></i>
         </div>
       </div>
 
@@ -216,67 +219,91 @@
 
         </div>
 
-        <!-- ================= LEFT COLUMN: Gateway Action & Badges (Desktop 7 cols, Mobile ORDER 2) ================= -->
+        <!-- ================= LEFT COLUMN: Genuine PayPal Gateway (Desktop 7 cols, Mobile ORDER 2) ================= -->
         <div class="lg:col-span-7 order-2 lg:order-1 bg-white rounded-2xl border border-slate-200 p-4 sm:p-8 shadow-sm space-y-6">
           
           <div class="space-y-2 pb-4 border-b border-slate-100">
-            <h2 class="text-base sm:text-lg font-black text-slate-900">1-Click Stripe Gateway Handoff</h2>
+            <div class="flex items-center gap-2.5">
+              <i class="fa-brands fa-paypal text-blue-600 text-2xl"></i>
+              <h2 class="text-base sm:text-lg font-black text-slate-900">Official PayPal & Card Checkout</h2>
+            </div>
             <p class="text-xs text-slate-500 leading-relaxed">
-              When you click the button below, you will instantly open the genuine Stripe hosted page for <strong>SAJID SERVICES LTD</strong>. You will be able to enter your shipping address and pay via any supported payment method with zero fake forms.
+              Pay securely using your <strong>PayPal account</strong>, any <strong>Debit or Credit Card</strong> (no PayPal account required), or <strong>Pay Later in 4 installments</strong>. Backed by PayPal Purchase Protection for <strong>SAJID SERVICES LTD</strong>.
             </p>
           </div>
 
           <!-- Feature badges -->
           <div class="grid grid-cols-2 gap-2.5 sm:gap-3 text-xs">
             <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-2.5">
+              <i class="fa-brands fa-paypal text-blue-600 text-lg flex-shrink-0"></i>
+              <div>
+                <div class="font-bold text-slate-900 text-[11px] sm:text-xs">PayPal 1-Touch</div>
+                <div class="text-[10px] text-slate-500">Fast Instant Checkout</div>
+              </div>
+            </div>
+            <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-2.5">
               <i class="fa-solid fa-credit-card text-emerald-600 text-base flex-shrink-0"></i>
               <div>
-                <div class="font-bold text-slate-900 text-[11px] sm:text-xs">Card & Digital Wallets</div>
-                <div class="text-[10px] text-slate-500">Apple Pay, Google Pay, Cards</div>
+                <div class="font-bold text-slate-900 text-[11px] sm:text-xs">Debit / Credit Card</div>
+                <div class="text-[10px] text-slate-500">Visa, Mastercard, Amex</div>
               </div>
             </div>
             <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-2.5">
-              <i class="fa-solid fa-truck-fast text-emerald-600 text-base flex-shrink-0"></i>
+              <i class="fa-solid fa-calendar-days text-indigo-600 text-base flex-shrink-0"></i>
               <div>
-                <div class="font-bold text-slate-900 text-[11px] sm:text-xs">Address Auto-Detect</div>
-                <div class="text-[10px] text-slate-500">Global Google Places Address</div>
+                <div class="font-bold text-slate-900 text-[11px] sm:text-xs">PayPal Pay Later</div>
+                <div class="text-[10px] text-slate-500">4 Interest-Free Payments</div>
               </div>
             </div>
             <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-2.5">
-              <i class="fa-solid fa-lock text-emerald-600 text-base flex-shrink-0"></i>
+              <i class="fa-solid fa-shield-halved text-emerald-600 text-base flex-shrink-0"></i>
               <div>
-                <div class="font-bold text-slate-900 text-[11px] sm:text-xs">PCI-DSS Level 1</div>
-                <div class="text-[10px] text-slate-500">Bank-Grade 256-Bit SSL</div>
+                <div class="font-bold text-slate-900 text-[11px] sm:text-xs">Buyer Protection</div>
+                <div class="text-[10px] text-slate-500">100% Encrypted SSL</div>
               </div>
             </div>
-            <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-2.5">
-              <i class="fa-solid fa-arrows-rotate text-emerald-600 text-base flex-shrink-0"></i>
-              <div>
-                <div class="font-bold text-slate-900 text-[11px] sm:text-xs">Instant Refundable</div>
-                <div class="text-[10px] text-slate-500">1-Click Refund from Dashboard</div>
-              </div>
+          </div>
+
+          <!-- PayPal Pay Later Incentive Banner -->
+          <div id="payLaterPromoBanner" class="p-3 bg-blue-50/70 border border-blue-200 rounded-xl text-blue-900 text-xs flex items-center gap-2.5">
+            <i class="fa-solid fa-tags text-blue-600 text-base flex-shrink-0"></i>
+            <div>
+              <span class="font-bold">PayPal Pay Later available:</span>
+              <span class="text-blue-800 ml-1">Split eligible orders into 4 interest-free installments at checkout.</span>
             </div>
+          </div>
+
+          <!-- Pending Credentials Prompt (Visible only if Client ID not set) -->
+          <div id="paypalSetupPrompt" class="hidden p-4 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-xs space-y-2">
+            <div class="flex items-center gap-2 font-bold text-amber-900">
+              <i class="fa-solid fa-key text-amber-600"></i> PayPal Live Gateway Configuration
+            </div>
+            <p class="leading-relaxed">
+              PayPal smart buttons are ready. Please paste your <strong>PayPal Live Client ID</strong> into <code>paypal-config.js</code> or in the <strong>Admin Panel (Payments Tab)</strong> to render live checkout buttons.
+            </p>
           </div>
 
           <!-- Error notice box if any -->
-          <div id="stripeErrorBox" class="hidden p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-xs">
+          <div id="paypalErrorBox" class="hidden p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-xs">
             <div class="flex items-center gap-2 font-bold mb-1">
-              <i class="fa-solid fa-triangle-exclamation"></i> Gateway Connection Note
+              <i class="fa-solid fa-triangle-exclamation"></i> PayPal Gateway Note
             </div>
-            <div id="stripeErrorMessage" class="text-[11px] leading-relaxed"></div>
+            <div id="paypalErrorMessage" class="text-[11px] leading-relaxed"></div>
           </div>
 
-          <!-- Proceed Button (Prominent, High-Converting) -->
+          <!-- PayPal Smart Buttons Container -->
           <div class="pt-2 space-y-3">
-            <button id="btnProceedToStripe" onclick="launchStripeHostedCheckout()" class="w-full py-4 px-4 sm:px-6 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-extrabold text-sm sm:text-base rounded-xl shadow-lg shadow-emerald-600/20 transition-all flex items-center justify-center gap-2.5">
-              <i class="fa-solid fa-lock text-emerald-200"></i>
-              <span id="btnProceedText">Proceed to Official Stripe Checkout</span>
-              <i class="fa-solid fa-arrow-right text-xs"></i>
-            </button>
+            <div id="paypal-button-container" class="w-full min-h-[140px]">
+              <div id="paypalButtonLoading" class="py-8 text-center text-xs text-slate-400 border-2 border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center gap-2">
+                <i class="fa-solid fa-circle-notch fa-spin text-blue-600 text-xl"></i>
+                <span class="font-semibold text-slate-600">Initializing Official PayPal Checkout...</span>
+                <span class="text-[10px] text-slate-400">Loading Yellow PayPal, Black Card, and Pay Later options</span>
+              </div>
+            </div>
 
-            <div class="flex items-center justify-between text-[11px] text-slate-400 pt-1">
+            <div class="flex items-center justify-between text-[11px] text-slate-400 pt-2 border-t border-slate-100">
               <span class="flex items-center gap-1.5">
-                <i class="fa-solid fa-shield-check text-emerald-600"></i> Encrypted Live Session
+                <i class="fa-solid fa-shield-halved text-emerald-600"></i> Encrypted Live Session
               </span>
               <span>Merchant: SAJID SERVICES LTD</span>
             </div>
@@ -294,8 +321,8 @@
   <footer class="bg-white border-t border-slate-200 py-6 mt-8 sm:mt-12 text-center text-xs text-slate-400">
     <div class="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
       <div class="flex items-center gap-2">
-        <i class="fa-brands fa-stripe text-2xl text-slate-500"></i>
-        <span>Official Checkout Infrastructure by Stripe, Inc.</span>
+        <i class="fa-brands fa-paypal text-2xl text-blue-600"></i>
+        <span>Official Checkout Infrastructure by PayPal (Europe) S.à r.l. et Cie, S.C.A.</span>
       </div>
       <div>&copy; 2026 SAJID SERVICES LTD. Shoppaza Official.</div>
     </div>
@@ -480,6 +507,7 @@
 
       // Load Cart & Render Launcher
       loadCartAndRender();
+      initPayPalGateway();
 
       // Check if coupon passed in URL (e.g. ?coupon=AG100 or ?promo=AG100)
       const urlCoupon = urlParams.get('coupon') || urlParams.get('promo');

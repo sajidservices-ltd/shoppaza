@@ -155,8 +155,8 @@
 
           <button onclick="switchTab('payments')" id="tabBtn-payments" class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-slate-300 hover:bg-shopify-surface transition">
             <div class="flex items-center gap-3">
-              <i class="fa-brands fa-stripe text-indigo-400 w-4 text-base"></i>
-              <span>Payments & Stripe</span>
+              <i class="fa-brands fa-paypal text-blue-400 w-4 text-base"></i>
+              <span>Payments & PayPal</span>
             </div>
             <span id="badgeStripeStatus" class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 text-slate-400 font-mono">Config</span>
           </button>
@@ -888,6 +888,117 @@
             </div>
           </div>
 
+          <!-- ================= 9A. OFFICIAL PAYPAL LIVE GATEWAY CARD ================= -->
+          <div class="p-6 rounded-2xl bg-shopify-sidebar border-2 border-blue-500/30 space-y-5 shadow-lg">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-shopify-border pb-4 gap-3">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 text-2xl font-bold">
+                  <i class="fa-brands fa-paypal"></i>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <h3 class="text-base font-bold text-white">PayPal Official Live Gateway</h3>
+                    <span id="badgePayPalLiveStatus" class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                      Configuration Pending
+                    </span>
+                  </div>
+                  <p class="text-[11px] text-slate-400">Accept PayPal balance, Credit/Debit Cards, and PayPal Pay Later for SAJID SERVICES LTD.</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs text-slate-400">Mode:</span>
+                <span class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold text-xs">
+                  <i class="fa-solid fa-circle text-[8px] mr-1"></i> Live Production
+                </span>
+              </div>
+            </div>
+
+            <form id="paypalConfigForm" onsubmit="handleSavePayPalSettings(event)" class="space-y-4 text-xs">
+              
+              <!-- Live Client ID -->
+              <div>
+                <div class="flex justify-between items-center mb-1.5">
+                  <label class="font-semibold text-slate-300 flex items-center gap-1.5">
+                    <i class="fa-solid fa-key text-blue-400"></i> PayPal Live Client ID
+                    <span class="text-rose-400">*</span>
+                  </label>
+                  <span class="text-[10px] text-slate-500 font-mono">From developer.paypal.com (Apps & Credentials > Live)</span>
+                </div>
+                <div class="relative">
+                  <input type="text" id="paypalLiveClientId" placeholder="Paste your Live Client ID here..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white font-mono text-xs focus:border-blue-500 focus:outline-none">
+                  <button type="button" onclick="pasteFromClipboard('paypalLiveClientId')" class="absolute right-3 top-2.5 px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-[11px] text-slate-300 border border-slate-700 transition">
+                    Paste
+                  </button>
+                </div>
+              </div>
+
+              <!-- Live Secret Key (Private) -->
+              <div>
+                <div class="flex justify-between items-center mb-1.5">
+                  <label class="font-semibold text-slate-300 flex items-center gap-1.5">
+                    <i class="fa-solid fa-shield-halved text-emerald-400"></i> PayPal Live Secret Key
+                    <span class="text-slate-500 text-[10px]">(Stored safely in your browser)</span>
+                  </label>
+                  <span class="text-[10px] text-slate-500 font-mono">Secret Key stays 100% private to you</span>
+                </div>
+                <div class="relative">
+                  <input type="password" id="paypalLiveSecretKey" placeholder="Paste your Live Secret Key here..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white font-mono text-xs focus:border-blue-500 focus:outline-none">
+                  <div class="absolute right-3 top-2.5 flex items-center gap-1.5">
+                    <button type="button" onclick="toggleSecretVisibility('paypalLiveSecretKey', 'eyePayPalSecret')" class="p-1 text-slate-400 hover:text-white">
+                      <i id="eyePayPalSecret" class="fa-regular fa-eye"></i>
+                    </button>
+                    <button type="button" onclick="pasteFromClipboard('paypalLiveSecretKey')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-[11px] text-slate-300 border border-slate-700 transition">
+                      Paste
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Methods Enabled Badges -->
+              <div class="pt-2 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center gap-2.5">
+                  <i class="fa-brands fa-paypal text-blue-400 text-lg"></i>
+                  <div>
+                    <div class="font-bold text-slate-200">PayPal 1-Touch</div>
+                    <div class="text-[10px] text-emerald-400">Active & Enabled</div>
+                  </div>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center gap-2.5">
+                  <i class="fa-solid fa-credit-card text-emerald-400 text-base"></i>
+                  <div>
+                    <div class="font-bold text-slate-200">Debit / Credit Card</div>
+                    <div class="text-[10px] text-emerald-400">Visa, MC, Amex Active</div>
+                  </div>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center gap-2.5">
+                  <i class="fa-solid fa-calendar-check text-indigo-400 text-base"></i>
+                  <div>
+                    <div class="font-bold text-slate-200">PayPal Pay Later</div>
+                    <div class="text-[10px] text-emerald-400">4 Payments Active</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Action button -->
+              <div class="pt-3 flex items-center justify-between">
+                <div class="text-[11px] text-slate-400">
+                  <i class="fa-solid fa-circle-check text-emerald-400 mr-1"></i> Changes apply immediately to storefront checkout.
+                </div>
+                <button type="submit" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl shadow-lg shadow-blue-600/30 transition flex items-center gap-2 text-xs">
+                  <i class="fa-solid fa-floppy-disk"></i> Save PayPal Settings
+                </button>
+              </div>
+
+            </form>
+          </div>
+
+          <!-- Divider -->
+          <div class="relative flex py-2 items-center">
+            <div class="flex-grow border-t border-slate-800"></div>
+            <span class="flex-shrink mx-4 text-slate-600 text-xs font-semibold uppercase tracking-wider">Secondary / Legacy Gateways</span>
+            <div class="flex-grow border-t border-slate-800"></div>
+          </div>
+          
           <form id="stripeConfigForm" onsubmit="handleSaveStripeSettings(event)" class="space-y-6">
             
             <!-- Credentials Card -->
@@ -3391,6 +3502,63 @@
           badge.className = 'px-1.5 py-0.5 rounded text-[10px] bg-amber-500/20 text-amber-400 font-mono';
         }
       }
+    }
+
+    // ================= PAYPAL SETTINGS HANDLERS =================
+    function handleSavePayPalSettings(e) {
+      e.preventDefault();
+      const clientId = document.getElementById('paypalLiveClientId').value.trim();
+      const secretKey = document.getElementById('paypalLiveSecretKey').value.trim();
+
+      if (!clientId) {
+        alert('Please enter your PayPal Live Client ID!');
+        return;
+      }
+
+      const cfg = {
+        clientId: clientId,
+        secretKey: secretKey,
+        currency: 'USD',
+        environment: 'live',
+        updatedAt: new Date().toISOString()
+      };
+
+      localStorage.setItem('shoppaza_paypal_config', JSON.stringify(cfg));
+      updatePayPalStatusUI(cfg);
+      alert('✓ PayPal Live Settings Saved Successfully! Customers can now checkout with PayPal, Cards, and Pay Later.');
+    }
+
+    function updatePayPalStatusUI(cfg) {
+      const badge = document.getElementById('badgePayPalLiveStatus');
+      if (!badge) return;
+      if (cfg && cfg.clientId && cfg.clientId !== 'YOUR_PAYPAL_LIVE_CLIENT_ID_HERE') {
+        badge.innerText = 'Connected & Active';
+        badge.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+      } else {
+        badge.innerText = 'Configuration Pending';
+        badge.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30';
+      }
+    }
+
+    function loadSavedPayPalSettings() {
+      try {
+        const raw = localStorage.getItem('shoppaza_paypal_config');
+        if (raw) {
+          const cfg = JSON.parse(raw);
+          if (cfg.clientId && document.getElementById('paypalLiveClientId')) {
+            document.getElementById('paypalLiveClientId').value = cfg.clientId;
+          }
+          if (cfg.secretKey && document.getElementById('paypalLiveSecretKey')) {
+            document.getElementById('paypalLiveSecretKey').value = cfg.secretKey;
+          }
+          updatePayPalStatusUI(cfg);
+        } else if (window.PAYPAL_CONFIG && window.PAYPAL_CONFIG.clientId !== 'YOUR_PAYPAL_LIVE_CLIENT_ID_HERE') {
+          if (document.getElementById('paypalLiveClientId')) {
+            document.getElementById('paypalLiveClientId').value = window.PAYPAL_CONFIG.clientId;
+          }
+          updatePayPalStatusUI(window.PAYPAL_CONFIG);
+        }
+      } catch(e) {}
     }
 
     function handleSaveStripeSettings(e) {

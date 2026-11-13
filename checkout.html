@@ -331,7 +331,169 @@
   <!-- ================= LOGIC & STRIPE BRIDGE SCRIPT ================= -->
   <script>
     // Live Stripe Restricted Key for Official Hosted Sessions
-    const STRIPE_RESTRICTED_KEY = atob('cmtfbGl2ZV81MVVWekJwRHdsbzZnQ0thSEszSkRYbGRpSWVyNW41Z1hhMnhOUHNZZlpoQ2taU21pYVJHUDNnSk5SNUhxWmpUcEhHa1YzVE80akwwSVJCS1dMdm1uTzZjVTAwRGt4ekozQzI=');
+    // ================= 100% GENUINE PAYPAL SMART BUTTONS ENGINE =================
+    function getPayPalConfig() {
+      // 1. Check browser localStorage (set via admin.html)
+      try {
+        const raw = localStorage.getItem('shoppaza_paypal_config');
+        if (raw) {
+          const cfg = JSON.parse(raw);
+          if (cfg && cfg.clientId && cfg.clientId.trim() !== '' && cfg.clientId !== 'YOUR_PAYPAL_LIVE_CLIENT_ID_HERE') {
+            return cfg;
+          }
+        }
+      } catch(e) {}
+
+      // 2. Check window.PAYPAL_CONFIG (paypal-config.js)
+      if (window.PAYPAL_CONFIG && window.PAYPAL_CONFIG.clientId && window.PAYPAL_CONFIG.clientId.trim() !== '' && window.PAYPAL_CONFIG.clientId !== 'YOUR_PAYPAL_LIVE_CLIENT_ID_HERE') {
+        return window.PAYPAL_CONFIG;
+      }
+
+      return null;
+    }
+
+    let isPayPalSdkLoaded = false;
+    let isPayPalSdkLoading = false;
+
+    function initPayPalGateway() {
+      const cfg = getPayPalConfig();
+      const promptEl = document.getElementById('paypalSetupPrompt');
+      const loaderEl = document.getElementById('paypalButtonLoading');
+
+      if (!cfg || !cfg.clientId) {
+        if (promptEl) promptEl.classList.remove('hidden');
+        if (loaderEl) {
+          loaderEl.innerHTML = `
+            <div class="p-4 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 text-xs text-left space-y-2">
+              <div class="font-bold flex items-center gap-2 text-sm text-amber-800">
+                <i class="fa-solid fa-circle-exclamation text-amber-600"></i> Awaiting PayPal Live Client ID
+              </div>
+              <p>Please open <strong><a href="admin.html" class="underline text-blue-700 font-bold">Admin Panel > Payments</a></strong> and paste your Live Client ID, then click Save.</p>
+            </div>
+          `;
+        }
+        return;
+      }
+
+      if (promptEl) promptEl.classList.add('hidden');
+
+      if (window.paypal && window.paypal.Buttons) {
+        renderPayPalSmartButtons();
+        return;
+      }
+
+      if (isPayPalSdkLoaded || isPayPalSdkLoading) return;
+      isPayPalSdkLoading = true;
+
+      // Inject official PayPal JavaScript SDK
+      const script = document.createElement('script');
+      const clientId = cfg.clientId.trim();
+      script.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(clientId)}&currency=USD&components=buttons,messages&enable-funding=venmo,paylater,card`;
+      script.async = true;
+      script.onload = () => {
+        isPayPalSdkLoaded = true;
+        isPayPalSdkLoading = false;
+        renderPayPalSmartButtons();
+      };
+      script.onerror = (err) => {
+        isPayPalSdkLoading = false;
+        console.error('PayPal SDK loading error:', err);
+        const errBox = document.getElementById('paypalErrorBox');
+        const errMsg = document.getElementById('paypalErrorMessage');
+        if (errBox) errBox.classList.remove('hidden');
+        if (errMsg) errMsg.innerText = 'Could not load PayPal SDK. Please verify your Client ID is valid in the Admin Panel.';
+        if (loaderEl) loaderEl.classList.add('hidden');
+      };
+      document.head.appendChild(script);
+    }
+
+    function renderPayPalSmartButtons() {
+      const container = document.getElementById('paypal-button-container');
+      const loaderEl = document.getElementById('paypalButtonLoading');
+      if (!container || !window.paypal || !window.paypal.Buttons) return;
+
+      if (loaderEl) loaderEl.remove();
+      container.innerHTML = '';
+
+      try {
+        window.paypal.Buttons({
+          style: {
+            layout: 'vertical',
+            color: 'gold',
+            shape: 'rect',
+            label: 'paypal'
+          },
+          createOrder: function(data, actions) {
+            const itemTotalVal = Math.max(0.50, currentSubtotal - currentDiscount).toFixed(2);
+            const shippingVal = currentShipping.toFixed(2);
+            const grandTotalVal = currentTotal.toFixed(2);
+
+            return actions.order.create({
+              intent: 'CAPTURE',
+              purchase_units: [{
+                reference_id: '#SHP-' + Math.floor(100000 + Math.random() * 900000),
+                description: 'Shoppaza Retail Purchase - SAJID SERVICES LTD',
+                amount: {
+                  currency_code: 'USD',
+                  value: grandTotalVal,
+                  breakdown: {
+                    item_total: {
+                      currency_code: 'USD',
+                      value: itemTotalVal
+                    },
+                    shipping: {
+                      currency_code: 'USD',
+                      value: shippingVal
+                    }
+                  }
+                }
+              }]
+            });
+          },
+          onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+              const orderId = '#SHP-' + Math.floor(100000 + Math.random() * 900000);
+              const txnId = details.purchase_units?.[0]?.payments?.captures?.[0]?.id || details.id || ('PP-' + Date.now());
+              const payerName = details.payer?.name?.given_name 
+                ? `${details.payer.name.given_name} ${details.payer.name.surname || ''}`.trim() 
+                : 'Customer';
+              
+              const addrObj = details.purchase_units?.[0]?.shipping?.address;
+              const addrStr = addrObj 
+                ? `${addrObj.address_line_1 || ''}, ${addrObj.admin_area_2 || ''}, ${addrObj.postal_code || ''}, ${addrObj.country_code || ''}` 
+                : 'Standard Delivery Address';
+
+              try {
+                const liveOrders = JSON.parse(localStorage.getItem('shoppaza_live_orders') || '[]');
+                liveOrders.unshift({
+                  id: orderId,
+                  paypal_order_id: details.id,
+                  paypal_txn_id: txnId,
+                  customer: payerName,
+                  address: addrStr,
+                  total: `${currentTotal.toFixed(2)} USD`,
+                  status: 'Paid (PayPal Verified)',
+                  date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+                });
+                localStorage.setItem('shoppaza_live_orders', JSON.stringify(liveOrders));
+                localStorage.removeItem('shoppaza_cart');
+              } catch(e) {}
+
+              window.location.href = `checkout.html?order_placed=true&order_id=${encodeURIComponent(orderId)}&txn_id=${encodeURIComponent(txnId)}&payer_name=${encodeURIComponent(payerName)}`;
+            });
+          },
+          onError: function(err) {
+            console.error('PayPal Button Error:', err);
+            const errBox = document.getElementById('paypalErrorBox');
+            const errMsg = document.getElementById('paypalErrorMessage');
+            if (errBox) errBox.classList.remove('hidden');
+            if (errMsg) errMsg.innerText = 'PayPal encountered an issue. Please try again or use the Card payment option.';
+          }
+        }).render('#paypal-button-container');
+      } catch (err) {
+        console.error('Error rendering PayPal smart buttons:', err);
+      }
+    }
 
     let currentCart = [];
     let currentSubtotal = 0.00;

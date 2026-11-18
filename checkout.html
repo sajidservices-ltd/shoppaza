@@ -410,9 +410,27 @@
     function renderPayPalSmartButtons() {
       const container = document.getElementById('paypal-button-container');
       const loaderEl = document.getElementById('paypalButtonLoading');
-      if (!container || !window.paypal || !window.paypal.Buttons) return;
+      if (!container) return;
 
       if (loaderEl) loaderEl.remove();
+
+      if (!currentCart || currentCart.length === 0) {
+        container.innerHTML = `
+          <div class="py-8 px-4 text-center text-xs text-slate-500 border-2 border-dashed border-slate-200 rounded-xl space-y-3 bg-slate-50">
+            <i class="fa-solid fa-basket-shopping text-3xl text-slate-400"></i>
+            <p class="font-bold text-slate-800 text-sm">Your shopping bag is currently empty</p>
+            <p class="text-xs text-slate-500 max-w-sm mx-auto">Please add items from our catalog to proceed with official PayPal & Card checkout.</p>
+            <div>
+              <a href="index.html" class="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-black text-white font-bold text-xs rounded-xl shadow transition">
+                <i class="fa-solid fa-arrow-left"></i> Explore Catalog & Best Sellers
+              </a>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      if (!window.paypal || !window.paypal.Buttons) return;
       container.innerHTML = '';
 
       try {
@@ -424,9 +442,7 @@
             label: 'paypal'
           },
           createOrder: function(data, actions) {
-            const itemTotalVal = Math.max(0.50, currentSubtotal - currentDiscount).toFixed(2);
-            const shippingVal = currentShipping.toFixed(2);
-            const grandTotalVal = currentTotal.toFixed(2);
+            const grandTotalVal = Math.max(0.50, currentTotal).toFixed(2);
 
             return actions.order.create({
               intent: 'CAPTURE',
@@ -436,7 +452,6 @@
                 amount: {
                   currency_code: 'USD',
                   value: grandTotalVal
-                }
                 }
               }]
             });
@@ -741,6 +756,10 @@
 
       // Recalculate totals with any active discount
       recalculateTotals();
+
+      if (isPayPalSdkLoaded) {
+        renderPayPalSmartButtons();
+      }
     }
 
     // Render cart items with Quantity controls (+ / -) and Remove button
@@ -845,6 +864,9 @@
 
         renderCartItems();
         recalculateTotals();
+        if (isPayPalSdkLoaded) {
+          renderPayPalSmartButtons();
+        }
       }
     }
 

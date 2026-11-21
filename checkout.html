@@ -939,11 +939,19 @@
     }
 
     const STANDARD_SHIPPING_USD = 3.99;
+    const JEWELRY_SHIPPING_USD = 1.50;
 
     function recalculateTotals() {
       currentDiscount = 0.00;
       const isOnlyTestItem = currentCart.length === 1 && currentCart[0].id === 999000111222;
-      currentShipping = (currentCart.length > 0 && !isOnlyTestItem) ? STANDARD_SHIPPING_USD : 0.00;
+      const isAllJewelry = currentCart.length > 0 && currentCart.every(item => isJewelryItem(item));
+      let baseShipping = isAllJewelry ? JEWELRY_SHIPPING_USD : STANDARD_SHIPPING_USD;
+
+      if (appliedCoupon && appliedCoupon.type === 'shipping') {
+        baseShipping = 0.00;
+      }
+
+      currentShipping = (currentCart.length > 0 && !isOnlyTestItem) ? baseShipping : 0.00;
 
       const discountRow = document.getElementById('summaryDiscountRow');
       const discountTag = document.getElementById('summaryDiscountCodeTag');
@@ -957,13 +965,19 @@
         if (discountRow) discountRow.classList.remove('hidden');
         if (discountTag) discountTag.innerText = `${appliedCoupon.code} (${pct}%)`;
         if (discountAmountEl) discountAmountEl.innerText = `-$${currentDiscount.toFixed(2)}`;
+      } else if (appliedCoupon && appliedCoupon.type === 'shipping') {
+        if (discountRow) discountRow.classList.remove('hidden');
+        if (discountTag) discountTag.innerText = `${appliedCoupon.code} (Free Shipping)`;
+        if (discountAmountEl) discountAmountEl.innerText = `FREE`;
       } else {
         if (discountRow) discountRow.classList.add('hidden');
       }
 
       currentTotal = currentCart.length > 0 ? (Math.max(0.50, currentSubtotal - currentDiscount) + currentShipping) : 0.00;
 
-      if (shippingTitle) shippingTitle.innerText = 'Standard Insured Tracked Shipping';
+      if (shippingTitle) {
+        shippingTitle.innerText = isAllJewelry ? 'Jewelry Insured Delivery' : 'Standard Insured Tracked Shipping';
+      }
       if (shippingAmountEl) {
         if (currentShipping > 0) {
           shippingAmountEl.innerText = `$${currentShipping.toFixed(2)}`;

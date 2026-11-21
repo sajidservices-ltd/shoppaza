@@ -30,5 +30,13 @@
     "desc": "Extra 5% Instant Discount",
     "status": "Active",
     "uses": "0 Used"
+  },
+  {
+    "code": "FREESHIP",
+    "type": "shipping",
+    "value": 100,
+    "desc": "100% Free Shipping Promotion",
+    "status": "Active",
+    "uses": "0 Used"
   }
 ]
